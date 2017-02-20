@@ -1,0 +1,116 @@
+
+<!--路径-->
+<div class="nav">
+	<span>首页</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>个人中心</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>我的收藏</span>
+</div>
+
+<!--内容详情-->
+<div class="contentInfo">
+	<div class="myCollection">
+		<div class="head">
+			<div data-id="collDemand" class="item active">需求</div>
+			<div data-id="collTalent" class="item">人才</div>
+			<div data-id="collRes" class="item">资源</div>
+			<div class="search">
+				<div>
+					<input class="searchInput" />
+				</div>
+				<div>
+					<button>
+						<img src="resources/images/front/search.png">
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="collContent">
+			<div class="collDemand" style="display:block;"></div>
+			<div class="collTalent"></div>
+			<div class="collRes"></div>
+		</div>
+		<div class="page">
+			<div id="paginator" style="margin: auto;"></div>
+		</div>
+	</div>
+</div>
+<script id="coll_collDemand_template" type="text/x-jquery-tmpl">
+				<div class="collPart">
+					<div class="collLeft">
+						<div>
+							${name}
+							{{if $data.type=='700001'}}
+							<span>[${status}]</span>
+							{{/if}}
+						</div>
+						<div>${description}</div>
+					</div>
+					<div class="collCentre">${price}</div>
+					<div class="collRight">
+						<button class="detail" data-status="${type}" data-id="${id}">查看详情</button>
+						<div class="tipImg">
+							{{if $data.type=='700001'}}
+									<img src="resources/images/front/demand.png" alt="">
+							{{/if}}
+							{{if $data.type=='700002'}}
+									<img src="resources/images/front/recruiting.png" alt="">	
+							{{/if}}
+							{{if $data.type=='700003'}}
+									<img src="resources/images/front/financingLabel.png" alt="">
+							{{/if}}
+							
+						</div>
+					</div>
+				</div>
+</script>
+<script id="coll_collTalent_template" type="text/x-jquery-tmpl">
+	<div class="collPart">
+					<div class="collLeft">
+						<div>
+							${talentName} <span>[${workMode}]</span>
+						</div>
+						<div class="collLeftDown">
+							<div class="fl">${conditionTalentName}</div>
+							<div class="fl">
+								{{if $data.conditionIsAuthentication=='0'}}
+								<img src="resources/images/front/identityAuthenticationSmall.png" alt="">
+								{{else}}
+								<img src="resources/images/front/identityAuthenticationGray.png" alt="">
+								{{/if}}
+							</div>
+							<div class="fl">
+								{{if $data.conditionEmail!=null}}
+								<img src="resources/images/front/phoneMakeSureSmall.png" alt="">
+								{{else}}
+								<img src="resources/images/front/phoneMakeSureGray.png" alt="">
+								{{/if}}
+							</div>
+							<div class="fl">
+								{{if $data.conditionMobile!=null}}
+								<img src="resources/images/front/emailAuthenticationSmall.png"	alt="">
+								{{else}}
+								<img src="resources/images/front/emailAuthenticationGray.png"	alt="">
+								{{/if}}
+								
+							</div>
+							<div class="fl">|</div>
+							<div class="fl">专业技能：</div>
+							<div class="fl">${conditionTechnology}</div>
+						</div>
+					</div>
+					<div class="collCentre">${talentDescription}</div>
+					<div class="collRight">
+						<button class="detail" data-id="${creativeTalentId}">查看详情</button>
+					</div>
+				</div>
+</script>
+<script id="coll_collRes_template" type="text/x-jquery-tmpl">
+			<div data-id="${creativeResourceId}" class="m fl white">
+					<img src="${resourceImage}" alt="">
+					<div class="pictureWord">${resourceName}</div>
+					<div class="m-down">
+						<span>¥</span> <span>${resourcePrice}</span> <span>元</span>
+					</div>
+				</div>
+</script>
+<script type="text/javascript" src="resources/js/front/myCollection.js"></script>

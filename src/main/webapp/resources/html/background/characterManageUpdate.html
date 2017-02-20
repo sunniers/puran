@@ -1,0 +1,81 @@
+            <!--路径-->
+            <div class="nav borderNone">
+                <span>首页</span><span><img src="../../images/front/rightAngleBrackets.png" alt=""></span>
+                <span>角色管理</span><span><img src="../../images/front/rightAngleBrackets.png" alt=""></span>
+                <span>角色信息修改</span>
+            </div>
+            <!--内容详情-->
+            <div class="contentInfo white">
+                <div class="characterManageUpdate">
+                    <div class="addPrompt">
+                        <img src="../../images/background/warning.png" alt="警告"/>
+                        <div class="addPromptWord">角色信息修改</div>
+                    </div>
+                    <div class="addContent">
+                        <div class="sui-msg msg-error characterNamePrompt" style="opacity:0;">
+                            <div class="msg-con">错误信息提示</div>
+                            <s class="msg-icon"></s>
+                        </div>
+                        <div class="characterName">
+                            <label>角色名称：</label>
+                            <input id="roleName" type="text">
+                        </div>
+                        <div class="resourceDirectory">
+                            <label>资源目录：</label>
+                            <table class="sui-table table-bordered" id="tableData">
+                            	<thead>
+                            	<tr>
+                                    <td>一级资源目录</td>
+                                    <td>二级资源目录</td>
+                                </tr>
+                            	</thead>
+                                <tbody>
+                                <!-- 
+                                <tr>
+                                    <td><div><input type="checkbox">发布信息审核</div></td>
+                                    <td><div><input type="checkbox">需求审核</div><div><input type="checkbox">资源审核</div></td>
+                                </tr>
+                                <tr>
+                                    <td><div><input type="checkbox">展示大厅</div></td>
+                                    <td><div><input type="checkbox">供需信息</div><div><input type="checkbox">虚拟实验室</div></td>
+                                </tr>
+                                <tr>
+                                    <td><div><input type="checkbox">融资管理</div></td>
+                                    <td><div><input type="checkbox">投资机构</div><div><input type="checkbox">融资信息</div></td>
+                                </tr>
+                                <tr>
+                                    <td><div><input type="checkbox">第三方服务</div></td>
+                                    <td><div><input type="checkbox">软件创意设计评估</div></td>
+                                </tr>
+                                <tr>
+                                    <td><div><input type="checkbox">统计分析</div></td>
+                                    <td><div><input type="checkbox">需求发布量统计</div><div><input type="checkbox">成交量分析</div>
+                                        <div><input type="checkbox">资源分布量统计</div><div><input type="checkbox">人员关系图谱</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><div><input type="checkbox">系统管理</div></td>
+                                    <td><div><input type="checkbox">用户管理</div><div><input type="checkbox">权限管理</div>
+                                        <div><input type="checkbox">权限管理</div><div><input type="checkbox">资源目录管理</div>
+                                    </td>
+                                </tr> -->
+                                </tbody>
+                            </table>
+                            <div class="save fr">
+                                <button id="save">保存</button>
+                                <button id="back">返回</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script id="character_update_template" type="text/x-jquery-tmpl">
+	            <tr>
+	            <td class="parentCheck" ><div><input id="${resourceId}" data-id="${resourceId}" value="${resourceName}" type="checkbox">${resourceName}</div></td>
+	            <td class="childCheck" >{{each $data.sysResources}}
+					<div><input id="${$data.sysResources[$index].resourceId}" data-id="${$data.sysResources[$index].resourceId}"  type="checkbox">${$data.sysResources[$index].resourceName}</div>
+					{{/each}}
+	            </td>
+	        	</tr>
+            </script>
+            <script type="text/javascript" src="../../js/background/characterManageUpdate.js"></script>

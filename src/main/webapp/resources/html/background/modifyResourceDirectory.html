@@ -1,0 +1,139 @@
+
+            <!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="../../images/background/rightCusp.png" alt=""></span>
+                <span>资源目录配置</span><span><img src="../../images/background/rightCusp.png" alt=""></span>
+                <span>修改资源目录</span>
+            </div>
+
+            <!--内容详情-->
+            <div class="contentInfo">
+                <div class="modifyResourceDirectory">
+                    <div class="addUserPrompt">
+                        <img src="../../images/background/warning.png" alt="警告"/>
+                        <div class="addUserPromptWord">修改一级资源目录将同步修改相关一级目录</div>
+                    </div>
+                    <div class="fieldContent">
+                   <!--  修改一级目录 -->
+                    <div class="editFirRes">
+                    	<div class="fr">
+                            <label>一级资源目录名称：
+                                <input class="resourceName" type="text">
+                                <div class="sui-msg msg-error">
+											  	<div class="msg-con">请填写名字</div>
+											  	<s class="msg-icon"></s>
+								</div>
+                            </label>
+                        </div>
+                        <div class="sort fr">
+	                                <label>目录排序：
+	                                    <input class="sortedField" type="number" min="0">
+	                                </label>
+                            </div>
+                        <div class="fr">
+                            <label>一级目录URL：
+                                <input class="resourceLink" type="text">
+                                <div class="sui-msg msg-error">
+											  	<div class="msg-con">请请填写URL</div>
+											  	<s class="msg-icon"></s>
+								</div>
+                            </label>
+                        </div>
+                        <div class="upload fr">
+                            <label>一级目录图标：
+                            <input  class="upLoadImg" type="file" name="file" style="display:none;">
+                            	<div class="sui-msg msg-error">
+											  	<div class="msg-con">请上传图片</div>
+											  	<s class="msg-icon"></s>
+								</div>
+                                <div class="uploadPhoto">
+                                    <img src="../../images/background/upload.png">
+                                    <div class="">更换</div>
+                                </div>
+                                <div class="uploadWord">图标大小为18*18px</div>
+                            </label>
+                        </div>
+                        <button  class="fr save button1">保存</button>
+                        <button  class="fr back">返回</button>
+                    </div>
+                    
+                    <!-- 修改二级菜单 -->
+                       <div class="editSecRes">
+                        <div class="fr">
+                            <label>一级资源目录选择：
+                                <span class="sui-dropdown dropdown-bordered select">
+                                    	<span id="allFirMenu" class="dropdown-inner">
+		                                    <a id="select" role="button" style="width:262px" href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">
+								      		<input value="" name="city" type="hidden"><i class="caret"></i><span>选择一级菜单</span></a>
+										    <ul role="menu" aria-labelledby="drop1" class="sui-dropdown-menu">
+										    	<li role="presentation" class="group-title peception">前台</li>
+										    	<li role="presentation" class="group-title back">后台</li>
+										    </ul>
+								    	</span>
+    								</span>
+                            </label>
+                        </div>
+                        <div class="fr">
+                            <label>二级资源目录名称：
+                                <input class="resourceName" type="text">
+                                <div class="sui-msg msg-error">
+											  	<div class="msg-con">请输入名字</div>
+											  	<s class="msg-icon"></s>
+								</div>
+                            </label>
+                        </div>
+                        <div class="sort fr">
+	                                <label>目录排序：
+	                                    <input class="sortedField" type="number" min="0">
+	                                </label>
+                            </div>
+                        <div class="fr">
+                            <label>二级目录URL：
+                                <input class="resourceLink" type="text">
+                                <div class="sui-msg msg-error">
+											  	<div class="msg-con">请输入URL</div>
+											  	<s class="msg-icon"></s>
+								</div>
+                            </label>
+                        </div>
+                        <div class="upload fr">
+                            <label>二级目录图标：
+                            <input  class="upLoadImg" type="file" name="file" style="display:none;">
+                            	<div class="sui-msg msg-error">
+											  	<div class="msg-con">请上传图片</div>
+											  	<s class="msg-icon"></s>
+								</div>
+                                <div class="uploadPhoto">
+                                    <img src="../../images/background/upload.png">
+                                    <div class="">更换</div>
+                                </div>
+                                <div class="uploadWord">图标大小为18*18px</div>
+                            </label>
+                        </div>
+                        <button class="fr save button1">保存</button>
+                        <button class="fr back">返回</button>
+                        
+                       </div>
+                    </div>
+                </div>
+            </div>
+            
+            <script type="text/x-jquery-tmpl" id="search_firRes_perception_template">
+            									
+													{{if $data.resourceType=="peception"}}
+													 <li data-type="peception" data-id="${$data.resourceId}" data-val="${$data.resourceName}" role="presentation">
+														<a role="menuitem" tabindex="-1" href="javascript:void(0);" value="wh">${$data.resourceName}
+													</a>
+													</li>
+													{{/if}}			
+            </script>
+            <script type="text/x-jquery-tmpl" id="search_firRes_back_template">
+												{{if $data.resourceType=="back"}}
+													 <li data-type="back" data-id="${$data.resourceId}" data-val="${$data.resourceName}" role="presentation">
+														<a role="menuitem" tabindex="-1" href="javascript:void(0);" value="wh">${$data.resourceName}
+													</a>
+													</li>	
+												{{/if}}		
+            </script>
+            
+            <script type="text/javascript" src='../../js/background/modifyResourceDirectory.js'></script>

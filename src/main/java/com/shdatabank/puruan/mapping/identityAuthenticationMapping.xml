@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IIdentityAuthenticationDao">
+    <!-- 将个人身份认证信息保存到数据库 -->
+    <insert id="insertUserExtensionInfo" parameterType="com.shdatabank.puruan.model.UserExtensionInfo">
+	    <![CDATA[
+	        INSERT INTO user_extension_info(user_id,user_real_name,credit_type,credit_number,
+	        credit_file_name,credit_front_path,credit_back_path,create_time) VALUES(#{userId},
+	        #{userRealName,jdbcType=VARCHAR},#{creditType,jdbcType=VARCHAR},
+	        #{creditNumber,jdbcType=VARCHAR},#{creditFileName,jdbcType=VARCHAR},
+	        #{creditFrontPath,jdbcType=VARCHAR},#{creditBackPath,jdbcType=VARCHAR},NOW())
+	    ]]>
+    </insert>
+    
+    <!-- 查询用户信息是否已经存在 -->
+    <select id="selectUserInfo" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        SELECT 
+        COUNT(*)
+        FROM user_extension_info 
+        WHERE user_id = #{userId}
+    </select>
+    
+    <!-- 更新用户信息 -->
+    <update id="updateUserInfo" parameterType="com.shdatabank.puruan.model.UserExtensionInfo">
+        UPDATE user_extension_info SET 
+        user_id = #{userId},
+        user_real_name = #{userRealName},
+        credit_type = #{creditType},
+        credit_number = #{creditNumber},
+        credit_file_name = #{creditType},
+        credit_front_path = #{creditFrontPath},
+        credit_back_path = #{creditBackPath},
+        create_time = NOW()
+        WHERE user_id = #{userId}
+    </update>
+    
+    <!-- 设置用户类型 -->
+    <update id="updateUserType" parameterType="com.shdatabank.puruan.model.User">
+        <![CDATA[
+            UPDATE user SET user_type = #{userType,jdbcType=VARCHAR},company_id = #{companyId} 
+            WHERE user_id = #{userId,jdbcType=BIGINT}
+        ]]>
+    </update>
+    
+    <!-- 将企业认证信息保存到数据库 -->
+    <insert id="insertCompany" parameterType="com.shdatabank.puruan.model.Company" 
+    useGeneratedKeys="true" keyProperty="companyId">
+        <![CDATA[
+            INSERT INTO company(company_name,company_type,company_address,
+            company_phone,company_trade) 
+            VALUES(#{companyName},#{companyType},#{companyAddress},
+            #{companyPhone},#{companyTrade})
+        ]]>
+    </insert>
+    
+    
+    
+    <!-- 将公司证件信息保存到数据库 -->
+    <insert id="insertCompanyCredit" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO company_credit(company_id,credit_name,credit_type,credit_filename,
+        credit_front_path,credit_back_path,create_time) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+	        (#{item.companyId},#{item.creditName,jdbcType=VARCHAR},
+	        #{item.creditType,jdbcType=VARCHAR},#{item.creditFilename,jdbcType=VARCHAR},
+	        #{item.creditFrontPath,jdbcType=VARCHAR},#{item.creditBackPath},NOW())
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.LoginDao">
+	<!-- 验证后台用户信息并返回用户信息 -->
+	<select id="selectBackUser" resultMap="selectBackUserMap" parameterType="com.shdatabank.puruan.model.BackUser">
+		<![CDATA[
+			SELECT user_id,user_name,user_alias,user_pwd,
+			user_department,user_mobile,user_email,
+			create_datetime,active FROM back_user WHERE 
+			active = #{active} AND user_name = #{userName,jdbcType=VARCHAR} 
+			AND user_pwd = #{userPwd,jdbcType=VARCHAR}
+		]]>
+	</select>
+	<resultMap type="com.shdatabank.puruan.model.BackUser" id="selectBackUserMap">
+		<id property="userId" column="user_id" />
+		<result property="userName" column="user_name" />
+		<result property="userAlias" column="user_alias" />
+		<result property="userPwd" column="user_pwd" />
+		<result property="userDepartment" column="user_department" />
+		<result property="userMobile" column="user_mobile" />
+		<result property="userEmail" column="user_email" />
+		<result property="createDatetime" column="create_datetime" />
+		<result property="active" column="active" />
+	</resultMap>
+	
+	<!-- 根据userId查询用户权限 -->
+    <select id="selectBackUserRole" resultMap="selectBackUserRoleMap">
+        <![CDATA[
+            SELECT user_role_id,user_id,r1.role_id,role_name 
+            FROM back_user_role r1 INNER JOIN back_roles r2 ON 
+            r1.role_id = r2.role_id 
+            WHERE user_id = #{0,jdbcType=INTEGER}
+        ]]>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.BackUserRole" id="selectBackUserRoleMap">
+        <id property="userRoleId" column="user_role_id" />
+        <result property="userId" column="user_id" />
+        <result property="roleId" column="role_id" />
+        <result property="roleName" column="role_name" />
+        <result property="active" column="active" />
+    </resultMap>
+	
+	<!-- 插入用户日志信息 -->
+	<insert id="insertUserBehavior" parameterType="com.shdatabank.puruan.model.UserBehavior">
+		<![CDATA[
+			INSERT INTO user_behavior(log_datetime,user_id,log_type,log_status) 
+			VALUES(
+				   #{logDatetime,jdbcType=TIMESTAMP},
+				   #{userId,jdbcType=BIGINT},
+				   #{logType,jdbcType=VARCHAR},
+				   #{logStatus,jdbcType=VARCHAR}
+				  )
+		]]>
+	</insert>
+	
+	<!-- 获取用户当天登录的次数 -->
+	<select id="selectUserBehaviorCount" resultType="java.lang.Integer">
+		<![CDATA[
+			SELECT COUNT(*) FROM user_behavior WHERE 
+			DATEDIFF(log_datetime,NOW()) = 0 AND 
+			user_id = #{0,jdbcType=BIGINT} AND 
+			log_status = #{1,jdbcType=VARCHAR} AND 
+			log_type = #{2,jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<!-- 判断后台用户名是否正确 -->
+	<select id="selectBackUserName" parameterType="java.lang.String" resultType="java.lang.Integer">
+		<![CDATA[
+			SELECT user_id FROM back_user WHERE user_name = #{0,jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<!-- 判断前台用户名是否正确 -->
+	<select id="selectUserName" parameterType="java.lang.String" resultType="java.lang.Long">
+		<![CDATA[
+			SELECT user_id FROM user WHERE user_name = #{0,jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<!-- 验证前台用户信息并返回用户信息 -->
+	<select id="selectUser" resultMap="selectUserMap" parameterType="com.shdatabank.puruan.model.User">
+		<![CDATA[
+			SELECT user_id,company_id,user_alias,user_name,user_type,
+			(SELECT c.company_name FROM company c WHERE u.company_id = c.company_id) company_name,
+			user_header_img,user_pwd,user_mobile,user_email
+			,create_datetime,is_authentication,is_activation,active FROM user u WHERE 
+			active = #{active} AND user_name = #{userName,jdbcType=VARCHAR} 
+			AND user_pwd = #{userPwd,jdbcType=VARCHAR} AND is_activation = 0
+		]]>
+	</select>
+	<resultMap type="com.shdatabank.puruan.model.User" id="selectUserMap">
+		<id property="userId" column="user_id" />
+		<result property="companyId" column="company_id" />
+		<result property="companyName" column="company_name" />
+		<result property="userAlias" column="user_alias" />
+		<result property="userName" column="user_name" />
+		<result property="userType" column="user_type" />
+		<result property="userHeaderImg" column="user_header_img" />
+		<result property="userPwd" column="user_pwd" />
+		<result property="userMobile" column="user_mobile" />
+		<result property="userEmail" column="user_email" />
+		<result property="createDatetime" column="create_datetime" />
+		<result property="isAuthentication" column="is_authentication" />
+		<result property="isActivation" column="is_activation" />
+		<result property="active" column="active" />
+	</resultMap>
+		<!-- 用户注册 -->
+	<insert id="register" parameterType="com.shdatabank.puruan.model.User" useGeneratedKeys="true" keyProperty="userId">
+		<![CDATA[
+			INSERT INTO user (company_id,user_alias,user_name,user_type,user_header_img,user_pwd,user_mobile,user_email,create_datetime) 
+			VALUES(#{companyId},#{userAlias},#{userName},#{userType},#{userHeaderImg},#{userPwd},#{userMobile},#{userEmail},NOW())
+		]]>
+	</insert>
+	<!-- 通过用户ID查找用户 -->
+	 <select id="UserName" parameterType="java.lang.Long" resultType="String">
+		<![CDATA[
+			SELECT user_name FROM user WHERE user_id = #{userId}
+		]]>
+	</select>
+	<!-- 判断用户名是否已存在 -->
+	 <select id="compareUserName" parameterType="java.lang.String" resultType="String">
+		<![CDATA[
+			SELECT user_name FROM user WHERE user_name = #{userName}
+		]]>
+	</select>
+		<!--判断邮箱是否已存在-->
+	<select id="compareUserEmail" parameterType="java.lang.String" resultType="String">
+		<![CDATA[
+			SELECT user_email FROM user WHERE user_name = #{userEmail} AND is_activation = 0
+		]]>
+	</select>
+	<!-- 通过用户名查询用户对象 -->
+	 <select id="user" parameterType="java.lang.String" resultMap="selectUserMap">
+		<![CDATA[
+			SELECT * FROM user WHERE user_name = #{userName}
+		]]>
+	</select>
+	<!-- 注册成功后修改激活状态 -->
+	<update id="updateUser" parameterType="com.shdatabank.puruan.model.User">
+			UPDATE user SET is_activation = 0
+            WHERE user_name = #{userName}
+	</update>
+	   <!-- 保存验证信息 -->
+    <insert id="insertEmailAuth" parameterType="com.shdatabank.puruan.model.EmailAuth">
+            INSERT INTO email_enroll(user_id,auth_code,create_datetime) VALUES(
+            #{userId},
+            #{authCode},
+            #{createTime})
+    </insert>
+    
+    <!-- 验证信息 -->
+    <select id="selectEmailAuth" parameterType="com.shdatabank.puruan.model.EmailAuth" resultMap="selectEmailAuthMap">
+        <![CDATA[
+            SELECT auth_id,user_id,auth_code,create_datetime FROM email_enroll WHERE 
+            user_id = #{userId} AND auth_code = #{authCode} AND #{createTime} - create_datetime < 24 * 60 * 60
+        ]]>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.EmailAuth" id="selectEmailAuthMap">
+        <id property="authId" column="auth_id" />
+        <result property="userId" column="user_id" />
+        <result property="authCode" column="auth_code" />
+        <result property="createTime" column="create_datetime" />
+    </resultMap>
+    
+    <!-- 删除信息 -->
+    <delete id="deleteEmailAuth" parameterType="com.shdatabank.puruan.model.EmailAuth">
+        <![CDATA[
+            DELETE FROM email_enroll WHERE auth_id = #{authId}
+        ]]>
+    </delete>
+</mapper>

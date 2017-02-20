@@ -1,0 +1,57 @@
+
+<!--路径-->
+<div class="nav borderNone">
+	<span>首页</span><span><img src="../../images/front/rightAngleBrackets.png"
+		alt=""></span> <span>角色管理</span>
+</div>
+<div class="characterSearch">
+	<div>快速查询</div>
+	<div>
+		角色名称： <input id="roleName" type="text">
+	</div>
+	<div>
+		<button class="query" id="query">查询</button>
+	</div>
+</div>
+<div class="characterOperation">
+	<div class="addNewRoleLeft">
+		<span><img src="../../images/background/add.png" alt=""></span><span class="addNewRoleWord">新增角色</span>
+	</div>
+	<div class="addNewRoleRight">
+		<span>全选</span>
+	</div>
+</div>
+<!--内容详情-->
+<div class="contentInfo chcHeight">
+	<div class="tableData">
+		<table class="sui-table table-nobordered" id="tableData">
+			<thead>
+				<tr>
+					<th>角色名称</th>
+					<th>资源目录</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- <tr>
+					<td><input type="checkbox">审核人员</td>
+					<td>需求审核，资源审核</td>
+					<td><button>修改</button>
+						<button>删除</button></td>
+				</tr> -->
+			</tbody>
+		</table>
+	</div>
+	<div id="paginator" style="margin: auto;"></div>
+</div>
+		<script id="character_manage_template" type="text/x-jquery-tmpl"> 
+							<tr>
+                                <td><input type="checkbox">${roleName}</td>
+                                <td>${resName}</td>
+                                <td data-id="${roleId}">
+								<button class="edit">修改</button>
+								<button class="del">删除</button>
+								</td>
+                            </tr>
+		</script>
+		<script type="text/javascript" src="../../js/background/characterManage.js"></script>

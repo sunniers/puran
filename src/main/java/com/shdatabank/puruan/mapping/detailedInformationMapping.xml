@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IDetailedInformationDao">
+    <!-- 查询用户的信息 -->
+    <select id="selectUserInformation" parameterType="com.shdatabank.puruan.model.UserInformation" resultMap="selectUserInformationMap">
+        <![CDATA[
+            SELECT 
+            u.user_id,
+            u.company_id,
+            u.user_alias,
+            u.user_name,
+            u.user_type,
+            u.user_header_img,
+            u.user_pwd,
+            u.user_mobile,
+            u.user_email,
+            tee.experience_id edu_experience_id,
+            tee.user_id edu_user_id,
+            tee.talent_degree,
+            tee.talent_profession,
+            tee.talent_school,
+            tee.finish_date,
+            tee.memo,
+            tee.is_open,
+            twe.experience_id work_experience_id,
+            twe.user_id work_user_id,
+            twe.start_date,twe.end_date,
+            twe.work_company,
+            twe.work_description,
+            twe.work_job,
+            twe.is_open,
+            uct.creative_talent_id,
+            uct.talent_name,
+            uct.work_mode,
+            uct.work_time,
+            uct.now_address,
+            uct.hope_salary,
+            uct.talent_description,
+            uct.talent_work_experience,
+            uct.publish_datetime,
+            uct.is_open,
+            uct.active 
+            FROM user u 
+            LEFT JOIN talent_edu_experience tee 
+            ON u.user_id = tee.user_id AND tee.is_open = 0 
+            LEFT JOIN talent_work_experience twe 
+            ON u.user_id = twe.user_id AND tee.is_open = 0 
+            LEFT JOIN user_creative_talent uct 
+            ON u.user_id = uct.user_id AND uct.is_open = 0 
+            WHERE u.user_id = #{userId} 
+            AND u.active = 0 
+            AND u.is_activation = 0 
+        ]]>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.UserInformation" id="selectUserInformationMap">
+        <id property="userId" column="user_id" />
+        <association property="user" javaType="com.shdatabank.puruan.model.User">
+            <id property="userId" column="user_id" />
+            <result property="companyId" column="company_id" />
+            <result property="userAlias" column="user_alias" />
+            <result property="userName" column="user_name" />
+            <result property="userType" column="user_type" />
+            <result property="userHeaderImg" column="user_header_img" />
+            <result property="userPwd" column="user_pwd" />
+            <result property="userMobile" column="user_mobile" />
+            <result property="userEmail" column="user_email" />
+        </association>
+        <association property="talentEduExperience" javaType="com.shdatabank.puruan.model.TalentEduExperience">
+            <id property="experienceId" column="edu_experience_id" />
+            <result property="userId" column="edu_user_id" />
+            <result property="talentDegree" column="talent_degree" />
+            <result property="talentProfession" column="talent_profession" />
+            <result property="talentSchool" column="talent_school" />
+            <result property="finishDate" column="finish_date" />
+            <result property="memo" column="memo" />
+            <result property="isOpen" column="is_open" />
+        </association>
+        <association property="userCreativeTalent" javaType="com.shdatabank.puruan.model.UserCreativeTalent">
+            <id property="creativeTalentId" column="creative_talent_id" />
+            <result property="talentName" column="talent_name" />
+            <result property="workMode" column="work_mode" />
+            <result property="workTime" column="work_time" />
+            <result property="nowAddress" column="now_address" />
+            <result property="hopeSalary" column="hope_salary" />
+            <result property="talentDescription" column="talent_description" />
+            <result property="talentWorkExperience" column="talent_work_experience" />
+            <result property="publishDatetime" column="publish_datetime" />
+            <result property="isOpen" column="is_open" />
+            <result property="active" column="active" />
+        </association>
+        <collection property="talentWorkExperiences" ofType="com.shdatabank.puruan.model.TalentWorkExperience">
+            <id property="experienceId" column="work_experience_id" />
+            <result property="userId" column="work_user_id" />
+            <result property="startDate" column="start_date" />
+            <result property="endDate" column="end_date" />
+            <result property="workCompany" column="work_company" />
+            <result property="workDescription" column="work_description" />
+            <result property="workJob" column="work_job" />
+            <result property="isOpen" column="is_open" />
+        </collection>
+    </resultMap>
+    
+    <!-- 查看创意需求信息和进度 -->
+    <select id="selectProjectRequirementDetails" resultMap="selectProjectRequirementDetailsMap"
+        parameterType="com.shdatabank.puruan.model.ProjectRequirementDetails">
+        SELECT
+        pr.proj_id,
+        pr.proj_enroll_status status_name,
+        pr.proj_name,
+        prd.proj_require_description_content,
+        u.user_alias,
+        u.company_id,
+        u.user_mobile,
+        u.is_authentication,
+        (SELECT IFNULL(c.company_name,IFNULL(u.user_name,'匿名')) 
+        FROM user u JOIN company c ON u.company_id = c.company_id 
+        WHERE pr.publish_user_id = u.user_id AND u.user_type = 'company') company_name,
+        (SELECT COUNT(*) FROM project_enroll pe WHERE pe.project_requirement_id = pr.proj_id) enroll_count,
+        (SELECT ra.audit_datetime FROM requirement_audit ra 
+        WHERE ra.proj_requirement_id = pr.proj_id AND ra.requirement_type = 700001
+        ORDER BY ra.audit_datetime LIMIT 1) audit_datetime,
+        pr.proj_service_fee,
+        pr.is_fee_trusteeship,
+        pr.proj_attach_file,
+        pr.proj_close_date,
+        FROM_UNIXTIME((UNIX_TIMESTAMP(pr.proj_close_date) + pr.proj_estimate * 24 * 60 * 60),'%Y-%m-%d') finish_date,
+        pru.undertake_datetime,
+        (
+        SELECT COUNT(*) FROM user_house uh
+        WHERE uh.user_id = #{userId}
+        AND uh.house_type = 700001 
+        AND uh.house_resource_id = #{projId}
+        AND uh.active = 0
+        ) is_house,
+        (
+        SELECT COUNT(*) FROM project_enroll pe
+        WHERE pe.project_requirement_id = #{projId}
+        AND pe.user_id = #{userId}
+        ) is_enroll,
+        IF(pr.publish_user_id = 1,1,0) is_my,
+        (SELECT IFNULL(u.user_alias,'匿名') FROM user u WHERE u.user_id = pe.user_id) evaluate_name,
+        pe.evaluate_id,
+        pe.proj_id project_id,
+        pe.user_id,
+        pe.evaluate_value,
+        pe.evaluate_time
+        FROM project_requirement pr 
+        LEFT JOIN project_requirement_description prd ON pr.proj_id = prd.proj_require_id
+        LEFT JOIN user u ON pr.publish_user_id = u.user_id
+        LEFT JOIN project_evaluate pe ON pe.proj_id = pr.proj_id
+        LEFT JOIN project_requirement_undertake pru ON pru.project_requirement_id = pr.proj_id AND pru.undertake_status = 400902
+        WHERE pr.proj_id = #{projId}
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirementDetails" id="selectProjectRequirementDetailsMap">
+        <id property="projId" column="proj_id" />
+        <result property="statusName" column="status_name" />
+        <result property="projName" column="proj_name" />
+        <result property="projRequireDescriptionContent" column="proj_require_description_content" />
+        <result property="userAlias" column="user_alias" />
+        <result property="companyId" column="company_id" />
+        <result property="userMobile" column="user_mobile" />
+        <result property="isAuthentication" column="is_authentication" />
+        <result property="companyName" column="company_name" />
+        <result property="enrollCount" column="enroll_count" />
+        <result property="auditDatetime" column="audit_datetime" />
+        <result property="projServiceFee" column="proj_service_fee" />
+        <result property="isFeeTrusteeship" column="is_fee_trusteeship" />
+        <result property="projAttachFile" column="proj_attach_file" />
+        <result property="projColseDate" column="proj_close_date" />
+        <result property="finishDate" column="finish_date" />
+        <result property="undertakeDatetime" column="undertake_datetime" />
+        <result property="isHouse" column="is_house" />
+        <result property="isEnroll" column="is_enroll" />
+        <result property="isMy" column="is_my" />
+        <collection property="projectEvaluates" ofType="com.shdatabank.puruan.model.ProjectEvaluate">
+            <id property="evaluateId" column="evaluate_id" />
+            <result property="projId" column="project_id" />
+            <result property="userId" column="user_id" />
+            <result property="userAlias" column="evaluate_name" />
+            <result property="evaluateValue" column="evaluate_value" />
+            <result property="evaluateTime" column="evaluate_time" />
+        </collection>
+    </resultMap>
+    
+    <!-- 人才需求详细信息 -->
+    <select id="selectTalentRequirement" parameterType="com.shdatabank.puruan.model.TalentRequirement" resultMap="selectTalentRequirementMap">
+        SELECT
+        tr.talent_requirement_id,
+        tr.talent_requirement_name,
+        (
+        SELECT COUNT(*) 
+        FROM talent_enroll te 
+        WHERE te.talent_requirement_id = tr.talent_requirement_id
+        ) talent_count,
+        tr.talent_buget,
+        tr.create_time,
+        tr.work_mode,
+        tr.work_space,
+        tr.professional_skills,
+        tr.requirement_description,
+        tr.work_duty,
+        tr.talent_require,
+        tr.talent_attachment,
+        (
+        SELECT IFNULL(c.company_name,IFNULL(u.user_alias,'匿名'))
+        FROM user u 
+        LEFT JOIN company c
+        ON u.company_id = c.company_id
+        WHERE u.user_id = tr.user_id
+        ) user_name,
+        (
+        SELECT COUNT(*)
+        FROM user_house uh
+        WHERE uh.house_type = '700002'
+        AND uh.house_resource_id = tr.talent_requirement_id
+        ) house_count,
+        u.is_authentication,
+        u.user_mobile,
+        u.user_email,
+        GROUP_CONCAT(
+        (
+        SELECT 
+        dd.data_value
+        FROM dictionarydata dd
+        WHERE dd.data_id = pt.technology_type
+        )) technology_requirement,
+        (
+        SELECT COUNT(*) FROM user_house uh
+        WHERE uh.user_id = #{userId}
+        AND uh.house_type = 700002 
+        AND uh.house_resource_id = #{talentRequirementId}
+        AND uh.active = 0
+        ) is_house,
+        (
+        SELECT COUNT(*) FROM talent_enroll te
+        WHERE te.talent_requirement_id = #{talentRequirementId}
+        AND te.user_id = #{userId}
+        ) is_enroll
+        FROM talent_requirement tr
+        JOIN user u 
+        ON u.user_id = tr.user_id
+        LEFT JOIN publish_technology pt
+        ON pt.publish_id = tr.talent_requirement_id
+        WHERE tr.talent_requirement_id = #{talentRequirementId}
+        GROUP BY tr.talent_requirement_id
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.TalentRequirement" id="selectTalentRequirementMap">
+        <id property="talentRequirementId" column="talent_requirement_id" />
+        <result property="talentRequirementName" column="talent_requirement_name" />
+        <result property="talentCount" column="talent_count" />
+        <result property="talentBuget" column="talent_buget" />
+        <result property="createTime" column="create_time" />
+        <result property="workMode" column="work_mode" />
+        <result property="workSpace" column="work_space" />
+        <result property="professionalSkills" column="professional_skills" />
+        <result property="requirementDescription" column="requirement_description" />
+        <result property="workDuty" column="work_duty" />
+        <result property="talentRequire" column="talent_require" />
+        <result property="talentAttachment" column="talent_attachment" />
+        <result property="userName" column="user_name" />
+        <result property="houseCount" column="house_count" />
+        <result property="isAuthentication" column="is_authentication" />
+        <result property="userMobile" column="user_mobile" />
+        <result property="userEmail" column="user_email" />
+        <result property="technologyRequirement" column="technology_requirement" />
+        <result property="isHouse" column="is_house" />
+        <result property="isEnroll" column="is_enroll" />
+    </resultMap>
+    
+    <!-- 查询需要修改的创意需求的信息 -->
+    <select id="selectModifyProjectRequirement" resultMap="selectModifyProjectRequirementMap"
+        parameterType="com.shdatabank.puruan.model.ProjectRequirement">
+        SELECT
+        pr.proj_name,
+        prc.*,
+        pr.proj_service_fee,
+        pr.proj_close_date,
+        pr.proj_devlier_date,
+        pr.proj_estimate,
+        prd.proj_require_description_content,
+        pr.provider_type,
+        pr.authentication_requirement,
+        pr.publish_way,
+        pr.proj_attach_file
+        FROM project_requirement pr
+        LEFT JOIN project_requirement_class prc
+        ON prc.proj_require_id = pr.proj_id
+        LEFT JOIN project_requirement_description prd
+        ON prd.proj_require_id = pr.proj_id
+        WHERE pr.proj_id = #{projId}
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirement" id="selectModifyProjectRequirementMap">
+        <id property="projId" column="proj_id" />
+        <result property="projName" column="proj_name" />
+        <result property="parentProjId" column="p_proj_id" />
+        <result property="parentProjName" column="p_proj_name" />
+        <result property="projServiceFee" column="proj_service_fee" />
+        <result property="projCloseDate" column="proj_close_date" />
+        <result property="projDevlierDate" column="proj_devlier_date" />
+        <result property="projEstimate" column="proj_estimate" />
+        <result property="providerType" column="provider_type" />
+        <result property="authenticationRequirement" column="authentication_requirement" />
+        <result property="publishWay" column="publish_way" />
+        <result property="projAttachFile" column="proj_attach_file" />
+        <collection property="projectRequirementClass" ofType="com.shdatabank.puruan.model.ProjectRequirementClass">
+            <id property="projRequirementClassId" column="proj_requirement_class_id" />
+            <result property="projRequireId" column="proj_require_id" />
+            <result property="projRequireClassType" column="proj_require_class_value" />
+        </collection>
+    </resultMap>
+    
+    <!-- 查创意需求的详细信息 -->
+    <select id="selectProjectRequirement" resultMap="selectProjectRequirementMap"
+        parameterType="com.shdatabank.puruan.model.ProjectRequirement">
+        SELECT 
+        pr.proj_id,
+        pr.proj_name,
+        GROUP_CONCAT(prc.proj_require_class_value) requirement_type,
+        pr.proj_service_fee,
+        pr.proj_close_date,
+        pr.proj_devlier_date,
+        pr.proj_estimate,
+        prd.proj_require_description_content,
+        pr.provider_type,
+        pr.authentication_requirement,
+        pr.publish_way,
+        (SELECT IFNULL(u.user_alias,'匿名') FROM user u WHERE u.user_id = pr.manager_user_id) manager_user,
+        pr2.proj_id subpackage_proj_id,
+        pr2.proj_close_date subpackage_proj_close_date,
+        (SELECT dd.data_value FROM dictionarydata dd WHERE dd.data_id = pr2.proj_enroll_status) subpackage_status 
+        FROM project_requirement pr
+        LEFT JOIN project_requirement_class prc 
+        ON prc.proj_require_id = pr.proj_id
+        LEFT JOIN project_requirement_description prd
+        ON prd.proj_require_id = pr.proj_id
+        LEFT JOIN project_requirement pr2 
+        ON pr2.parent_proj_id = pr.proj_id
+        WHERE pr.proj_id = #{projId}
+        GROUP BY pr.proj_id,pr2.proj_id
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirement" id="selectProjectRequirementMap">
+        <id property="projId" column="proj_id" />
+        <result property="projName" column="proj_name" />
+        <result property="requirementType" column="requirement_type" />
+        <result property="projServiceFee" column="proj_service_fee" />
+        <result property="projCloseDate" column="proj_close_date" />
+        <result property="projDevlierDate" column="proj_devlier_date" />
+        <result property="projEstimate" column="proj_estimate" />
+        <result property="projRequireDescriptionContent" column="proj_require_description_content" />
+        <result property="providerType" column="provider_type" />
+        <result property="authenticationRequirement" column="authentication_requirement" />
+        <result property="publishWay" column="publish_way" />
+        <result property="managerUser" column="manager_user" />
+        <collection property="projectRequirements" ofType="com.shdatabank.puruan.model.ProjectRequirement">
+            <id property="projId" column="subpackage_proj_id" />
+            <result property="projCloseDate" column="subpackage_proj_close_date" />
+            <result property="projEnrollStatusValue" column="subpackage_status" />
+        </collection>
+    </resultMap>
+           <!-- 创意人才Map -->
+     <resultMap type="com.shdatabank.puruan.model.UserCreativeTalent" id="selectUserCreativeTalentMap">
+        <id property="creativeTalentId" column="creative_talent_id" />
+        <result property="userId" column="user_id" />
+        <result property="talentName" column="talent_name" />
+        <result property="talentDescription" column="talent_description" />
+        <result property="nowAddress" column="now_address" />
+        <result property="publishDatetime" column="publish_datetime" />
+        <result property="hopeSalary" column="hope_salary" />
+        <result property="technologys" column="technologys" />
+        <result property="evaluate" column="evaluate" />
+        <result property="undertakeTimes" column="undertakeTimes" />
+        <result property="houseTimes" column="houseTimes" />
+        <result property="isHouse" column="is_house" />
+        <result property="userName" column="user_name" />
+        <association property="user" javaType="com.shdatabank.puruan.model.User">
+            <id property="userId" column="user_id" />
+            <result property="userAlias" column="user_alias" />
+            <result property="userMobile" column="user_mobile" />
+            <result property="userEmail" column="user_email" />
+            <result property="userHeaderImg" column="user_header_img" />
+            <result property="isAuthentication" column="is_authentication" />
+            <result property="companyName" column="company_name" />
+        </association>
+    </resultMap>
+    
+    <!-- 查看创意人才的详情 -->
+    <select id="selectUserCreativeTalent" resultMap="selectUserCreativeTalentMap">
+        SELECT 
+            uct.creative_talent_id,
+           (SELECT IFNULL(u.user_alias,'匿名') FROM user u WHERE u.user_id = uct.user_id) user_name,
+            (
+            SELECT COUNT(*) from project_requirement_undertake pru
+            ) undertakeTimes,
+             (
+            SELECT COUNT(*)
+            FROM user_house uh
+            WHERE uh.house_type = '700004'
+            AND uh.house_resource_id = uct.creative_talent_id
+            ) houseTimes,
+            (
+            SELECT COUNT(*) FROM user_house uh
+            WHERE uh.user_id = #{userId}
+            AND uh.house_type = '700004' 
+            AND uh.house_resource_id = #{creativeTalentId}
+            AND uh.active = 0
+            ) is_house,
+            uct.talent_name,
+            uct.now_address,
+            uct.work_mode,
+            uct.work_time,
+            uct.hope_salary,
+            uct.publish_datetime,
+            uct.talent_description,
+            uct.talent_work_experience
+            from user_creative_talent uct,user u  
+            where uct.user_id = u.user_id  and uct.creative_talent_id = #{creativeTalentId}
+    </select>
+    <!-- 项目用户关系 -->
+      <resultMap type="com.shdatabank.puruan.model.ProjectUserReleation" id="selectTeamMemberMap">
+        <id property="releationId" column="releation_id" />
+        <result property="projectRequirementId" column="project_requirement_id" />
+        <result property="userId" column="user_id" />
+        <result property="userName" column="user_name" />
+        <result property="joinDate" column="join_date" />
+        <result property="leaveDatetime" column="leave_datetime" />
+        <result property="projectDuty" column="project_duty" />
+        <result property="releationStatus" column="releation_status" />
+        <result property="remark" column="remark" />
+        <result property="projectName" column="project_name" />
+    </resultMap>
+    <!-- 查询项目名 -->
+    <select id="selectProjectUserReleation" resultMap="selectTeamMemberMap">
+    SELECT p.project_name from project_user_releation pur,project p where  pur.user_id = #{userId} and pur.project_requirement_id = p.project_id and pur.releation_id = #{releationId} and pur.active = 0
+    </select>
+    <!-- 插入招募 -->
+    <insert id="insertProjectUserReleation" parameterType="com.shdatabank.puruan.model.ProjectUserReleation" >
+        INSERT INTO project_user_releation 
+                (
+                project_requirement_id,
+                user_id,
+                project_duty,
+                remark,
+                create_datetime,
+                releation_status
+                )
+            VALUES
+                (
+                #{projectRequirementId},
+                #{userId},
+                #{projectDuty},
+                #{remark},
+                NOW(),
+                400804
+                )
+    </insert>
+    
+    <!-- 查询创意人才的详细信息 -->
+    <select id="selectGetTalents" resultMap="selectGetTalentsMap"
+        parameterType="com.shdatabank.puruan.model.GetTalents">
+        SELECT
+        uct.creative_talent_id,
+        uct.talent_name,
+        uct.work_mode,
+        u.user_id,
+        IFNULL(u.user_alias,u.user_name) user_alias,
+        u.is_authentication,
+        u.user_mobile,
+        u.user_email,
+        (
+        SELECT ROUND(AVG(cte.evaluate_star),1) 
+        FROM creative_talent_evaluate cte
+        WHERE cte.user_id = u.user_id
+        ) stars,
+        (
+        SELECT COUNT(*) FROM project_requirement pr
+        WHERE uct.user_id = pr.manager_user_id
+        ) user_count,
+        (
+        SELECT COUNT(*) FROM user_house uh
+        WHERE uh.house_resource_id = uct.creative_talent_id
+        AND uh.house_type = 700004
+        ) house_count,
+        uct.work_time,
+        uct.now_address,
+        uct.talent_description,
+        uct.talent_work_experience,
+        uct.hope_salary,
+        IF((
+        SELECT
+        COUNT(*)
+        FROM user_house uh
+        WHERE uh.house_resource_id = uct.creative_talent_id
+        AND uh.house_type = 700004
+        AND uh.user_id = #{userId}
+        AND uh.active = 0
+        )=0,0,1) is_house,
+        IF((
+        SELECT
+        COUNT(*)
+        FROM my_community mc
+        WHERE 
+        (
+        (mc.user_id = #{userId} AND mc.community_user_id = u.user_id)
+        OR
+        (mc.user_id = u.user_id AND mc.community_user_id = #{userId})
+        ) 
+        AND active = 0
+        )=0,0,1) is_community,
+        IF(((
+        SELECT
+        COUNT(DISTINCT pr.proj_id)
+        FROM project_requirement pr
+        JOIN project p
+        ON pr.proj_id = p.project_requirement_id
+        JOIN project_user_releation pur
+        ON pur.project_requirement_id = p.project_id
+        WHERE pr.manager_user_id = #{userId}
+        ) - (
+        SELECT
+        COUNT(DISTINCT pr.proj_id)
+        FROM project_requirement pr
+        JOIN project p
+        ON pr.proj_id = p.project_requirement_id
+        JOIN project_user_releation pur
+        ON pur.project_requirement_id = p.project_id
+        WHERE pr.manager_user_id = #{userId}
+        AND pur.user_id = u.user_id
+        AND pur.releation_status IN (400801,400803,400805)
+        ))=0,1,0) is_get
+        FROM user_creative_talent uct
+        JOIN user u
+        ON u.user_id = uct.user_id
+        WHERE uct.creative_talent_id = #{creativeTalentId}
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.GetTalents" id="selectGetTalentsMap">
+        <id property="creativeTalentId" column="creative_talent_id" />
+        <result property="talentName" column="talent_name" />
+        <result property="workMode" column="work_mode" />
+        <result property="userId" column="user_id" />
+        <result property="userAlias" column="user_alias" />
+        <result property="isAuthentication" column="is_authentication" />
+        <result property="userMobile" column="user_mobile" />
+        <result property="userEmail" column="user_email" />
+        <result property="stars" column="stars" />
+        <result property="userCount" column="user_count" />
+        <result property="houseCount" column="house_count" />
+        <result property="workTime" column="work_time" />
+        <result property="nowAddress" column="now_address" />
+        <result property="talentDescription" column="talent_description" />
+        <result property="talentWorkExperienct" column="talent_work_experience" />
+        <result property="hopeSalary" column="hope_salary" />
+        <result property="isHouse" column="is_house" />
+        <result property="isCommunity" column="is_community" />
+        <result property="isGet" column="is_get" />
+    </resultMap>
+    
+    <!-- 后台用户查询创意资源详细信息 -->
+    <select id="selectProjectRequirementDetails2" resultMap="selectProjectRequirementDetails2Map"
+        parameterType="com.shdatabank.puruan.model.ProjectRequirementDetails">
+        SELECT
+        pr.proj_id,
+        pr.proj_enroll_status status_name,
+        pr.proj_name,
+        prd.proj_require_description_content,
+        u.user_alias,
+        u.company_id,
+        u.user_mobile,
+        u.is_authentication,
+        (SELECT IFNULL(c.company_name,IFNULL(u.user_name,'匿名')) 
+        FROM user u JOIN company c ON u.company_id = c.company_id 
+        WHERE pr.publish_user_id = u.user_id AND u.user_type = 'company') company_name,
+        (SELECT COUNT(*) FROM project_enroll pe WHERE pe.project_requirement_id = pr.proj_id) enroll_count,
+        (SELECT ra.audit_datetime FROM requirement_audit ra 
+        WHERE ra.proj_requirement_id = pr.proj_id AND ra.requirement_type = 700001
+        ORDER BY ra.audit_datetime LIMIT 1) audit_datetime,
+        pr.proj_service_fee,
+        pr.is_fee_trusteeship,
+        pr.proj_attach_file,
+        pr.proj_close_date,
+        FROM_UNIXTIME((UNIX_TIMESTAMP(pr.proj_close_date) + pr.proj_estimate * 24 * 60 * 60),'%Y-%m-%d') finish_date,
+        pru.undertake_datetime,
+        (SELECT IFNULL(u.user_alias,'匿名') FROM user u WHERE u.user_id = pe.user_id) evaluate_name,
+        pe.evaluate_id,
+        pe.proj_id project_id,
+        pe.user_id,
+        pe.evaluate_value,
+        pe.evaluate_time
+        FROM project_requirement pr 
+        LEFT JOIN project_requirement_description prd ON pr.proj_id = prd.proj_require_id
+        LEFT JOIN user u ON pr.publish_user_id = u.user_id
+        LEFT JOIN project_evaluate pe ON pe.proj_id = pr.proj_id
+        LEFT JOIN project_requirement_undertake pru ON pru.project_requirement_id = pr.proj_id AND pru.undertake_status = 400902
+        WHERE pr.proj_id = #{projId}
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirementDetails" id="selectProjectRequirementDetails2Map">
+        <id property="projId" column="proj_id" />
+        <result property="statusName" column="status_name" />
+        <result property="projName" column="proj_name" />
+        <result property="projRequireDescriptionContent" column="proj_require_description_content" />
+        <result property="userAlias" column="user_alias" />
+        <result property="companyId" column="company_id" />
+        <result property="userMobile" column="user_mobile" />
+        <result property="isAuthentication" column="is_authentication" />
+        <result property="companyName" column="company_name" />
+        <result property="enrollCount" column="enroll_count" />
+        <result property="auditDatetime" column="audit_datetime" />
+        <result property="projServiceFee" column="proj_service_fee" />
+        <result property="isFeeTrusteeship" column="is_fee_trusteeship" />
+        <result property="projAttachFile" column="proj_attach_file" />
+        <result property="projColseDate" column="proj_close_date" />
+        <result property="finishDate" column="finish_date" />
+        <result property="undertakeDatetime" column="undertake_datetime" />
+        <collection property="projectEvaluates" ofType="com.shdatabank.puruan.model.ProjectEvaluate">
+            <id property="evaluateId" column="evaluate_id" />
+            <result property="projId" column="project_id" />
+            <result property="userId" column="user_id" />
+            <result property="userAlias" column="evaluate_name" />
+            <result property="evaluateValue" column="evaluate_value" />
+            <result property="evaluateTime" column="evaluate_time" />
+        </collection>
+    </resultMap>
+    
+        <!-- 人才需求详细信息 -->
+    <select id="selectTalentRequirement2" parameterType="com.shdatabank.puruan.model.TalentRequirement" resultMap="selectTalentRequirement2Map">
+        SELECT
+        tr.talent_requirement_id,
+        tr.talent_requirement_name,
+        (
+        SELECT COUNT(*) 
+        FROM talent_enroll te 
+        WHERE te.talent_requirement_id = tr.talent_requirement_id
+        ) talent_count,
+        tr.talent_buget,
+        tr.create_time,
+        tr.work_mode,
+        tr.work_space,
+        tr.professional_skills,
+        tr.requirement_description,
+        tr.work_duty,
+        tr.talent_require,
+        tr.talent_attachment,
+        (
+        SELECT IFNULL(c.company_name,IFNULL(u.user_alias,'匿名'))
+        FROM user u 
+        LEFT JOIN company c
+        ON u.company_id = c.company_id
+        WHERE u.user_id = tr.user_id
+        ) user_name,
+        (
+        SELECT COUNT(*)
+        FROM user_house uh
+        WHERE uh.house_type = '700002'
+        AND uh.house_resource_id = tr.talent_requirement_id
+        ) house_count,
+        u.is_authentication,
+        u.user_mobile,
+        u.user_email,
+        GROUP_CONCAT(
+        (
+        SELECT 
+        dd.data_value
+        FROM dictionarydata dd
+        WHERE dd.data_id = pt.technology_type
+        )) technology_requirement
+        FROM talent_requirement tr
+        JOIN user u 
+        ON u.user_id = tr.user_id
+        LEFT JOIN publish_technology pt
+        ON pt.publish_id = tr.talent_requirement_id
+        WHERE tr.talent_requirement_id = #{talentRequirementId}
+        GROUP BY tr.talent_requirement_id
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.TalentRequirement" id="selectTalentRequirement2Map">
+        <id property="talentRequirementId" column="talent_requirement_id" />
+        <result property="talentRequirementName" column="talent_requirement_name" />
+        <result property="talentCount" column="talent_count" />
+        <result property="talentBuget" column="talent_buget" />
+        <result property="createTime" column="create_time" />
+        <result property="workMode" column="work_mode" />
+        <result property="workSpace" column="work_space" />
+        <result property="professionalSkills" column="professional_skills" />
+        <result property="requirementDescription" column="requirement_description" />
+        <result property="workDuty" column="work_duty" />
+        <result property="talentRequire" column="talent_require" />
+        <result property="talentAttachment" column="talent_attachment" />
+        <result property="userName" column="user_name" />
+        <result property="houseCount" column="house_count" />
+        <result property="isAuthentication" column="is_authentication" />
+        <result property="userMobile" column="user_mobile" />
+        <result property="userEmail" column="user_email" />
+        <result property="technologyRequirement" column="technology_requirement" />
+    </resultMap>
+</mapper>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="pragma" content="no-cache"  />
+   <meta http-equiv="content-type" content="no-cache, must-revalidate" />
+   <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT"/>
+    <title>软件创意设计共性技术服务平台</title>
+    <link rel="stylesheet" href="resources/styles/base/sui-all.min.css">
+    <link rel="stylesheet" href="resources/styles/base/smartpaginator.css">
+    <link rel="stylesheet" href="resources/styles/common.front.css"> 
+<body>
+    <!-- 非登录头部导航    -->
+     <div class="topPrompt unlogin">
+        <div class="helloManager">
+            <span id="login">欢迎登录</span>
+            <span id="register">注册</span><i>|</i>
+            <span class="complaintsReport">投诉举报</span><i>|</i>
+            <span class="helpCenter">帮助中心</span><i>|</i>
+            <span><img src="resources/images/front/wechat.png" alt="">微信公众号</span>
+        </div>
+    </div>
+	<!-- 登录头部导航 -->
+	<div class="topPrompt logined" style="display: none;">
+        <div class="helloManager">
+            <span id="userName"></span>
+            <span id="logout">退出</span><i>|</i>
+            <span class="sui-dropdown">
+            	<span class="dropdown-inner">
+            	<a style="color:#333333" role="button" data-toggle="dropdown" href="javascript:void(0);" class="dropdown-toggle">个人中心 <i class="caret"></i></a>
+                      <ul role="menu" aria-labelledby="drop1" class="sui-dropdown-menu">
+                        <li id="myAccount" role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);">我的帐号</a></li>
+                        <li id="myCircle" role="presentation" class="menuitem "><a role="menuitem" tabindex="-1" href="javascript:void(0);">我的圈子</a></li>
+                        <li id="myDeal" role="presentation" class="menuitem"><a role="menuitem" tabindex="-1" href="javascript:void(0);">我的成交</a></li>
+                        <li id="myCollection" role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);">我的收藏</a></li>
+                        <li id="shoppingCart" role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);">我的购物车</a></li>
+                      </ul>
+                 </span>
+            </span>
+            <i>|</i>
+            <span class="messageIcon"><img src="resources/images/front/email.png" alt="">消息</span>
+			<i>|</i>
+            <span class="complaintsReport">投诉举报</span>
+            <i>|</i>
+            <span class="helpCenter">帮助中心</span>
+            <i>|</i>
+            <span><img src="resources/images/front/wechat.png" alt="">微信公众号</span>
+        </div>
+    </div>
+
+
+    <!--logo区域-->
+    <div class="logoField">
+        <div class="logoMediate">
+            <img src="resources/images/front/logo.jpg" alt="浦软">
+            <div class="search">
+                <div class="searchType">
+                    <span class="active">全部</span>
+                    <span>需求</span>
+                    <span>人才</span>
+                    <span>资源</span>
+                </div>
+                <div class="searchInput">
+                    <input type="text"><button><img src="resources/images/front/search.png" alt=""></button>
+                </div>
+            </div>
+            <img class="codeImg" src="resources/images/front/QRcode.JPG" alt="浦软">
+        </div>
+        <div class="menuNav">
+            <div class="navMiddle">
+                <div class="home">
+                    <img src="resources/images/front/index.png" alt="">
+                    <span class="goIndex">首页</span>
+                </div>
+                <div class="demandHall">
+                    <span>需求大厅</span>
+                </div>
+                <div class="creativeTalent">
+                    <span>创意人才</span>
+                </div>
+                <div class="creativeResources">
+                    <span>创意资源</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!--容器-->
+    <div class="container">
+
+        <!--主体内容-->
+        <div class="content">
+
+            <!--左侧菜单区域-->
+            <div class="leftMenuField" id="leftMenu">
+            
+            </div>
+
+            <!--右侧内容区域-->
+            <div class="rightContentField">
+                
+                <!-- <div  class="nav">
+                    <span>首页</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                </div> -->
+
+                <!--内容详情-->
+                <div class="contentInfo">
+                    <div class="demandRecommend">
+                        <div class="title">
+                            <span></span>
+                            <span>需求推荐</span>
+                            <span class="more">更多 <img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                        </div>
+                        <div class="demandRecommendContent">
+                            <div class="left">
+                             
+                            </div>
+                            <div class="right">
+                              
+                            </div>
+                        </div>
+                        <div class="title bottomTitle">
+                            <span></span>
+                            <span>资源推荐</span>
+                            <span class="moreRes">更多 <img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                        </div>
+                        <div class="bottomContent">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--右侧固定工具栏-->
+            <div class="toFixed">
+                <div>
+                    <img src="resources/images/front/customerService.png" alt="投诉">
+                    <div class="complaintContent">
+                        <div>电话：13115551935</div>
+                        <div>邮箱：service@pdsts.com</div>
+                        <div><span>在线客服</span>9:00-18:00</div>
+                    </div>
+                </div>
+                <div>
+                    <img src="resources/images/front/wechat1.png" alt="微信">
+                    <div class="codeRight">
+                        <div>
+                            <img src="resources/images/front/QRcode.JPG" alt="">
+                        </div>
+                        <div class="codeRightContent">
+                            <div>扫一扫</div>
+                            <div>关注微信公众号</div>
+                            <div>为您推送最新咨询</div>
+                        </div>
+
+                    </div>
+                </div>
+                <div>
+                    <img src="resources/images/front/complaint.png" alt="投诉">
+                </div>
+                <div>
+                    <img src="resources/images/front/angleBracketsThinUp.png" alt="返回顶部">
+                    
+                </div>
+            </div>
+
+        </div>
+
+    </div>  
+<!-- 公共库 -->
+    <script type="text/javascript" src="resources/js/base/jquery-2.1.1.js"></script>
+	<script type="text/javascript" src="resources/js/base/sui.min.js"></script>
+	<script type="text/javascript" src="resources/js/base/smartpaginator.js"></script>
+	<script type="text/javascript" src="resources/js/base/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="resources/js/base/jquery.ui.widget.js"></script>
+	<script type="text/javascript" src="resources/js/base/jquery.fileupload.js"></script>
+	<script type="text/javascript" src="resources/js/base/common.js"></script>
+ 	<!-- js -->
+ 	
+<script id="index_menu_template" type="text/x-jquery-tmpl">
+			<div data-url="${resourceLink}"  {{if $data.sysResources.length<=0}}class="menuTitle parentDirectory" style="cursor:pointer;"{{else}}style="cursor:default;" class="menuTitle"{{/if}}>
+                   <div><img src="resources/images/front/needManage.png" alt="需求管理"></div>
+                   <div>${resourceName}</div>
+            </div>
+                <div class="menuContent">
+				{{each $data.sysResources}}
+                    <div data-url="${$data.sysResources[$index].resourceLink}" class="menuTree childDirectory">
+                        <div><img src="resources/images/front/needSubmit.png" alt="需求提交"></div>
+                        <div>${$data.sysResources[$index].resourceName}</div>
+                    </div>
+                {{/each}}
+                </div>
+</script>
+<script id="index_resdemand_template"  type="text/x-jquery-tmpl">
+						{{each $data.retObject}}
+							{{if $index<4}}
+							<div data-id="${creativeResourceId}" class="bottomCard">
+                                <div class="bottomImg">
+                                    <img src="${resourceImage}" alt="">
+                                </div>
+                                <div class="bottomTip">
+                                    <span>${resourceName}</span>
+                                </div>
+                            </div>
+							{{/if}}
+						{{/each}}
+</script>
+<script type="text/javascript" src="resources/js/front/index.js"></script>
+</body>
+</html>

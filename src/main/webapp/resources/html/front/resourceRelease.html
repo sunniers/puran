@@ -1,0 +1,287 @@
+            <!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>资源管理</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>资源发布</span>
+            </div>
+
+            <!--内容详情-->
+            <div class="contentInfo">
+                <div class="commonCss resoureRelease">
+                    <div class="header">
+                        <div class="refer active">
+                            <span>资源发布</span>
+                        </div>
+                        <div class="drafts">
+                            <span>草稿箱</span>
+                        </div>
+                    </div>
+                    <div class="contents">
+                        <div class="content1">
+                            <div class="submitPrompt">
+                                <img src="resources/images/front/warning.png">
+                                <div class="promptWord fl">带*为必填项目</div>
+                            </div>
+                            <div class="box">
+                                <div class="box1 fl">
+                                    <label>*</label>资源图片:
+                                </div>
+                                <div id="upload" class="box2 fr">
+                                <label>
+                                <input  class="upLoadImg" type="file" name="file" style="display:none;">
+                                <div class="sui-msg msg-error">
+											  	<div class="msg-con">请输上传图片</div>
+											  	<s class="msg-icon"></s>
+									</div>
+                                    <div class="up"></div>
+                                    <div class="down">
+                                        	图片上传
+                                    </div>
+                                </label>
+                                </div>
+                            </div>
+                            <div class="box">
+                                <div class="box1 fl">
+                                    <label>*</label>资源名称:
+                                </div>
+                                <div class="box2 fr">
+                                    <input  placeholder="20字以内" type="text" class="type1 resourceName">
+                                    <div class="sui-msg msg-error">
+											  	<div class="msg-con">请输入名称</div>
+											  	<s class="msg-icon"></s>
+									</div>
+                                </div>
+                            </div>
+                            <div class="box" style="    overflow: visible;">
+                                <div class="box1 fl">
+                                    <label>*</label>资源类型:
+                                </div>
+                                <div class="box2 fr" style="line-height:30px;">
+                                <button data-toggle="modal" data-target="#resReleaseModal" data-keyboard="false" class="sui-btn btn-primary btn-lg resourceType">请选择</button>
+                                    <div class="sui-msg msg-error">
+											  	<div class="msg-con">请选择资源类型</div>
+											  	<s class="msg-icon"></s>
+									</div>
+                   				 </div>
+                            </div>
+                            <div class="box">
+                                <div class="box1 fl">
+                                    <label>*</label>资源数量:
+                                </div>
+                                <div class="box2 fr">
+                                    <input  placeholder="单位：件" type="text" class="type2 resourceNumber">
+                                    <div class="sui-msg msg-error">
+											  	<div class="msg-con">资源数量为非零的正整数</div>
+											  	<s class="msg-icon"></s>
+									</div>
+                                </div>
+                            </div>
+                            <div class="box">
+                                <div class="box1 fl">
+                                    <label>*</label>价格:
+                                </div>
+                                <div class="box2 fr">
+                                    <input id="resPrice" placeholder="单位：元" type="text" class="type2 resourcePrice">
+                                    <div class="sui-msg msg-error">
+											  	<div class="msg-con">资源价格为非零的正数</div>
+											  	<s class="msg-icon"></s>
+									</div>
+                                </div>
+                            </div>
+                            <div class="box">
+                                <div class="box1 fl">
+                                    <label></label>资源演示地址:
+                                </div>
+                                <div class="box2 fr">
+                                    <input  placeholder="http://" type="text" class="type1 showAddress">                                </div>
+                            </div>
+                            <div class="box">
+                                <div class="box1 fl">
+                                    <label>*</label>需求概述:
+                                </div>
+                                <div class="box2 fr">
+                                    <textarea class="resourceDescription" cols="59" rows="10"></textarea>
+                                    <div class="sui-msg msg-error">
+											  	<div class="msg-con">请输入描述(500字以内)</div>
+											  	<s class="msg-icon"></s>
+									</div>
+                                </div>
+                            </div>
+                            <div class="box">
+                                <button class="buttonType1 save">保存</button>
+                                <button class="buttonType2 submit">发布</button>
+                            </div>
+                        </div>
+                       
+                        <div class="content3">
+                        	<div class="draftList">
+                        	
+                        	</div>
+                        	<div class="page" style="padding-left:200px;">
+                        		<div id="paginator" style="margin: auto;" ></div>
+                        	</div>
+                        	
+                        	<!-- 草稿修改 -->
+                        		<div id="draftDetail" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade" style="width: auto;left:40%;">
+									  <div class="modal-dialog">
+									    <div class="modal-content">
+									      <div class="modal-header">
+									        <button type="button" data-dismiss="modal" aria-hidden="true" class="sui-close">×</button>
+									        <h4 id="myModalLabel" class="modal-title">草稿修改</h4>
+									      </div>
+									      <div class="modal-body" style="max-height: 1000px;">
+						                        <div class="content2">
+						                            <div class="submitPrompt">
+						                                <img src="resources/images/front/warning.png">
+						                                <div class="promptWord fl">带*为必填项目</div>
+						                            </div>
+						                            <div class="box">
+						                                <div class="box1 fl">
+						                                    <label>*</label>资源图片:
+						                                </div>
+						                                <div id="upload" class="box2 fr">
+						                                <label>
+						                                <input  class="upLoadImg" type="file" name="file" style="display:none;">
+						                                <div class="sui-msg msg-error">
+																	  	<div class="msg-con">请输上传图片</div>
+																	  	<s class="msg-icon"></s>
+															</div>
+						                                    <div class="up"></div>
+						                                    <div class="down">
+						                                        	图片上传
+						                                    </div>
+						                                </label>
+						                                </div>
+						                            </div>
+						                            <div class="box">
+						                                <div class="box1 fl">
+						                                    <label>*</label>资源名称:
+						                                </div>
+						                                <div class="box2 fr">
+						                                    <input  placeholder="20字以内" type="text" class="type1 resourceName">
+						                                    <div class="sui-msg msg-error">
+																	  	<div class="msg-con">请输入名称</div>
+																	  	<s class="msg-icon"></s>
+															</div>
+						                                </div>
+						                            </div>
+						                            <div class="box" style="    overflow: visible;">
+						                                <div class="box1 fl">
+						                                    <label>*</label>资源类型:
+						                                </div>
+						                                <div class="box2 fr" style="line-height:30px;">
+						                                <button data-toggle="modal" data-target="#draftDetailRestype" data-keyboard="false" class="sui-btn btn-primary btn-lg resourceType">请选择</button>
+						                                    <div class="sui-msg msg-error">
+																	  	<div class="msg-con">请选择资源类型</div>
+																	  	<s class="msg-icon"></s>
+															</div>
+						                   				 </div>
+						                            </div>
+						                            <div class="box">
+						                                <div class="box1 fl">
+						                                    <label>*</label>资源数量:
+						                                </div>
+						                                <div class="box2 fr">
+						                                    <input  placeholder="单位：件" type="text" class="type2 resourceNumber">
+						                                    <div class="sui-msg msg-error">
+																	  	<div class="msg-con">资源数量为非零的正整数</div>
+																	  	<s class="msg-icon"></s>
+															</div>
+						                                </div>
+						                            </div>
+						                            <div class="box">
+						                                <div class="box1 fl">
+						                                    <label>*</label>价格:
+						                                </div>
+						                                <div class="box2 fr">
+						                                    <input id="resPrice" placeholder="单位：元" type="text" class="type2 resourcePrice">
+						                                    <div class="sui-msg msg-error">
+															  	<div class="msg-con">资源价格为非零的正数</div>
+															  	<s class="msg-icon"></s>
+															</div>
+						                                </div>
+						                            </div>
+						                            <div class="box">
+						                                <div class="box1 fl">
+						                                    <label></label>资源演示地址:
+						                                </div>
+						                                <div class="box2 fr">
+						                                    <input  placeholder="http://" type="text" class="type1 showAddress">                                </div>
+						                            </div>
+						                            <div class="box">
+						                                <div class="box1 fl">
+						                                    <label>*</label>需求概述:
+						                                </div>
+						                                <div class="box2 fr">
+						                                    <textarea class="resourceDescription" cols="59" rows="10"></textarea>
+						                                    <div class="sui-msg msg-error">
+																	  	<div class="msg-con">请输入描述(500字以内)</div>
+																	  	<s class="msg-icon"></s>
+															</div>
+						                                </div>
+						                            </div>
+                        						</div>
+											</div>
+									      <div class="modal-footer">
+									      	<div class="box">
+									      		<button type="button"  class="buttonType2 save">保存</button>
+									       	 	<button type="button"  class="buttonType2 submit">发布</button>
+									      	</div>
+									      </div>
+									    </div>
+									  </div>
+									</div>
+								  
+								  
+							</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+			
+			
+			<div id="draftDetailRestype" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" data-dismiss="modal" aria-hidden="true" class="sui-close">×</button>
+			        <h4 id="myModalLabel" class="modal-title">资源类型选择</h4>
+			      </div>
+			      <div class="modal-body">
+							
+					</div>
+			      <div class="modal-footer">
+			        <button type="button" data-ok="modal" class="sui-btn btn-primary btn-large">确定</button>
+			        <button type="button" data-stus="one" class="sui-btn btn-default btn-large checkAll">全选</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			
+			<div id="resReleaseModal" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" data-dismiss="modal" aria-hidden="true" class="sui-close">×</button>
+			        <h4 id="myModalLabel" class="modal-title">资源类型选择</h4>
+			      </div>
+			      <div class="modal-body">
+							
+					</div>
+			      <div class="modal-footer">
+			        <button type="button" data-ok="modal" class="sui-btn btn-primary btn-large">确定</button>
+			        <button type="button" data-stus="one" class="sui-btn btn-default btn-large checkAll">全选</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			<script id="res_restype_template" type="text/x-jquery-tmpl">
+					<div class="preCheckName">${dictName}</div>
+							<div class="checkItem">
+								{{each $data.dictionarydatas}}
+								<label><input data-id="${$data.dictionarydatas[$index].dataId}" type="checkbox"/>${$data.dictionarydatas[$index].dataValue}</label>
+								{{/each }}
+					</div>
+			</script>
+            <script type="text/javascript" src="resources/js/front/resourceRelease.js"></script>

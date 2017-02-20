@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.AssessmentAuditDao">
+
+	<resultMap id="selectAssessmentAuditMap" type="com.shdatabank.puruan.model.AssessmentAudit">
+		<id property="auditId" column="audit_id" />
+		<result property="assessmentId" column="assessment_id" />
+		<result property="backUserId" column="back_user_id" />
+		<result property="auditDateTime" column="audit_datetime" />
+		<result property="auditContent" column="audit_content" />
+		<result property="auditStatus" column="auditStatus" />
+		<result property="auditStatusId" column="audit_status" />
+		<result property="active" column="active" />
+		<association property="professionalEvaluation"
+			resultMap="com.shdatabank.puruan.dao.ProfessionalEvaluationDao.selectProfessionalEvaluationMap" />
+	</resultMap>
+
+	<!-- 未审核 专业评估申请 -->
+	<select id="selectAllAssessmentAuditNo"
+		resultMap="com.shdatabank.puruan.dao.ProfessionalEvaluationDao.selectProfessionalEvaluationMap">
+		SELECT
+		<include
+			refid="com.shdatabank.puruan.dao.ProfessionalEvaluationDao.sql_couml" />
+		,
+		GROUP_CONCAT(DISTINCT
+		pd.data_value) projectType
+		,(SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名'))
+		applyPerson
+		FROM user
+		u
+		LEFT JOIN company c ON u.company_id =
+		c.company_id where
+		u.user_id=pe.user_id) applyPerson
+		from
+		professional_evaluation pe LEFT
+		JOIN project p on
+		p.project_id=pe.project_id
+		LEFT JOIN
+		project_requirement pr on pr.proj_id=pe.project_id
+		LEFT JOIN
+		project_requirement_class prc on prc.proj_require_id=pr.proj_id
+		LEFT
+		JOIN dictionarydata pd on pd.data_id=prc.proj_require_class_value
+		LEFT
+		JOIN
+		dictionarydata d
+		on
+		d.data_id=pe.assessment_status
+		where
+		pe.assessment_status=900001 and pe.active=0
+		GROUP BY pe.assessment_id
+	</select>
+
+	<!-- 已审核 专业评估申请 -->
+	<select id="selectAllAssessmentAuditYes" resultMap="selectAssessmentAuditMap">
+		SELECT
+		t.audit_id,
+		t.audit_status,
+		ad.data_value auditStatus,
+		<include
+			refid="com.shdatabank.puruan.dao.ProfessionalEvaluationDao.sql_couml" />
+		,(SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名'))
+		applyPerson
+		FROM user
+		u
+		LEFT JOIN company c ON u.company_id =
+		c.company_id where
+		u.user_id=pe.user_id) applyPerson,
+		(SELECT u.user_alias FROM user u
+		where u.user_id=pe.professional_id)
+		professionalName
+		from
+		(SELECT * from
+		assessment_audit
+		aa ORDER BY aa.audit_datetime DESC)
+		t LEFT JOIN
+		dictionarydata ad on
+		t.audit_status=ad.data_id
+		LEFT JOIN
+		professional_evaluation pe on
+		t.assessment_id=pe.assessment_id
+		LEFT
+		JOIN
+		project p on
+		p.project_id=pe.project_id
+		LEFT JOIN project_requirement pr
+		on
+		pr.proj_id=pe.project_id
+		LEFT JOIN project_requirement_class prc on
+		prc.proj_require_id=pr.proj_id
+		LEFT JOIN dictionarydata pd on
+		pd.data_id=prc.proj_require_class_value
+		LEFT JOIN dictionarydata d on
+		d.data_id=pe.assessment_status
+		where pe.active=0 and t.active=0
+		GROUP BY
+		pe.assessment_id
+	</select>
+
+	<!-- 自动专家选择 -->
+	<select id="professionalEvaluationRand"
+		resultType="com.shdatabank.puruan.model.ProfessionalEvaluationBy">
+		select DISTINCT
+		u.user_id userId,u.user_alias
+		userAlias,ppf.professional_field_value
+		professionalFieldValue,d.data_value dataValue
+		from
+		user u
+		join
+		proficient_professional_field ppf
+		on u.user_id = ppf.user_id
+		LEFT JOIN
+		dictionarydata d on d.data_id=ppf.professional_field_value
+		where
+		ppf.professional_field_value IN
+		(select
+		prc.proj_require_class_value
+		FROM project p JOIN
+		project_requirement pr
+		ON pr.proj_id =
+		p.project_requirement_id
+		LEFT JOIN
+		project_requirement_class prc
+		ON
+		prc.proj_require_id = pr.proj_id where
+		p.project_id=#{projectId}) ORDER
+		BY
+		RAND() LIMIT 1
+	</select>
+
+	<!-- 根据专业领域选专家 -->
+	<select id="findProfessionalByFile"
+		resultType="com.shdatabank.puruan.model.ProfessionalEvaluationBy">
+		select
+		u.user_id userId,u.user_alias
+		userAlias,ppf.professional_field_value
+		professionalFieldValue,d.data_value dataValue
+		from
+		user u
+		join
+		proficient_professional_field ppf
+		on u.user_id = ppf.user_id
+		LEFT JOIN
+		dictionarydata d on d.data_id=ppf.professional_field_value
+		where
+		ppf.professional_field_value=#{id}
+		GROUP BY u.user_id
+	</select>
+
+	<!-- 专业评估审核 -->
+	<insert id="insertAssessmentAudit" parameterType="com.shdatabank.puruan.model.AssessmentAudit">
+		INSERT INTO
+		assessment_audit(assessment_id,back_user_id,audit_datetime,audit_content,audit_status,active)
+		VALUES(
+		#{assessmentId},
+		#{backUserId},
+		now(),
+		#{auditContent},
+		#{auditStatusId},
+		0
+		)
+	</insert>
+	<!-- 更新专业评估状态 及评估专家信息 -->
+	<update id="updateAssessmentAudit" parameterType="com.shdatabank.puruan.model.ProfessionalEvaluation">
+		UPDATE professional_evaluation
+		<set>
+			<trim suffix=" " suffixOverrides=",">
+				<if test="professionalId!='' and professionalId!=null">
+					professional_id = #{professionalId},
+				</if>
+				<if test="assessmentStatus!='' and assessmentStatus!=null">
+					assessment_status = #{assessmentStatus},
+				</if>
+				<if test="assessmentView!='' and assessmentView!=null">
+					assessment_view = #{assessmentView},
+				</if>
+				<if test="evaluationDate !='' and evaluationDate !=null">
+					evaluation_date = #{evaluationDate},
+				</if>
+				<if test="assessmentDate!='' and assessmentDate!=null">
+					assessment_date = #{assessmentDate},
+				</if>
+				<if test="mobile!='' and mobile!=null">
+					mobile = #{mobile},
+				</if>
+				<if test="projectDescribe!='' and projectDescribe!=null">
+					project_describe = #{projectDescribe},
+				</if>
+				<if test="assessmentFile !='' and assessmentFile !=null">
+					assessment_file = #{assessmentFile},
+				</if>
+				<if test="assessmentFileSeePath !='' and assessmentFileSeePath !=null">
+					assessment_file_see_path = #{assessmentFileSeePath},
+				</if>
+				<if test="assessmentFileName !='' and assessmentFileName !=null">
+					assessment_file_name = #{assessmentFileName},
+				</if>
+				
+			</trim>
+		</set>
+		WHERE assessment_id = #{assessmentId}
+	</update>
+</mapper>

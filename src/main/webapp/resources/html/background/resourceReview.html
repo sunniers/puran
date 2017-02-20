@@ -1,0 +1,92 @@
+ <!--路径-->
+                <div class="nav">
+                    <span>首页</span><span><img src="../../images/background/rightCusp.png" alt=""></span>
+                    <span>发布信息审核</span><span><img src="../../images/background/rightCusp.png" alt=""></span>
+                    <span>资源审核</span>
+                </div>
+
+                <!--内容详情-->
+                <div class="contentInfo">
+					 <div class="resourceReview">
+					 	<div class="resourceSearchTitle">
+					 		<div class="t active" data-attr="resAudit">待审核</div>
+					 		<div class="t" data-attr="resChecked">已审核</div>
+					 		<div class="s">
+					 		<div>
+					 			<input id="searchVal" type="text">
+					 		</div>
+					 		<div>
+					 			<button id="search"><img src="../../images/background/search.png" alt=""></button>
+					 		</div>
+					 		</div>
+					 	</div>
+					 	<div class="resourceReviewData">
+					 		<!-- 待审核 -->
+					 		<table  class="sui-table table-zebra resAudit">
+					 			<thead>
+					 				<tr>
+					 				<td>资源名称A</td>
+					 				<td>发布方</td>
+					 				<td>资源类型</td>
+					 				<td>提交时间</td>
+					 				<td>操作</td>
+					 				</tr>
+					 			</thead>
+					 			<tbody>
+					 				
+					 			</tbody>
+					 		</table>
+					 		
+					 		<!-- 待已审核 -->
+					 		<table  class="sui-table table-zebra resChecked" style="display: none;">
+					 			<thead>
+					 				<tr>
+						 				<td>需求名称C</td>
+						 				<td>发布方</td>
+						 				<td>需求类型</td>
+						 				<td>提交时间</td>
+						 				<td>结果</td>
+						 				<td>操作</td>
+					 				</tr>
+					 			</thead>
+					 			<tbody>
+					 				
+					 			</tbody>
+					 		</table>
+					 	</div>
+					 	<!-- 分页 -->
+						<div class="page">
+		                      <div id="paginator" style="margin: auto;"></div>
+		                </div>
+					</div>
+                </div>
+                <!-- 待审核 -->
+                 <script id="auditing_resAudit_tmplate" type="text/x-jquery-tmpl">
+			 			<tbody>
+					 		<tr>
+					 			<td>${resourceName}</td>
+					 			<td>${publishName}</td>
+					 			<td>${resourceType}</td>
+					 			<td>${publishDatetime}</td>
+					 			<td><button class="resAuditing" data-id="${resourceId}">审核</button></td>
+					 		</tr>
+					 	</tbody>
+				</script>
+				<!-- 已审核 -->
+				 <script id="auditing_resChecked_tmplate" type="text/x-jquery-tmpl">
+			 			<tbody>
+					 		<tr>
+								<td>${resourceName}</td>
+					 			<td>${publishName}</td>
+					 			<td>${resourceType}</td>
+					 			<td>${auditDatetime}</td>
+								{{if $data.auditStatus=="未通过"}}
+								<td style="color:red">${auditStatus}</td>
+								{{else}}
+								<td style="color:#2d7ee2">${auditStatus}</td>
+								{{/if}}
+					 			<td><button class="resAuditing" data-id="${resourceId}">查看</button></td>
+					 		</tr>
+					 	</tbody>
+				</script>
+                <script type="text/javascript" src="../../js/background/resourceReview.js"></script>

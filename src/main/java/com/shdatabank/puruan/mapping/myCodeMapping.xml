@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IMyCodeDao">
+    <!-- 查询正在参与的项目的数量 -->
+    <select id="selectRunningProj" resultType="java.lang.Integer">
+        <![CDATA[
+            SELECT COUNT(*) FROM project_user_releation pur INNER JOIN project_requirement pr 
+            ON pur.project_requirement_id = pr.proj_id WHERE pur.user_id = #{0} AND 
+            pr.proj_flow_status = #{1} AND pr.active = #{2}
+        ]]>
+    </select>
+    
+    <!-- 查询参与的项目的数量 -->
+    <select id="selectTakeProj" resultType="java.lang.Integer">
+        <![CDATA[
+            SELECT COUNT(*) FROM project_user_releation pur INNER JOIN project_requirement pr 
+            ON pur.project_requirement_id = pr.proj_id WHERE pur.user_id = #{0} AND pr.active = #{1}
+        ]]>
+    </select>
+    
+    <!-- 我发布的项目的数量 -->
+    <select id="selectPublishProj" resultType="java.lang.Integer">
+        <![CDATA[
+            SELECT COUNT(*) FROM project_user_releation pur INNER JOIN project_requirement pr 
+            ON pur.project_requirement_id = pr.proj_id WHERE pur.user_id = #{0} AND pr.active = #{1} 
+            AND pr.publish_user_id = #{0}
+        ]]>
+    </select>
+</mapper>

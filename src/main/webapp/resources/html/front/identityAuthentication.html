@@ -1,0 +1,65 @@
+          	<!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="../resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>个人中心</span><span><img src="../resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>我的账号</span><span><img src="../resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>个人认证</span>
+            </div>
+
+            <!--内容详情-->
+            <div class="contentInfo white">
+                <div class="indentifyAuthentication">
+                    <div class="addUserPrompt">
+                        <img src="../resources/images/front/warning.png" alt="警告"/>
+                        <div class="addUserPromptWord">一个用户企业认证和身份认证只能选择一种，请谨慎选择</div>
+                    </div>
+                    <div class="userContent">
+                        <div class="name fr">
+                            <label>*姓名:</label>
+                            <input type="text">
+                            <div class="sui-msg msg-error promptWords">
+                                <div class="msg-con">姓名不能为空</div>
+                                <s class="msg-icon"></s>
+                            </div>
+                        </div>
+                        <div class="idNumber fr">
+                            <label>*身份证号码:</label>
+                            <input type="text">
+                            <div class="sui-msg msg-error promptWords">
+                                <div class="msg-con">证号不能为空</div>
+                                <s class="msg-icon"></s>
+                            </div>
+                        </div>
+                        <div class="upload fr">
+                            <div class="uploadPhoto fr otherSide">
+                            	<label>
+                            		<input  class="upLoadImg1" type="file" name="file" style="display:none;">
+                            		<div class="replace">
+                                		<img src="../resources/images/front/upload.png" alt="上传" />
+                                		<div class="uploadPrompt">上传反面</div>
+                                	</div>
+                            	</label>
+                            </div>
+                            <div class="uploadPhoto fr positive">
+                            	<label>
+                            		<input  class="upLoadImg2" type="file" name="file" style="display:none;">
+                            		<div class="replace">
+                                		<img src="../resources/images/front/upload.png" alt="上传" />
+                                		<div class="uploadPrompt">上传正面</div>
+                                	</div>
+                                </label>
+                            </div>              
+                            <label>*身份证:</label>
+                            <div class="sui-msg msg-error promptWords">
+                                <div class="msg-con">请上传图片</div>
+                                <s class="msg-icon"></s>
+                            </div>
+                        </div>
+                        <div class="words fl">请上传有效身份证正反面照片。模糊，修改，遮挡，不完整的都将不予审核通过</div>
+                        <div class="submit fr">
+                            <button id="subBtn">提 交</button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <script type="text/javascript" src="/resources/js/front/identityAuthentication.js"></script>

@@ -1,0 +1,89 @@
+<!--路径-->
+<div class="nav">
+	<span>首页</span>
+	<span><img src="../../images/background/rightCusp.png" alt=""></span>
+	<span>展示大厅</span>
+	<span><img src="../../images/background/rightCusp.png" alt=""></span>
+	<span>供需信息</span>
+	<span><img src="../../images/background/rightCusp.png" alt=""></span>
+	<span>人才详情</span>
+</div>
+
+<!--内容详情-->
+<div class="contentInfo talentDetails">
+	<div class="details">
+		<div class="introduction">
+			<div class="ct1">
+				<h2 id="talentRequirementName"></h2>
+				<div class="needing">人 才</div>
+				<div class="fee"><span id="talentBuget"></span>元/8小时</div>
+			</div>
+			<div class="ct3">
+				已报名数：<span id="talentCount"></span>人&nbsp;&nbsp; 已收藏：<span id="houseCount">8</span>次
+			</div>
+			<div class="ct2">
+				<span id="userName"></span>
+				<img class="cer" src="" alt="企业认证" />
+				<img class="pho" src="" alt="手机认证" />
+				<img class="ema" src="" alt="邮箱认证" />
+				&nbsp; | 发布时间：<span id="createTime"></span>
+			</div>
+		</div>
+		<div class="title">
+			<div class="circle "></div>
+			工作性质
+		</div>
+		<div class="workType">
+			<div>
+				工作方式：<span id="workMode"></span>
+			</div>
+			<div>
+				工作地点：<span id="workSpace"></span>
+			</div>
+			<div>
+				技能要求：<span id="technologyRequirement"></span>
+			</div>
+		</div>
+		<div class="title">
+			<div class="circle "></div>
+			需求描述
+		</div>
+		<div class="needDetail" id="requirementDescription"></div>
+		<div class="title">
+			<div class="circle "></div>
+			工作职责
+		</div>
+		<div class="workDuty" id="workDuty"></div>
+		<div class="title">
+			<div class="circle "></div>
+			人员要求
+		</div>
+		<div class="personAsk" id="talentRequire"></div>
+		<div class="title">
+			<div class="circle "></div>
+			附件
+		</div>
+		<div class="enclosure">
+			<!-- <div class="enclosures">
+				<img src="../../images/front/enclosure.png" alt="链接" />
+				<div class="download fl">
+					<a href="">下载</a>
+				</div>
+				|
+				<div data-url="" class="preview fr">预览</div>
+			</div> -->
+		</div>
+	</div>
+</div>
+<script id="talentDetail_enclosure_tmplate" type="text/x-jquery-tmpl">
+				{{if  $data.talentAttachment!=null}}
+				<div class="enclosures">
+                    <img src="resources/images/front/enclosuretalentAttachment" alt="链接"/>
+                    <div class="download fl">
+						<a href="${projAttachFile}">下载</a>
+					</div> |
+                    <div data-url="${talentAttachment}" class="preview fr">预览</div>
+                </div>
+				{{/if}}
+</script>
+<script type="text/javascript" src="../../js/background/backTalentDetail.js"></script>

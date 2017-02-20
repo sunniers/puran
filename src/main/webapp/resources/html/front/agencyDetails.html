@@ -1,0 +1,39 @@
+			<!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="./resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>投融资管理</span><span><img src="./resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>投资机构</span><span><img src="./resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>机构详情</span>
+            </div>
+
+            <!--内容详情-->
+            <div class="contentInfo">
+                <div class="agencyDetails">
+                	
+                </div>
+            </div>
+            
+            <script id="institutions_agencyDetails_template" type="text/x-jquery-tmpl">
+ 					<div class="box1">
+                		<div class="part1 fl">企业名称</div>
+                		<div class="part2 fl">${companyName}</div>
+                		<div class="part1 fl">投资机构名称</div>
+                		<div class="part2 fl">${investCompanyName}</div>
+                		<div class="part3 fl">成立时间</div>
+                		<div class="part4 fl">${buildDate}</div>
+                	</div>
+                	<div class="box2">
+                		<div class="part1 fl">投资领域</div>
+                		<div class="part2 fl">${investDomain}</div>
+                		<div class="part1 fl">投资偏好</div>
+                		<div class="part2 fl">${investPreference}</div>
+                		<div class="part3 fl">提交时间</div>
+                		<div class="part4 fl">${createTime}</div>
+                	</div>
+                	<div class="box3">
+                		<div class="part5 fl">机构简介</div>
+                		<div class="part6 fl">${investCase}</div>
+                	</div>
+			</script>
+            
+			<script type="text/javascript" src="resources/js/front/agencyDetails.js"></script>

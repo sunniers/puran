@@ -1,0 +1,251 @@
+            <!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>个人中心</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>我的圈子</span>
+            </div>
+            <!--内容详情-->
+            <div class="contentInfo">
+                <div class="myCircle">
+                    <div class="contents">
+                        <div class="content1">
+                            <div class="tableData">
+                                <table id="tableData" class="sui-table table-nobordered">
+                                    <thead>
+	                                    <tr>
+	                                        <th>名称</th>
+	                                        <th>联系电话</th>
+	                                        <th>邮箱</th>
+	                                        <th>现属项目</th>
+	                                        <th>操作</th>
+	                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                   
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="paginator" style="margin: auto;"></div>
+                </div>
+            </div>
+            <!-- 圈子详情 个人 -->
+            <div id="myCirclePersonModal" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade" style="left:50%; width:550px;">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" data-dismiss="modal" aria-hidden="true" class="sui-close">×</button>
+			        <h4 id="myModalLabel" class="modal-title">详细信息</h4>
+			      </div>
+			      <div class="modal-body">
+			     <!--  基本信息 -->
+						<div class="grid-demo baseInfo">
+								<div class="sui-row title">
+								    <div class="span3"><h4>基本信息</h4></div>
+							  	</div>
+							  <div class="sui-row">
+							    <div class="span1">用户名:</div>
+							    <div class="span3 userName"></div>
+							  </div>
+							  <div class="sui-row">
+							    <div class="span1">昵称:</div>
+							    <div class="span3 userAlias"></div>
+							  </div>
+							  <div class="sui-row">
+							    <div class="span1">邮箱:</div>
+							    <div class="span3 userEmail"></div>
+							  </div>
+							  <div class="sui-row">
+							    <div class="span1">手机:</div>
+							    <div class="span3 userMobile"></div>
+							  </div>
+						</div>
+					
+						<div class="grid-demo eduExInfo">
+							  <div class="sui-row title">
+								    <div class="span3"><h4>教育经历</h4></div>
+							  </div>
+							  <div class="sui-row">
+							    <div class="span1">学历:</div>
+							    <div class="span3 talentDegree"></div>
+							  </div>
+							  <div class="sui-row">
+							    <div class="span1">学校:</div>
+							    <div class="span3 talentSchool"></div>
+							  </div>
+							  <div class="sui-row">
+							    <div class="span1">专业:</div>
+							    <div class="span3 talentProfession"></div>
+							  </div>
+							  <div class="sui-row">
+							    <div class="span1">毕业时间:</div>
+							    <div class="span3 finishDate"></div>
+							  </div>
+							  <div class="sui-row">
+							    <div class="span1">备注:</div>
+							    <div class="span3 memo"></div>
+							  </div>
+						</div>
+						<div class="grid-demo workExInfo">
+							  <div class="sui-row title">
+								    <div class="span3"><h4>工作经历</h4></div>
+							  </div>
+							  <div class="itemContent">
+							  		
+							  </div>
+							  
+						</div>
+						<div class="grid-demo additionInfo">
+							  <div class="sui-row title">
+								    <div class="span3"><h4>附加信息</h4></div>
+							  </div>
+							  <div class="sui-row">
+							    <div class="span1">人才名称:</div>
+							    <div class="span3 talentName"></div>
+							  </div>
+							   <div class="sui-row">
+							    <div class="span1">工作方式:</div>
+							    <div class="span3 workMode"></div>
+							  </div>
+							   <div class="sui-row">
+							    <div class="span1">技术标签:</div>
+							    <div class="span3 technologys"></div>
+							  </div>
+							   <div class="sui-row">
+							    <div class="span1 ">工作时间:</div>
+							    <div class="span3 workTime"></div>
+							  </div>
+							   <div class="sui-row">
+							    <div class="span1">所在地:</div>
+							    <div class="span3 nowAddress"></div>
+							  </div>
+							   <div class="sui-row">
+							    <div class="span1">期望薪资:</div>
+							    <div class="span3 hopeSalary"></div>
+							  </div>
+							   <div class="sui-row">
+							    <div class="span1">技术特长:</div>
+							    <div class="span3 talentDescription"></div>
+							  </div>
+							   <div class="sui-row">
+							    <div class="span1">项目经验:</div>
+							    <div class="span3 talentWorkExperience"></div>
+							  </div>
+						</div>
+				  </div>
+			      <div class="modal-footer">
+			        <button type="button" data-ok="modal" class="sui-btn btn-primary btn-large">确定</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+            
+            <!-- 圈子详情 公司 -->
+            <div id="myCircleComModal" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" data-dismiss="modal" aria-hidden="true" class="sui-close">×</button>
+			        <h4 id="myModalLabel" class="modal-title">详细信息</h4>
+			      </div>
+			      <div class="modal-body">
+						
+				  </div>
+			      <div class="modal-footer">
+			        <button type="button" data-ok="modal" class="sui-btn btn-primary btn-large">确定</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+            
+            <!-- 圈子详情 公司 -->
+            <div id="joinMyCircle" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" data-dismiss="modal" aria-hidden="true" class="sui-close">×</button>
+			        <h4 id="myModalLabel" class="modal-title">添加成员</h4>
+			      </div>
+			      <div class="modal-body">
+						<div class="grid-demo">
+							 <div class="sui-row">
+							 	 <div class="span3">*工作项目：</div>
+							 </div>
+							 <div class="sui-row">
+							 	 <div class="span5">
+									<select class="workPro" style="width: 100%;height: 30px;">
+									</select>
+								</div>
+							 </div>
+						</div>
+						<div class="grid-demo" style="margin-top: 10px;">
+							 <div class="sui-row">
+							 	 <div class="span3">*工作岗位：</div>
+							 </div>
+							 <div class="sui-row">
+							 	 <div class="span5">
+									<input class="workJob" style="width: 100%;height: 25px;"/>
+								</div>
+							 </div>
+						</div>
+				  </div>
+			      <div class="modal-footer">
+			        <button type="button"  class="sui-btn btn-primary btn-large makeSure">确定</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+            
+            <script id="mycirle_confirmed_template" type="text/x-jquery-tmpl">
+					{{if $data.projectName!=null}}
+ 									<tr>
+                                        <td>${userAlias}</td>
+                                        <td>${userMobile}</td>
+                                        <td>${userEmail}</td>
+                                        <td>${projectName}</td>
+                                        <td data-id="${userId}">
+                                            <button class="detail">详情</button>
+                                            <button class="del">删除</button>
+                                        </td>
+                                    </tr>
+							{{else}}
+									<tr>
+                                        <td>${userAlias}</td>
+                                        <td>${userMobile}</td>
+                                        <td>${userEmail}</td>
+                                        <td>${projectName}</td>
+                                        <td data-cuId="${communityId}" data-id="${userId}">
+                                            <button class="detail">详情</button>
+                                            <button class="joinTeam">加入团队</button>
+                                            <button class="del">删除</button>
+                                        </td>
+                                    </tr>
+							{{/if}}
+			</script>
+			<script id="mycirle_workEx_template" type="text/x-jquery-tmpl">
+					<div class="sui-row">
+				    <div class="span1">开始时间:</div>
+				    <div class="span2 startDate">${startDate}</div>
+				    <div class="span1">结束时间:</div>
+				    <div class="span2 endDate">${endDate}</div>
+				  </div>
+				  <div class="sui-row">
+				    <div class="span1">公司:</div>
+				    <div class="span3 workCompany">${workCompany}</div>
+				  </div>
+				  <div class="sui-row">
+				    <div class="span1">职位:</div>
+				    <div class="span3 workJob">${workJob}</div>
+				  </div>
+				  <div class="sui-row">
+				    <div class="span1">主要情况:</div>
+				    <div class="span3 workDescription">${workDescription}</div>
+				  </div> 
+			</script>
+			<script id="mycirle_join_template" type="text/x-jquery-tmpl">
+				<option value="${projId}">${projName}</option>
+			</script>
+            <script type="text/javascript" src="resources/js/front/myCircle.js"></script>
+            

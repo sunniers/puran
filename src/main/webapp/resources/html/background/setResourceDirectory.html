@@ -1,0 +1,73 @@
+ 			<!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="../../images/background/rightCusp.png" alt=""></span>
+                <span>资源目录配置</span>
+            </div>
+
+            <!--内容详情-->
+            <div class="contentInfo">
+                <div class="setResourceDirectory">
+                    <div class="header">
+                        <div class="headerLeft">
+                            <div class="queryName">查询：</div>
+                        </div>
+                        <div class="headerRight">
+                            <form>
+                                <div class="frontBackTable" >
+                                    <label>前后台：</label>
+                                    <select id="resType">
+                                        <option value="">请选择</option>
+                                        <option value="peception">前台</option>
+                                        <option value="back">后台</option>
+                                    </select>
+                                </div>
+                                <div class="resourceDirectory1">
+                                    <label>资源目录：</label>
+                                    <input id="parentRes" type="text">
+                                </div>
+                                <div class="resourceDirectory2">
+                                    <label>父资源目录：</label>
+                                    <input id="childRes" type="text">
+                                </div>
+                            </form>
+                            <button class="query">查询</button>
+                        </div>
+                    </div>
+                    <div class="addResourceDirectory">
+                        <div class="addResourceDirectoryLeft" >
+                            <img src="../../images/background/add.png" />
+                            <div id="addRes" class="addResourceDirectoryWord">新增资源目录</div>
+                        </div>
+                    </div>
+                    <div class="setResourceDirectoryForm">
+                        <table class="sui-table table-nobordered" id="resData">
+                            <thead>
+                            <tr>
+                                <!-- <th>序号</th> -->
+                                <th>分类</th>
+                                <th>资源目录</th>
+                                <th>父资源目录</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="page">
+                        <div id="paginator" style="margin: auto;"></div>
+                    </div>
+                </div>
+            </div>
+            <script id="resources_directory_template" type="text/x-jquery-tmpl">
+							<tr>
+                                <td>{{if $data.resourceType=='back'}}后台{{else}}前台{{/if}}</td>
+                                <td>${resourceName}</td>
+                                <td>${parentName}</td>
+                                <td data-id="${resourceId}" >
+									<button class="edit">修改</button>
+									<button class="del">删除</button>
+								</td>
+                            </tr>
+			</script>
+			<script type="text/javascript" src='../../js/background/setResourceDirectory.js'></script>

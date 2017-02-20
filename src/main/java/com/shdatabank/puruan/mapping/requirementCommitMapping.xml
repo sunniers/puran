@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.RequirementCommitDao">
+	<!-- 项目需求resultMap -->
+	<resultMap type="com.shdatabank.puruan.model.ProjectRequirement" id="ProjectRequirementMap">
+		<id property="projId" column="proj_id"/>
+		<result property="parentProjId" column="parent_proj_id"/>
+		<result property="publishUserId" column="publish_user_id" />
+		<result property="projName" column="proj_name" />
+		<result property="projCloseDate" column="proj_close_date" />
+		<result property="projDevlierDate" column="proj_devlier_date" />
+		<result property="projEstimate" column="proj_estimate" />
+		<result property="projAttachFile" column="proj_attach_file" />
+		<result property="projServiceFee" column="proj_service_fee" />
+		<result property="managerUserId" column="manager_user_id" />
+		<result property="projFeeCurrency" column="proj_fee_currency" />
+		<result property="projFlowStatus" column="proj_flow_status" />
+		<result property="active" column="active" />
+		<result property="isProject" column="is_project" />
+		<result property="createDatetime" column="create_datetime" />
+		<result property="projFlowStatus" column="proj_start_date" />
+		<result property="projEnrollStatus" column="proj_enroll_status" />
+		<result property="providerType" column="provider_type" />
+		<result property="authenticationRequirement" column="authentication_requirement" />
+		<result property="publishWay" column="publish_way" />
+		<collection property="projectRequirementClasss" ofType="com.shdatabank.puruan.model.ProjectRequirementClass">
+	        <id property="projRequirementClassId" column="proj_requirement_class_id" />
+	        <result property="projRequireId" column="proj_require_id" />
+	        <result property="projRequireClassValue" column="proj_require_class_value" />
+	        <result property="projRequireClassName" column="proj_require_class_name" />
+	    </collection> 
+	    <!-- 创意需求描述实体类 --> 
+		 <collection property="projRequireDescriptions" ofType="com.shdatabank.puruan.model.ProjRequireDescription">
+	        <id property="projRequireDescriptionId" column="proj_require_description_id" />
+	        <result property="projRequireId" column="proj_require_id" />
+	        <result property="projRequireDescriptionContent" column="proj_require_description_content" />
+	    </collection> 
+	</resultMap>
+	 <!--查询项目需求类型-->
+     <resultMap id="Dictionary_resultMap" type="com.shdatabank.puruan.model.Dictionary">
+	    <id property="dictId" column="dict_id" />
+	    <result property="parentId" column="parent_id" />
+	    <result property="dictName" column="dict_name" />
+	    <collection property="dictionarydatas" ofType="com.shdatabank.puruan.model.Dictionarydata">
+	        <id property="dataId" column="data_id" />
+	        <result property="dictId" column="dictid" />
+	        <result property="dataValue" column="data_value" />
+	    </collection> 
+	</resultMap>
+	<sql id="prRequirement_columns">
+		pr.proj_id,
+		pr.parent_proj_id,
+		pr.publish_user_id,
+		pr.proj_name,
+		pr.proj_start_date,
+		pr.proj_close_date,
+		pr.proj_devlier_date,
+		pr.proj_estimate,
+		pr.proj_attach_file,
+		pr.proj_service_fee,
+		pr.manager_user_id,
+		pr.proj_fee_currency,
+		pr.requirement_type,
+		pr.proj_flow_status,
+		pr.active,
+		pr.is_project,
+		pr.create_datetime
+		dd.data_value
+	</sql>
+
+    <!-- 插入需求的分类 -->
+    <insert id="insertRequirementType" parameterType="java.util.List" useGeneratedKeys="true">
+	    INSERT INTO project_requirement_class(proj_require_id,proj_require_class_value)VALUES
+			<foreach collection="list" item="item" index="index" separator=",">
+				(#{item.projRequireId},#{item.projRequireClassValue})
+			</foreach>
+    </insert>
+    <!-- 插入需求概述 -->
+    <insert id="insertRequirementDescription" parameterType="java.util.List" useGeneratedKeys="true">
+    	INSERT INTO project_requirement_description(proj_require_id,proj_require_description_content,create_time)VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.projRequireId},#{item.projRequireDescriptionContent},NOW())
+		</foreach>
+    </insert>
+    <!-- 插入项目需求 -->
+    <insert id="insertPrRequirement" parameterType="com.shdatabank.puruan.model.ProjectRequirement" useGeneratedKeys="true" keyProperty="projId">
+    	<!-- INSERT INTO project_requirement(parent_proj_id,publish_user_id,proj_name,proj_start_date,proj_close_date,proj_devlier_date,proj_estimate,
+    				proj_attach_file,proj_service_fee,manager_user_id,proj_fee_currency,requirement_type,proj_flow_status,active,is_project,create_datetime)
+				VALUES(#{parentProjId},#{publishUserId},#{projName},#{projStartDate},#{projCloseDate},#{projDevlierDate},#{projEstimate},
+					#{projAttachFile},#{projServiceFee},#{managerUserId},#{projFeeCurrency},#{requirementType},#{projFlowStatus},#{active},#{isProject},#{createDatetime}) -->
+		    INSERT INTO project_requirement 
+		    	(
+				parent_proj_id,
+				publish_user_id,
+				proj_name,
+				proj_start_date,
+				proj_close_date,
+				proj_devlier_date,
+				proj_estimate,
+				proj_file_name,
+				proj_attach_file,
+				proj_service_fee,
+				proj_see_file_path,
+				manager_user_id,
+				proj_fee_currency,
+				proj_flow_status,
+				proj_enroll_status,
+				create_datetime,
+				provider_type,
+				authentication_requirement,
+				publish_way
+				)
+			VALUES
+				(
+					#{parentProjId},
+					#{publishUserId},
+					#{projName},
+					#{projStartDate},
+					#{projCloseDate},
+					#{projDevlierDate},
+					#{projEstimate},
+					#{projFileName},
+					#{projAttachFile},
+					#{projServiceFee},
+					#{projSeeFilePath},
+					#{managerUserId},
+					#{projFeeCurrency},
+					#{projFlowStatus},
+					#{projEnrollStatus},
+					NOW(),
+					#{providerType},
+					#{authenticationRequirement},
+					#{publishWay}
+				)
+    </insert>
+    <!-- 查询项目需求 -->
+    <select id="selectPrRequirement" resultMap="ProjectRequirementMap">
+    	SELECT pr.proj_id,pr.create_datetime,pr.proj_name,prd.proj_require_description_content from project_requirement pr,project_requirement_description prd 
+    	<!-- where pr.proj_id = #{projId} and pr.proj_id = prd.proj_require_id -->
+    	where pr.publish_user_id = #{publishUserId} and pr.proj_id = prd.proj_require_id and pr.active = 0 and pr.proj_flow_status = 400105 ORDER BY pr.create_datetime DESC
+    	
+    </select>
+    <!-- 查询项目需求 -->
+    <select id="selectPrRequirementId" resultMap="ProjectRequirementMap">
+    	<!-- SELECT pr.*,prc.proj_require_class_value,prd.proj_require_description_content from project_requirement pr,project_requirement_class prc,project_requirement_description prd 
+    	where pr.proj_id = #{projId} and  prc.proj_require_id = pr.proj_id  and  pr.proj_id = prd.proj_require_id and pr.active = 0 --> 
+  	 SELECT pr.*,prc.proj_require_class_value,(select dd.data_value 
+		from dictionary d LEFT JOIN dictionarydata dd ON d.dict_id = dd.dict_id 
+		WHERE  dd.dict_id = 100100 and dd.data_id = prc.proj_require_class_value
+		ORDER BY d.dict_id) proj_require_class_name,prd.proj_require_description_content from project_requirement pr,project_requirement_class prc,project_requirement_description prd 
+    	where pr.proj_id = #{projId} and  prc.proj_require_id = pr.proj_id  and  pr.proj_id = prd.proj_require_id and pr.active = 0 
+    </select>
+    
+    <!-- 根据需求id查询创意需求信息 -->
+   <select id="selectCreativeResource" resultMap="ProjectRequirementMap" parameterType="com.shdatabank.puruan.model.ProjectRequirement">
+    	select <include refid="prRequirement_columns"></include> FROM project_requirement pr
+		LEFT JOIN dictionarydata dd ON pr.requirement_type = dd.data_id
+		WHERE pr.proj_id = #{projId} and and pr.active = 0
+    </select>
+ 
+	<!-- 查询出所有需求类型包含子类型 -->
+	<select id="selectAllRequirementType" resultMap="Dictionary_resultMap">
+		select d.dict_id,d.parent_id,d.dict_name,dd.data_id,dd.dict_id dictid,dd.data_value 
+		from dictionary d LEFT JOIN dictionarydata dd ON d.dict_id = dd.dict_id
+		WHERE d.parent_id = 100000 and dd.dict_id = 100100
+		ORDER BY d.dict_id
+	</select> 
+		<!-- 系统消息 -->
+	<resultMap type="com.shdatabank.puruan.model.SysMessage" id="SysMessageMap">
+		<id property="sysMessageId" column="sys_message_id"/>
+		<result property="messageSubject" column="message_subject"/>
+		<result property="messageTitle" column="message_title"/>
+		<result property="messageContent" column="message_content"/>
+		<result property="messageSender" column="message_sender"/>
+		<result property="receiveMessageType" column="receive_message_type"/>
+		<result property="messageReceiver" column="message_receiver"/>
+		<result property="generateDatetime" column="generate_datetime"/>
+		<result property="isGet" column="is_get"/>
+		<result property="getMessageTime" column="get_message_time"/>
+		<result property="messageSenderName" column="sender_name"/>
+		<result property="messageReceiverName" column="receiver_name"/>
+	</resultMap>
+	<!-- 查看消息信息 -->
+	<select id="selectMessage" resultMap="SysMessageMap">
+		SELECT
+			sm.sys_message_id,
+			sm.message_subject,
+			sm.message_title,
+			sm.message_content,
+			sm.generate_datetime,
+			sm.message_sender,
+			u.user_name  sender_name,
+			sm.receive_message_type,
+			sm.message_receiver,
+			us.user_name  receiver_name,
+			sm.is_get
+		FROM
+	sys_message sm JOIN user u on sm.message_sender = u.user_id JOIN user us on  sm.message_receiver = us.user_id
+		where receive_message_type=#{receiveMessageType} and message_receiver=#{messageReceiver}
+	</select> 
+    
+    <!-- 根据项目需求id修改项目需求 -->
+    <update id="updatePrRequirement" parameterType="com.shdatabank.puruan.model.ProjectRequirement">
+    	UPDATE project_requirement
+		<set>
+				<if test="parentProjId != null">
+					parent_proj_id = #{parentProjId},
+				</if>
+				<if test="publishUserId != null">
+					publish_user_id = #{publishUserId},
+				</if>
+				<if test="projName != null">
+					proj_name = #{projName},
+				</if>
+				<if test="projStartDate != null">
+					proj_start_date = #{projStartDate},
+				</if>
+				<if test="projCloseDate != null">
+					proj_close_date = #{projCloseDate},
+				</if>				
+				<if test="projDevlierDate != null">
+					proj_devlier_date = #{projDevlierDate},
+				</if>				
+				<if test="projEstimate != null">
+					proj_estimate = #{projEstimate},
+				</if>				
+				<if test="projAttachFile != null">
+					proj_attach_file = #{projAttachFile},
+				</if>				
+				<if test="projServiceFee != null">
+					proj_service_fee = #{projServiceFee},
+				</if>				
+				<if test="managerUserId != null">
+					manager_user_id = #{managerUserId},
+				</if>	
+				<if test="projFeeCurrency != null">
+					proj_fee_currency = #{projFeeCurrency},
+				</if>				
+				<if test="projFlowStatus != null">
+					proj_flow_status = #{projFlowStatus},
+				</if>				
+				<if test="active != null">
+					active = #{active},
+				</if>				
+				<if test="isProject != null">
+					is_project = #{isProject},
+				</if>				
+				<if test="createDatetime != null">
+					create_datetime = #{createDatetime},
+				</if>				
+				<if test="providerType != null">
+					provider_type = #{providerType},
+				</if>				
+				<if test="publishWay != null">
+					publish_way = #{publishWay},
+				</if>				
+				<if test="authenticationRequirement != null">
+					authentication_requirement = #{authenticationRequirement}
+				</if>				
+		</set>
+		WHERE proj_id = #{projId}
+    </update>
+    <!-- 根据项目需求id假删除创意需求 -->
+    <update id="deletePrRequirement" parameterType="com.shdatabank.puruan.model.ProjectRequirement">
+      	UPDATE project_requirement set active = 1
+		WHERE proj_id = #{projId}  
+    </update>
+    <!-- 根据需求id删除该需求id的所有类型 -->
+	<delete id="deleteRequirementType" parameterType="java.lang.Long">
+		delete from project_requirement_class where proj_require_id = #{projRequireId}
+	</delete>
+    <!-- 根据需求id删除该需求id的所有描述 -->
+	<delete id="deleteRequirementDescription" parameterType="java.lang.Long">
+		delete from project_requirement_description where proj_require_id = #{projRequireId}
+	</delete>
+
+</mapper>

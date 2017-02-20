@@ -1,0 +1,273 @@
+            <!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>资源管理</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>资源仓库</span>
+            </div>
+            <!--内容详情-->
+            <div class="contentInfo">
+                <div class="investment_f myResources">
+                <div class="borderInves"><!-- 边框 -->
+                    <div class="investment_title">
+                        <div data-attr="inventoryGoods" class="on">库存</div>
+                        <div data-attr="reviewIng" class="">审核中</div>
+                        <div data-attr="notReviewed" class="">未通过审核</div>
+                        <div data-attr="soldOut" class="">已下架</div>
+                        <div data-attr="deleted" class="">已删除</div>
+                        <div data-attr="onSealing" class="">出售中 </div>
+                    </div>
+                    
+                    <div class="investment_con">
+                    <!--库存 -->
+                    	 <div class="investment_con_list inventoryGoods">
+                            <table >
+                                <thead>
+	                                <tr>
+	                                    <th width="425">资源名称</th>
+	                                    <th width="185">库存</th>
+	                                    <th width="185">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+	                                
+                                </tbody>
+                            </table>
+                        </div>
+                    <!--出售中  -->
+                        <div class="investment_con_list onSealing" >
+                            <table >
+                                <thead>
+	                                <tr>
+	                                    <th width="420">资源名称</th>
+	                                    <th width="125">价格（元）</th>
+	                                    <th width="125">库存</th>
+	                                    <th width="125">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+									
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--审核中 -->
+                        <div class="investment_con_list reviewIng">
+                            <table >
+                                <thead>
+	                                <tr>
+	                                    <th width="420">资源名称</th>
+	                                    <th width="125">价格（元）</th>
+	                                    <th width="125">库存</th>
+	                                    <th width="125">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--未通过审核-->
+                        <div class="investment_con_list notReviewed">
+                            <table >
+                                <thead>
+	                                <tr>
+	                                    <th width="420">资源名称</th>
+	                                    <th width="125">价格（元）</th>
+	                                    <th width="125">库存</th>
+	                                    <th width="125">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+	                                
+	                           </tbody>
+                            </table>
+                        </div>
+                    
+                    	<!--已下架 -->
+                    	 <div class="investment_con_list soldOut">
+                            <table >
+                                <thead>
+	                                <tr>
+	                                    <th width="420">资源名称</th>
+	                                    <th width="125">价格（元）</th>
+	                                    <th width="125">库存</th>
+	                                    <th width="125">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+	                                
+                                </tbody>
+                            </table>
+                        </div>
+                       
+                        <!--已删除-->
+                        <div class="investment_con_list deleted">
+                            <table >
+                                <thead>
+	                                <tr>
+	                                    <th width="420">资源名称</th>
+	                                    <th width="125">价格（元）</th>
+	                                    <th width="125">库存</th>
+	                                    <th width="125">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+	                                
+	                           </tbody>
+                            </table>
+                        </div>
+                    </div> 
+                 </div>
+                 <!--边框-->                   
+                    <div class="page">
+                        <div id="paginator" style="margin: auto;"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- 仓库添加 -->
+            <div id="addMyShopping" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" data-dismiss="modal" aria-hidden="true" class="sui-close">×</button>
+			        <h4 id="myModalLabel" class="modal-title">添加到采购</h4>
+			      </div>
+			      <div class="modal-body">
+					<form class="sui-form form-horizontal">
+						  <div class="control-group">
+						    <label  class="control-label">项目名称：</label>
+						    <div class="controls">
+						      <select class="proName" style="min-width: 200px;"></select>
+						    </div>
+						  </div>
+						  <div class="control-group">
+						    <label  class="control-label">任务名称：</label>
+						    <div class="controls">
+						    	<select class="taskName" style="min-width: 200px;"></select>
+						    </div>
+						  </div>
+						  <div class="control-group">
+						    <label  class="control-label">添加数量：</label>
+						    <div class="controls">
+						    	<input class="addNum" type="number" min="0"/>
+						    </div>
+						    <div class="sui-msg msg-error" style="display:none;">
+							  <div class="msg-con"></div>
+							  <s class="msg-icon"></s>
+							</div>
+						  </div>
+						  
+					</form>
+				 </div>
+			      <div class="modal-footer">
+			        <button type="button"  class="sui-btn btn-primary btn-large makeSure">确定</button>
+			        <button type="button" data-dismiss="modal" class="sui-btn btn-default btn-large">取消</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			<script id="resources_proName_tmplate" type="text/x-jquery-tmpl" >
+				<option value="${projectId}">${projectName}</option>
+			</script>
+			<script id="resources_taskName_tmplate" type="text/x-jquery-tmpl" >
+				<option value="null"></option>
+				<option value="${projTaskId}">${projTaskName}</option>
+			</script>
+            <!-- 仓库修改 -->
+            
+            
+            <!-- 出售中 -->
+            <script id="resources_onSealing_tmplate" type="text/x-jquery-tmpl">
+	                                <tr>
+	                                    <td >
+	                                        <div class="ziYuan">
+	                                            <a href="javascript:void(0)"><img src="${resourceImage}" alt=""/></a>
+	                                            <p><a href="javascript:void(0)">${resourceName}</a> </p>
+	                                        </div>
+	                                    </td>
+	                                    <td><p>${resourcePrice}</p></td>
+	                                    <td><p>${resourceNumber}</p></td>
+	                                    <td><p><a class="_sold_out" data-id="${creativeResourceId}" href="javascript:void(0)">下架</a></p></td>
+	                                </tr>
+			</script>
+			<!-- 审核中 -->
+            <script id="resources_reviewIng_tmplate" type="text/x-jquery-tmpl">
+			            <tr>
+			            	<td >
+			                <div class="ziYuan">
+			                    <a href="javascript:void(0)"><img src="${resourceImage}" alt=""/></a>
+			                    <p><a href="javascript:void(0)">${resourceName}</a> </p>
+			                </div>
+			            	</td>
+			            		<td><p>${resourcePrice}</p></td>
+	                            <td><p>${resourceNumber}</p></td>
+			            	<td><p><a class="_look_at" data-id="${creativeResourceId}" href="javascript:void(0)">查看</a></p></td>
+			        	</tr>
+            </script>
+            <!-- 未通过审核 -->
+            <script id="resources_notReviewed_tmplate" type="text/x-jquery-tmpl">
+			            <tr>
+	                          <td >
+	                              <div class="ziYuan">
+	                              <a href="javascript:void(0)"><img src="${resourceImage}" alt=""/></a>
+	                               <p><a href="javascript:void(0)">${resourceName}</a> </p>
+	                               </div>
+	                          </td>
+	                               <td><p>${resourcePrice}</p></td>
+	                               <td><p>${resourceNumber}</p></td>
+	                          <td>
+	                               <p><a class="edit" data-id="${creativeResourceId}" href="javascript:void(0)">修改</a></p>
+	                               <p><a class="del" data-id="${creativeResourceId}" href="javascript:void(0)">删除</a></p>
+	                          </td>
+	                   </tr>
+            </script>
+            <!-- 已下架 -->
+            <script id="resources_soldOut_tmplate" type="text/x-jquery-tmpl">
+			            			<tr>
+	                                    <td >
+	                                        <div class="ziYuan">
+	                                            <a href="javascript:void(0)"><img src="${resourceImage}" alt=""/></a>
+	                                            <p><a href="javascript:void(0)">${resourceName}</a> </p>
+	                                        </div>
+	                                    </td>
+	                                    <td><p>${resourcePrice}</p></td>
+	                               		<td><p>${resourceNumber}</p></td>
+	                                    <td>
+	                                    	<p><a class="_look_at" data-id="${creativeResourceId}" href="javascript:void(0)">查看</a></p>
+	                                    	<p><a class="edit" data-id="${creativeResourceId}" href="javascript:void(0)">修改</a></p>
+	                                    	<p><a class="shelves" data-id="${creativeResourceId}" href="javascript:void(0)">重新上架</a></p>
+	                                    </td>
+	                                </tr>
+            </script>
+            <!-- 已删除 -->
+            <script id="resources_deleted_tmplate" type="text/x-jquery-tmpl">
+			            			<tr>
+	                                    <td >
+	                                        <div class="ziYuan">
+	                                            <a href="javascript:void(0)"><img src="${resourceImage}" alt=""/></a>
+	                                            <p><a href="javascript:void(0)">${resourceName}</a> </p>
+	                                        </div>
+	                                    </td>
+	                                    <td><p>${resourcePrice}</p></td>
+	                               		<td><p>${resourceNumber}</p></td>
+	                                    <td>
+	                                    	<p><a class="edit" data-id="${creativeResourceId}" href="javascript:void(0)">修改</a></p>
+	                                    	<p><a class="del" data-id="${creativeResourceId}" href="javascript:void(0)">删除</a></p>
+	                                    </td>
+	                                </tr>
+            </script>
+            <!-- 库存 -->
+            <script id="resources_inventoryGoods_tmplate" type="text/x-jquery-tmpl">
+			            			<tr>
+	                                    <td >
+	                                        <div class="ziYuan">
+	                                            <a href="javascript:void(0)"><img src="${resourceImage}" alt=""/></a>
+	                                            <p><a href="javascript:void(0)">${resourceName}</a> </p>
+	                                        </div>
+	                                    </td>
+	                                    <td><p>${stockCount}</p></td>
+	                                    <td>
+	                                    	<p><a class="_look_at" data-id="${createResourceId}" href="javascript:void(0)">查看</a></p>
+	                                    	<p><a class="add" data-num="${stockCount}" data-id="${stockId}" href="javascript:void(0)">添加到采购</a></p>
+	                                    </td>
+	                                </tr>
+            </script>
+            <script type="text/javascript" src="resources/js/front/resourceWarehouse.js"></script>

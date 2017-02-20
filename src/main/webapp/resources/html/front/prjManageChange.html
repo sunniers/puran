@@ -1,0 +1,89 @@
+			<!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>项目管理</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>进行中</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>变更</span>
+            </div>
+            <!--内容详情-->
+            <div class="contentInfo">
+                <div class="prjManageChange">
+                    <div class="header">
+                        <li class="on">变更申请</li>
+                        <li>变更状态</li>
+                    </div>
+                    <div class="contents1" style="display: block;">
+                       <div class="header">变更申请</div>
+                       <div class="title">变更内容</div>
+                       <textarea placeholder="请输入内容....."></textarea>
+                       <div class="title">接收对象</div>
+                       <div class="objects">
+                       		<label class="checkbox-pretty inline">
+    							<input type="checkbox" checked="checked"><span>成员A</span>
+  							</label>
+  							<label class="checkbox-pretty inline">
+    							<input type="checkbox"><span>成员A</span>
+  							</label>
+  							<label class="checkbox-pretty inline">
+    							<input type="checkbox"><span>成员A</span>
+  							</label>
+  							<label class="checkbox-pretty inline">
+    							<input type="checkbox"><span>成员A</span>
+  							</label>
+                       	</div>
+                       	<div class="title">任务时间</div>
+                       	<div class="projectTime">
+                       		<div class="box1">预计开始时间</div>
+                       		<div class="box2">
+                       			<form class="sui-form form-horizontal">
+                        			<div data-toggle="datepicker" class="control-group input-daterange">
+                                		<input type="text" class="input-medium input-date">
+                            		</div>
+                        		</form>
+                       		</div>
+                       		<div class="box1">预计结束时间</div>
+                       		<div class="box2">
+                       			<form class="sui-form form-horizontal">
+                        			<div data-toggle="datepicker" class="control-group input-daterange">
+                                		<input type="text" class="input-medium input-date">
+                            		</div>
+                        		</form>
+                       		</div>
+                       	</div>
+                       	<button class="back">返回</button><button>提 交</button>
+                    </div>
+                    <div class="contents2" style="display: block;">
+                    	<table>
+                    		<thead>
+                    			<tr>
+                    				<th>变更内容</th>
+                    				<th>变更提出人</th>
+                    				<th>变更状态</th>
+                    				<th>提交时间</th>
+                    				<th>操作</th>
+                    			</tr>
+                    		</thead>
+                    		<tbody>
+                    			<tr>
+                    				<td>fasfasf</td>
+                    				<td>提出人A</td>
+                    				<td>未确认</td>
+                    				<td>2016-11-15</td>
+                    				<td><button>查看</button><br><button>确认</button></td>
+                    			</tr>
+                    			<tr>
+                    				<td>fasfasf</td>
+                    				<td>提出人A</td>
+                    				<td>确认</td>
+                    				<td>2016-11-15</td>
+                    				<td><button>查看</button></td>
+                    			</tr>
+                    		</tbody>
+                    	</table>
+                    	<div class="page">
+                        	<div id="paginator" style="margin: auto;"></div>
+                		</div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript" src="resources/js/front/prjManageChange.js"></script>

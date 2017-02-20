@@ -1,0 +1,81 @@
+			<!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="../resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>个人中心</span><span><img src="../resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>我的账号</span><span><img src="../resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>企业认证</span>
+            </div>
+
+            <!--内容详情-->
+            <div class="contentInfo white">
+                <div class="enterpriseCertification">
+                    <div class="addUserPrompt">
+                        <img src="../resources/images/front/warning.png" alt="警告"/>
+                        <div class="addUserPromptWord">一个用户企业认证和身份认证只能选择一种，请谨慎选择</div>
+                    </div>
+                    <div class="userContent">
+                        <div class="enterpriseName fr">
+                            <label>*企业名称:</label>
+                            <input type="text">
+                            <div class="sui-msg msg-error promptWords">
+                                <div class="msg-con">企业名称不能为空</div>
+                                <s class="msg-icon"></s>
+                            </div>
+                        </div>
+                        <div class="legalPerson fr">
+                            <label>*法人:</label>
+                            <input type="text">
+                            <div class="sui-msg msg-error promptWords">
+                                <div class="msg-con">法人名称不能为空</div>
+                                <s class="msg-icon"></s>
+                            </div>
+                        </div>
+                        <div class="organization fr">
+                            <label>*组织机构代码:</label>
+                            <input type="text">
+                            <div class="sui-msg msg-error promptWords">
+                                <div class="msg-con">机构代码不能为空</div>
+                                <s class="msg-icon"></s>
+                            </div>
+                        </div>
+                        <div class="upload fr">
+                            <div class="uploadPhoto fr">
+                                <label>
+                                    <input  class="upLoadImg3" type="file" name="file" style="display:none;">
+                                    <div class="replace">
+                                        <img src="../resources/images/front/upload.png" alt="上传" />
+                                        <div class="uploadPrompt">税务登记证</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="uploadPhoto fr">
+                                <label>
+                                    <input  class="upLoadImg2" type="file" name="file" style="display:none;">
+                                    <div class="replace">
+                                        <img src="../resources/images/front/upload.png" alt="上传" />
+                                        <div class="uploadPrompt">组织机构代码证</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="uploadPhoto fr">
+                                <label>
+                                    <input  class="upLoadImg1" type="file" name="file" style="display:none;">
+                                    <div class="replace">
+                                        <img src="../resources/images/front/upload.png" alt="上传" />
+                                        <div class="uploadPrompt">工商营业执照</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="sui-msg msg-error promptWords">
+                                <div class="msg-con">请上传图片</div>
+                                <s class="msg-icon"></s>
+                            </div>
+                            <label>*三证照片:</label>
+                        </div>
+                        <div class="words fl">请上传工商营业执照、组织机构代码证和税务登记证。请保证图片清晰。模糊，修改，遮挡，不完整的都将不予审核通过</div>
+                        <div class="submit fr">
+                            <button id="subBtn">提 交</button>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript" src="/resources/js/front/enterpriseCertification.js"></script>

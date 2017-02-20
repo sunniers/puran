@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.InvestCompanyDao">
+
+	<!--投资机构实体类映射 -->
+	<resultMap id="selectAllInvestCompanyMap" type="com.shdatabank.puruan.model.InvestCompany">
+		<id property="investCompanyId" column="invest_company_id"></id>
+		<result property="companyId" column="company_id"></result>
+		<result property="investCompanyName" column="invest_company_name"></result>
+		<result property="buildDate" column="build_date"></result>
+		<result property="createTime" column="create_time"></result>
+		<result property="investCase" column="invest_case"></result>
+		<result property="companyName" column="company_name"></result>
+		<result property="investPreference" column="preference"></result>
+		<result property="investDomain" column="domain"></result>
+		<result property="auditStatus" column="data_value"></result>
+		
+	</resultMap>
+	<!-- 投资机构字段 -->
+	<sql id="sql_column">
+		company_id,company_name,build_date,invest_case,invest_preference,invest_domain
+	</sql>
+
+	<!-- 投资机构查询列表已审核 后台 -->
+	<select id="selectAllResourseYesBack" resultMap="selectAllInvestCompanyMap"
+		parameterType="com.shdatabank.puruan.model.InvestCompany">
+		SELECT
+		c.invest_company_id,c.invest_company_name,c.build_date,c.invest_case,
+		group_concat(DISTINCT p.data_value) as
+		preference,group_concat(DISTINCT
+		d.data_value) as domain,a.data_value
+		FROM
+		(SELECT
+		o.audit_id,o.invest_company_id,o.audit_status,o.audit_datetime,o.active
+		from
+		invest_company_audit o ORDER BY o.audit_datetime DESC) t
+		LEFT JOIN
+		invest_company c on
+		c.invest_company_id=t.invest_company_id
+		LEFT JOIN
+		invest_domain m on
+		c.invest_company_id=m.invest_company_id
+		LEFT JOIN
+		dictionarydata d on
+		d.data_id=m.invest_domain_value
+		LEFT JOIN
+		invest_preference r on
+		r.invest_company_id=c.invest_company_id
+		LEFT JOIN
+		dictionarydata p on
+		p.data_id=r.invest_preference_value
+		LEFT JOIN 
+		dictionarydata a on a.data_id=t.audit_status
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			c.active=0 and t.active=0
+			<if test="investCompanyName != null and investCompanyName!=''">
+				AND c.invest_company_name LIKE '%${investCompanyName}%'
+			</if>
+			<if test="investPreferenceValue != null and investPreferenceValue!=''">
+				AND c.invest_company_id in (SELECT i.invest_company_id
+				from
+				invest_preference
+				i where
+				i.invest_preference_value=#{investPreferenceValue})
+			</if>
+		</trim>
+		GROUP BY c.invest_company_id
+		ORDER BY
+		c.invest_company_name,c.build_date
+	</select>
+
+	<!-- 投资机构查询列表未审核 后台 -->
+	<select id="selectAllResourseNoBack" resultMap="selectAllInvestCompanyMap"
+		parameterType="com.shdatabank.puruan.model.InvestCompany">
+		SELECT
+		c.invest_company_id,c.invest_company_name,c.build_date,c.invest_case,
+		group_concat(DISTINCT p.data_value) as
+		preference,group_concat(DISTINCT
+		d.data_value) as domain
+		FROM
+		invest_company c
+		LEFT JOIN
+		invest_domain m on
+		c.invest_company_id=m.invest_company_id
+		LEFT
+		JOIN
+		dictionarydata d on
+		d.data_id=m.invest_domain_value
+		LEFT JOIN
+		invest_preference r on
+		r.invest_company_id=c.invest_company_id
+		LEFT
+		JOIN
+		dictionarydata p on
+		p.data_id=r.invest_preference_value
+		where c.invest_company_id not in (
+		SELECT DISTINCT u.invest_company_id from invest_company_audit u
+		) and
+		c.active=0
+		<if test="investCompanyName != null and investCompanyName!=''">
+			AND c.invest_company_name LIKE '%${investCompanyName}%'
+		</if>
+		<if test="investPreferenceValue != null and investPreferenceValue!=''">
+			AND c.invest_company_id in (SELECT DISTINCT
+			i.invest_company_id
+			from
+			invest_preference
+			i where
+			i.invest_preference_value=#{investPreferenceValue})
+		</if>
+		GROUP BY c.invest_company_id
+		ORDER BY
+		c.invest_company_name,c.build_date
+	</select>
+
+
+	<!-- 投资机构查询 前台 -->
+	<select id="selectAllInvestCompany" resultMap="selectAllInvestCompanyMap"
+		parameterType="com.shdatabank.puruan.model.InvestCompany">
+		SELECT
+		c.invest_company_id,c.invest_company_name,c.build_date,c.invest_case,
+		group_concat(DISTINCT p.data_value) as
+		preference,group_concat(DISTINCT
+		d.data_value) as domain
+		FROM
+		(SELECT
+		o.audit_id,o.invest_company_id,o.audit_status,o.audit_datetime
+		,o.active
+		from
+		invest_company_audit o ORDER BY o.audit_datetime DESC) t
+		LEFT JOIN
+		invest_company c on
+		c.invest_company_id=t.invest_company_id
+		LEFT JOIN
+		invest_domain m on
+		c.invest_company_id=m.invest_company_id
+		LEFT JOIN
+		dictionarydata d on
+		d.data_id=m.invest_domain_value
+		LEFT JOIN
+		invest_preference r on
+		r.invest_company_id=c.invest_company_id
+		LEFT
+		JOIN
+		dictionarydata p on
+		p.data_id=r.invest_preference_value
+		where
+		t.audit_status=400702 and c.active=0 and t.active=0
+		<if test="investCompanyName != null and investCompanyName!=''">
+			AND c.invest_company_name LIKE '%${investCompanyName}%'
+		</if>
+		<if test="investPreferenceValue != null and investPreferenceValue!=''">
+			AND c.invest_company_id in (SELECT i.invest_company_id
+			from
+			invest_preference
+			i where
+			i.invest_preference_value=#{investPreferenceValue})
+		</if>
+		GROUP BY c.invest_company_id
+		ORDER BY
+		c.invest_company_name,c.build_date
+	</select>
+
+	<!-- 投资机构详情查看 -->
+	<select id="findResoursebyId" resultMap="selectAllInvestCompanyMap"
+		parameterType="com.shdatabank.puruan.model.InvestCompany">
+		select i.invest_company_id,
+		c.company_name,i.invest_company_name,i.build_date,i.create_time,i.invest_case,
+		group_concat(DISTINCT p.data_value) as
+		preference,group_concat(DISTINCT
+		d.data_value) as domain
+		from
+		invest_company i
+		LEFT JOIN company c on i.company_id=c.company_id
+		LEFT
+		JOIN invest_domain m
+		on i.invest_company_id=m.invest_company_id
+		LEFT
+		JOIN dictionarydata d on
+		d.data_id=m.invest_domain_value
+		LEFT JOIN
+		invest_preference r on
+		r.invest_company_id=i.invest_company_id
+		LEFT JOIN
+		dictionarydata p on
+		p.data_id=r.invest_preference_value
+		where
+		i.invest_company_id=#{investCompanyId}
+	</select>
+
+
+	<!-- 插入投资机构审核信息 -->
+	<insert id="insertInvestCompanyAudit" parameterType="com.shdatabank.puruan.model.InvestCompanyAudit"
+		useGeneratedKeys="true" keyProperty="auditId">
+		INSERT INTO
+		invest_company_audit(invest_company_id,back_user_id,audit_datetime,audit_content,audit_status,active)
+		VALUES(
+		#{investCompanyId},
+		#{backUserId},
+		now(),
+		#{auditContent},
+		#{auditStatus},
+		0
+		)
+	</insert>
+
+	<!-- 投资偏好列表 -->
+	<select id="findAllPreference" resultType="com.shdatabank.puruan.model.InvestPreference">
+		SELECT d.data_id
+		investPreferenceValueId
+		, d.data_value preferenceValue
+		from
+		dictionarydata
+		d where dict_id=500100
+	</select>
+
+</mapper>

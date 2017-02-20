@@ -1,0 +1,164 @@
+<!--路径-->
+<div class="nav">
+	<span>首页</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>任务管理</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>任务变更</span>
+</div>
+
+<!--内容详情-->
+<div class="contentInfo">
+	<div class="taskChanges">
+		<div class="title">
+			<div class="on" data-attr="changeRequest">变更申请</div>
+			<div data-attr="changeStatus">变更状态</div>
+		</div>
+		<div class="changeRequest tableSwitch">
+		<div class="contents">
+			<div class="head">任务变更</div>
+			<div class="bodyContent">
+				<div class="titles">任务信息</div>
+				<div class="tableContent">
+					
+				</div>
+				<div class="titles">变更内容</div>
+				<textarea placeholder="请输入内容" id="changeContent"></textarea>
+				<div class="titles">任务时间</div>
+				<div class="times">
+					<div class="time1 fl">预计开始时间 </div>
+					<div class="startTime fl">
+						<form class="sui-form form-horizontal">
+                        	<div data-toggle="datepicker" class="control-group input-daterange">
+                                <input type="text" class="input-medium input-date" id="projTaskExpectStart">
+                            </div>
+                        </form>
+					</div>
+					<div class="time2 fl">预计结束时间 </div>
+					<div class="endTime fl">
+						<form class="sui-form form-horizontal">
+                        	<div data-toggle="datepicker" class="control-group input-daterange">
+                                <input type="text" class="input-medium input-date" id="projTaskExpectFinish">
+                            </div>
+                        </form>
+					</div>
+				</div>
+				<div class="sui-msg msg-error">
+                    <div class="msg-con">邮箱不能为空</div>
+                    <s class="msg-icon"></s>
+                </div>
+				<button id="changeBtn">提交</button>
+			</div>
+		</div>
+	</div>
+	<div class="changeStatus tableSwitch" style="display:none;">
+		<div class="tableContent">
+			<div class="tableTitle">
+				<div style="width:250px;">变更内容</div>
+				<div style="width:130px;">变更提出人</div>
+				<div style="width:130px;">变更状态</div>
+				<div style="width:130px;">提交时间</div>
+				<div style="width:150px;">操作</div>
+			</div>
+			<div class="tableContents">
+				
+			</div>
+		</div>
+		<div class="page">
+			<div id="paginator" style="margin: auto;"></div>
+		</div>
+	</div>
+	</div>
+</div>
+
+			<div id="taskChanges_lookAt" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" data-dismiss="modal" aria-hidden="true" class="sui-close">×</button>
+							<h4 id="myModalLabel" class="modal-title">变更详情</h4>
+						</div>
+						<div class="modal-body">
+							<div class="title">项目名称</div>
+							<div class="boxs">
+								
+							</div>
+							<div class="title">变更内容</div>
+							<div class="changeContent"></div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" data-ok="modal" class="sui-btn btn-primary btn-large">确认</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<script id="taskChanges_taskContent_tmplate" type="text/x-jquery-tmpl">
+					<div class="box">
+						<div class="box1 fl">任务名称</div>
+						<div class="box2 fl">${projTaskName}</div>
+						<div class="box1 fl">资源名称</div>
+						<div class="box2 fl">${userName}</div>
+					</div>
+					<div class="box">
+						<div class="box1 fl">开始时间</div>
+						<div class="box2 fl">${projTaskStartDate}</div>
+						<div class="box1 fl">结束时间</div>
+						<div class="box2 fl">${projTaskFinishDate}</div>
+					</div>
+					<div class="box">
+						<div class="box1 fl">工期</div>
+						<div class="box2 fl">${projTaskWorkRange}</div>
+						<div class="box1 fl">前置任务</div>
+						<div class="box2 fl">${projPlanName}</div>
+					</div>
+					<div class="boxs">
+						<div class="boxs1 fl">任务详情</div>
+						<div class="boxs2 fl">${projTaskContent}</div>
+					</div>
+</script>
+<script id="taskChanges_table_tmplate" type="text/x-jquery-tmpl">
+				<div class="box">
+					<div class="box1 fl">${projChangeContent}</div>
+					<div class="box2 fl">${userName}</div>
+					{{if $data.changeStatus==400901}}
+					<div class="box2 fl">未确认</div>
+					<div class="box2 fl">${createTime}</div>
+					<div class="box3 fl" data-id="${projectTaskChangeId}">
+						<button data-toggle="modal" data-keyboard="false" class="lookAt">查看</button><br>
+						<button class="sure">确认</button>
+					</div>
+					{{else}}
+					<div class="box2 fl">确认</div>
+					<div class="box2 fl">${createTime}</div>
+					<div class="box3 fl" data-id="${projectTaskChangeId}">
+						<button data-toggle="modal" data-keyboard="false" class="lookAt">查看</button>
+					</div>
+					{{/if}}
+				</div>
+</script>
+<script id="taskChanges_changeDeail_tmplate" type="text/x-jquery-tmpl">
+								<div class="box">
+									<div class="box1">项目名称</div>
+									<div class="box2">${projectName}</div>
+								</div>
+								<div class="box">
+									<div class="box1">项目编号</div>
+									<div class="box2">${projectId}</div>
+								</div>
+								<div class="box">
+									<div class="box1">发起人</div>
+									<div class="box2">${planName}</div>
+								</div>
+								<div class="box">
+									<div class="box1">发起时间</div>
+									<div class="box2">${auditDatetime}</div>
+								</div>
+								<div class="box">
+									<div class="box1">预算</div>
+									<div class="box2">${projServiceFee}</div>
+								</div>
+								<div class="box">
+									<div class="box1">交付时间</div>
+									<div class="box2">${projDevlierDate}</div>
+								</div>
+</script>
+<script type="text/javascript" src="resources/js/front/taskChanges.js"></script>

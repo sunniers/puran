@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.VirtualAboratoryDao">
+	<!-- 虚拟实验室表映射 -->
+	<resultMap type="com.shdatabank.puruan.model.VirtualAboratory"
+		id="selectVirtualAboratoryMap">
+		<id property="virtualAboratoryId" column="virtual_aboratory_id" />
+		<result property="equipmentNumber" column="equipment_number" />
+		<result property="virtualVersion" column="virtual_version" />
+		<result property="virtualType" column="virtual_type" />
+		<result property="virtualOwnerName" column="virtual_owner_name" />
+		<result property="virtualCount" column="virtual_count" />
+		<result property="parentVirtualAboratory" column="parent_virtual_aboratory" />
+		<result property="virtualAboratoryName" column="virtual_aboratory_name" />
+		<result property="virtualAboratoryIntroduce" column="virtual_aboratory_introduce" />
+		<result property="createTime" column="create_time" />
+		<result property="active" column="active" />
+
+	</resultMap>
+	<!-- 虚拟实验室表字段 -->
+	<sql id="sql_couml">
+		va.virtual_aboratory_id,
+		va.virtual_aboratory_name,
+		va.virtual_version
+	</sql>
+	<!-- 查询虚拟实验室 -->
+	<select id="selectVirtualAboratoryByParentId" resultMap="selectVirtualAboratoryMap">
+		SELECT
+		<include refid="sql_couml"/>
+		from
+		virtual_aboratory va
+		where
+		va.parent_virtual_aboratory=#{parentVirtualAboratory}
+	</select>
+
+
+	<!-- 查询未来七天剩余数 -->
+	<select id="selectVirtualAboratoryCount" resultType="com.shdatabank.puruan.model.VirtualCountResponse">
+		SELECT
+		time,((SELECT virtual_count from virtual_aboratory v where
+		v.virtual_aboratory_id=#{virtualAboratoryId})-count) count
+		FROM
+		(SELECT
+		current_date() time,
+		(SUM(va.application_count)) count
+		from
+		virtual_application va
+		where
+		current_date()&gt;=va.application_start_date AND
+		current_date()&lt;va.application_end_date AND
+		va.virtual_id=#{virtualAboratoryId}
+		union ALL
+		SELECT
+		date_add(current_date(), INTERVAL 1 day) time,
+		(SUM(va.application_count))
+		from virtual_application va
+		where
+		date_add(current_date(), INTERVAL 1 day)&gt;=va.application_start_date
+		AND
+		date_add(current_date(), INTERVAL 1 day)&lt;va.application_end_date
+		AND
+		va.virtual_id=#{virtualAboratoryId}
+		union ALL
+		SELECT
+		date_add(current_date(), INTERVAL 2 day) time,
+		SUM(va.application_count) from virtual_application va where
+		date_add(current_date(), INTERVAL 2 day)&gt;=va.application_start_date
+		AND date_add(current_date(), INTERVAL 2
+		day)&lt;va.application_end_date AND va.virtual_id=#{virtualAboratoryId}
+		union ALL
+		SELECT
+		date_add(current_date(), INTERVAL 3 day) time
+		,SUM(va.application_count) from virtual_application va where
+		date_add(current_date(), INTERVAL 3 day)&gt;=va.application_start_date
+		AND date_add(current_date(), INTERVAL 3
+		day)&lt;va.application_end_date AND va.virtual_id=#{virtualAboratoryId}
+		union ALL
+		SELECT
+		date_add(current_date(), INTERVAL 4 day) time,
+		SUM(va.application_count) from virtual_application va where
+		date_add(current_date(), INTERVAL 4 day)&gt;=va.application_start_date
+		AND date_add(current_date(), INTERVAL 4
+		day)&lt;va.application_end_date AND va.virtual_id=#{virtualAboratoryId}
+		union ALL
+		SELECT
+		date_add(current_date(), INTERVAL 5 day) time,
+		SUM(va.application_count) from virtual_application va where
+		date_add(current_date(), INTERVAL 5 day)&gt;=va.application_start_date
+		AND date_add(current_date(), INTERVAL 5
+		day)&lt;va.application_end_date AND va.virtual_id=#{virtualAboratoryId}
+		union ALL
+		SELECT
+		date_add(current_date(), INTERVAL 6 day)
+		time,SUM(va.application_count) from virtual_application va where
+		date_add(current_date(), INTERVAL 6 day)&gt;=va.application_start_date
+		AND date_add(current_date(), INTERVAL 6
+		day)&lt;va.application_end_date AND va.virtual_id=#{virtualAboratoryId}
+		) t
+		ORDER BY time
+	</select>
+</mapper>

@@ -1,0 +1,48 @@
+
+<!--路径-->
+<div class="nav">
+	<span>首页</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>任务管理</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>详情</span>
+</div>
+
+<!--内容详情-->
+<div class="contentInfo">
+	<div class="taskPoints">
+		<div class="head">任务详情</div>
+		<div class="bodyContent">
+			<div class="title">任务信息</div>
+			<div class="tableContent">
+				
+			</div>
+			<button id="backBtn">返 回</button>
+		</div>
+	</div>
+</div>
+
+<script id="taskPoints_task_tmplate" type="text/x-jquery-tmpl">
+				<div class="box">
+					<div class="box1 fl">任务名称</div>
+					<div class="box2 fl">${projTaskName}</div>
+					<div class="box1 fl">资源名称</div>
+					<div class="box2 fl">${userName}</div>
+				</div>
+				<div class="box">
+					<div class="box1 fl">开始时间</div>
+					<div class="box2 fl">${projTaskStartDate}</div>
+					<div class="box1 fl">结束时间</div>
+					<div class="box2 fl">${projTaskFinishDate}</div>
+				</div>
+				<div class="box">
+					<div class="box1 fl">工期</div>
+					<div class="box2 fl">${projTaskWorkRange}</div>
+					<div class="box1 fl">前置任务</div>
+					<div class="box2 fl">${projPlanName}</div>
+				</div>
+				<div class="boxs">
+					<div class="boxs1 fl">任务详情</div>
+					<div class="boxs2 fl">${projTaskContent}</div>
+				</div>
+</script>
+
+<script type="text/javascript" src="resources/js/front/taskPoints.js"></script>

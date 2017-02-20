@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IEnrollDao">
+    <!-- 插入报名信息 -->
+    <insert id="insertProjectEnroll" parameterType="com.shdatabank.puruan.model.ProjectEnroll"
+        useGeneratedKeys="true" keyProperty="enrollId">
+        INSERT INTO project_enroll(
+        project_requirement_id,
+        user_id,
+        enroll_datetime,
+        enroll_status,
+        enroll_name,
+        enroll_email,
+        enroll_mobile,
+        enroll_value,
+        enroll_see_file_path,
+        enroll_file_name,
+        enroll_file_path,
+        create_time
+        ) VALUES (
+        #{projectRequirementId},
+        #{userId},
+        NOW(),
+        400201,
+        #{name},
+        #{email},
+        #{mobile},
+        #{enrollValue},
+        #{enrollSeeFilePath},
+        #{enrollFileName},
+        #{enrollFilePath},
+        NOW()
+        )
+    </insert>
+    
+    <!-- 删除报名信息 -->
+    <delete id="deleteProjectEnroll" parameterType="com.shdatabank.puruan.model.ProjectEnroll">
+        DELETE FROM project_enroll
+        WHERE project_requirement_id = #{projectRequirementId}
+        AND user_id = #{userId}
+    </delete>
+    
+    <!-- 插入人才需求报名信息 -->
+    <insert id="insertTalentEnroll" parameterType="com.shdatabank.puruan.model.TalentEnroll">
+        INSERT INTO talent_enroll(
+        talent_requirement_id,
+        user_id,
+        enroll_datetime,
+        enroll_status,
+        enroll_name,
+        enroll_email,
+        enroll_mobile,
+        enroll_value,
+        enroll_see_file_path,
+        enroll_file_name,
+        enroll_file_path,
+        create_time
+        ) VALUES (
+        #{talentRequirementId},
+        #{userId},
+        NOW(),
+        400201
+        #{name},
+        #{email},
+        #{mobile},
+        #{enrollValue},
+        #{enrollSeeFilePath},
+        #{enrollFileName},
+        #{enrollFilePath},
+        NOW()
+        )
+    </insert>
+    
+    <!-- 删除人才需求报名信息 -->
+    <delete id="deleteTalentEnroll" parameterType="com.shdatabank.puruan.model.TalentEnroll">
+        DELETE FROM talent_enroll
+        WHERE talent_requirement_id = #{talentRequirementId}
+        AND user_id = #{userId}
+    </delete>
+</mapper>

@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IRequirementManageDao">
+    <!-- 查询用户的需求 -->
+    <select id="selectRequirementManage" resultMap="selectRequirementManageMap"
+        parameterType="com.shdatabank.puruan.model.RequirementManage">
+        SELECT 
+            proj_id requirement_id,
+            proj_name requirement_name,
+            create_datetime,
+            proj_require_description_content requirement_describe,
+            proj_flow_status requirement_status,
+            house requirement_house,
+            enroll requirement_enroll,
+            recommend requirement_recommend,
+            type requirement_type,
+            is_fee_trusteeship is_fee_trusteeship,
+            proj_status proj_flow_status,
+            is_evaluate
+            FROM (
+            SELECT 
+            pr.proj_id,
+            pr.proj_name,
+            pr.create_datetime,
+            prd.proj_require_description_content,
+            (
+            SELECT dd.data_value FROM dictionarydata dd WHERE dd.data_id = pr.proj_flow_status
+            ) proj_flow_status,
+            (
+            SELECT COUNT(*) FROM user_house uh WHERE uh.house_type = 700001 
+            AND uh.house_resource_id = pr.proj_id
+            ) house,
+            (
+            SELECT COUNT(*) FROM project_enroll pe WHERE pe.project_requirement_id = pr.proj_id
+            ) enroll,
+            (
+            SELECT COUNT(*) FROM project_requirement_recommend prr WHERE prr.proj_id = pr.proj_id
+            ) recommend ,
+            '700001' type,
+            pr.is_fee_trusteeship,
+            pr.proj_flow_status proj_status,
+            (
+	        SELECT COUNT(*) FROM creative_talent_evaluate cte
+	        WHERE cte.proj_id = pr.proj_id
+	        AND user_id = #{userId}
+	        ) is_evaluate
+            FROM project_requirement as pr
+            LEFT JOIN project_requirement_description prd ON pr.proj_id = prd.proj_require_id
+            <where>
+                pr.publish_user_id = #{userId}
+                AND pr.active = 0
+                AND pr.proj_flow_status &lt;&gt; 400105
+                <if test="null != requirementStatus and '' != requirementStatus">
+                    AND pr.proj_flow_status = #{requirementStatus}
+                </if>
+                <if test="null != search and '' != search">
+                    AND pr.proj_name LIKE '%${search}%'
+                </if>
+            </where>
+            
+            UNION
+            SELECT 
+            tr.talent_requirement_id,
+            tr.talent_requirement_name,
+            tr.create_time,
+            tr.requirement_description,
+            (
+            SELECT dd.data_value FROM dictionarydata dd WHERE dd.data_id = tr.requirement_status
+            ) proj_flow_status,
+            (
+            SELECT COUNT(*) FROM user_house uh WHERE uh.house_type = 700002 
+            AND uh.house_resource_id = tr.talent_requirement_id
+            ) house,
+            (
+            SELECT COUNT(*) FROM talent_enroll te WHERE te.talent_requirement_id = tr.talent_requirement_id
+            ) enroll,
+            (
+            SELECT COUNT(*) FROM talent_requirement_recommend trr WHERE trr.talent_id = tr.talent_requirement_id
+            ) recommend,
+            '700002' type,
+            NULL,
+            tr.requirement_status,
+            NULL
+            FROM talent_requirement tr
+            <where>
+                tr.user_id = #{userId}
+                AND tr.active = 0 
+                AND tr.requirement_status &lt;&gt; 400105
+                <if test="null != requirementStatus and '' != requirementStatus">
+                    AND tr.requirement_status = #{requirementStatus}
+                </if>
+                <if test="null != search and '' != search">
+                    AND tr.talent_requirement_name LIKE '%${search}%'
+                </if>
+            </where>
+            ) requirement 
+            <if test="null != orderBy and '' != orderBy">
+                ORDER BY ${orderBy} 
+            </if>
+            <if test="null != asc and '' !=asc">
+                ${asc}
+            </if>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.RequirementManage" id="selectRequirementManageMap">
+        <id property="requirementId" column="requirement_id" />
+        <result property="requirementName" column="requirement_name" />
+        <result property="createDatetime" column="create_datetime" />
+        <result property="requirementDescribe" column="requirement_describe" />
+        <result property="requirementStatus" column="requirement_status" />
+        <result property="requirementHouse" column="requirement_house" />
+        <result property="requirementEnroll" column="requirement_enroll" />
+        <result property="requirementRecommend" column="requirement_recommend" />
+        <result property="requirementType" column="requirement_type" />
+        <result property="isFeeTrusteeship" column="is_fee_trusteeship" />
+        <result property="status" column="proj_flow_status" />
+        <result property="isEvaluate" column="is_evaluate" />
+    </resultMap>
+    
+    <!-- 查询交易完成的需求 -->
+    <select id="selectRransactionEnd" resultMap="selectRransactionEndMap"
+        parameterType="com.shdatabank.puruan.model.RequirementManage">
+        SELECT 
+        pr.proj_id requirement_id,
+        pr.proj_name requirement_name,
+        prd.proj_require_description_content requirement_describe,
+        p.create_datetime,
+        (SELECT IFNULL(u.user_alias,'匿名') FROM user u WHERE u.user_id = pr.manager_user_id) enroll,
+        (SELECT dd.data_value FROM dictionarydata dd WHERE dd.data_id = p.project_status) proj_flow_status,
+        pr.proj_flow_status proj_flow_status1,
+        (
+        SELECT COUNT(*) FROM creative_talent_evaluate cte
+        WHERE cte.proj_id = pr.proj_id
+        AND user_id = #{userId}
+        ) is_evaluate
+        FROM project_requirement pr 
+        JOIN project p ON pr.proj_id = p.project_requirement_id 
+        JOIN project_requirement_description prd ON pr.proj_id = prd.proj_require_id
+        <where>
+            pr.publish_user_id = #{userId}
+            AND pr.active = 0 
+            <if test="null != search and '' != search">
+                AND pr.proj_name LIKE '%${search}%'
+            </if>
+        </where>
+        <if test="null != orderBy and '' != orderBy">
+            ORDER BY ${orderBy} 
+        </if>
+        <if test="null != asc and '' !=asc">
+            ${asc}
+        </if>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.RequirementManage" id="selectRransactionEndMap">
+        <id property="requirementId" column="requirement_id" />
+        <result property="requirementName" column="requirement_name" />
+        <result property="createDatetime" column="create_datetime" />
+        <result property="requirementDescribe" column="requirement_describe" />
+        <result property="requirementStatus" column="proj_flow_status" />
+        <result property="userAlias" column="enroll" />
+        <result property="status" column="proj_flow_status1" />
+        <result property="isEvaluate" column="is_evaluate" />
+    </resultMap>
+    
+    <!-- 删除创意需求 -->
+    <update id="deleteProjectRequirement">
+        UPDATE project_requirement SET active = 1 WHERE proj_id = #{0} AND proj_flow_status = 400104
+    </update>
+    
+    <!-- 删除人才需求 -->
+    <update id="deleteTalentRequirement">
+        UPDATE talent_requirement SET active = 1 WHERE talent_requirement_id = #{0} AND requirement_status = 400104
+    </update>
+    
+    <!-- 创意需求添加推荐 -->
+    <select id="selectProjectRequirementRecommend" resultMap="selectProjectRequirementRecommendMap"
+        parameterType="com.shdatabank.puruan.model.ProjectRequirementRecommend">
+        SELECT user_id,user_type FROM (
+        SELECT
+        u.user_id,
+        u.user_type,
+        ROUND(AVG(cte.evaluate_star),1) stars
+        FROM user u 
+        LEFT JOIN creative_talent_evaluate cte
+        ON u.user_id = cte.user_id
+        <where>
+            u.user_type = 100502
+            <if test="null != identity and '' != identity">
+                AND u.is_authentication = 0
+            </if>
+            <if test="null != phone and '' != phone">
+                AND u.user_mobile is not NULL
+            </if>
+            <if test="null != email and '' != email">
+                AND u.user_email is not NULL
+            </if>
+        </where>
+        GROUP BY u.user_id
+        LIMIT 5
+        UNION
+        SELECT
+        u.user_id,
+        u.user_type,
+        ROUND(AVG(cte.evaluate_star),1) stars
+        FROM user u
+        JOIN user_creative_talent uct
+        ON u.user_id = uct.user_id
+        JOIN talent_technology tt
+        ON uct.creative_talent_id = tt.creative_talent_id
+        LEFT JOIN creative_talent_evaluate cte
+        ON u.user_id = cte.user_id
+        <where>
+            u.user_type = 100501
+            <if test="null != identity and '' != identity">
+                AND u.is_authentication = 0
+            </if>
+            <if test="null != phone and '' != phone">
+                AND u.user_mobile is not NULL
+            </if>
+            <if test="null != email and '' != email">
+                AND u.user_email is not NULL
+            </if>
+            AND tt.technology_id in 
+            (
+            SELECT 
+            GROUP_CONCAT(prc.proj_require_class_value) 
+            FROM project_requirement_class prc 
+            WHERE prc.proj_require_id = 1
+            )
+        </where>
+        GROUP BY u.user_id
+        LIMIT 5
+        ) users
+        <where>
+            1 = 1
+            <if test="null == company and '' != company and null == user">
+                AND user_type = 100502
+            </if>
+            <if test="null != user and '' != user and null == company">
+                AND user_type = 100501
+            </if>
+        </where>
+        ORDER BY stars DESC
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirementRecommend" 
+    id="selectProjectRequirementRecommendMap">
+        <id property="userId" column="user_id" />
+    </resultMap>
+    
+    <!-- 插入创意需求推荐 -->
+    <insert id="insertProjectRequirementRecommend" parameterType="java.util.List" 
+        useGeneratedKeys="true">
+        INSERT INTO project_requirement_recommend(
+        proj_id,
+        user_id,
+        create_time
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.projId},#{item.userId},NOW())
+        </foreach>
+    </insert>
+    
+    <!-- 查询创意需求信息 -->
+    <select id="selectProjectRequirement" resultMap="selectProjectRequirementMap"
+        parameterType="java.lang.Long">
+        SELECT
+        proj_id,
+        provider_type,
+        authentication_requirement,
+        publish_way
+        FROM project_requirement
+        WHERE proj_id = #{0}
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirement" id="selectProjectRequirementMap">
+        <id property="projId" column="proj_id" />
+        <result property="providerType" column="provider_type" />
+        <result property="authenticationRequirement" column="authentication_requirement" />
+        <result property="publishWay" column="publish_way" />
+    </resultMap>
+    
+    <!-- 查询人才需求信息 -->
+    <select id="selectTalentRequirement" resultMap="selectTalentRequirementMap"
+        parameterType="com.shdatabank.puruan.model.TalentRequirement">
+        SELECT
+        talent_requirement_id,
+        publish_way
+        FROM talent_requirement
+        WHERE talent_requirement_id = #{0}
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.TalentRequirement" id="selectTalentRequirementMap">
+        <id property="talentRequirementId" column="talent_requirement_id" />
+        <result property="publishWay" column="publish_way" />
+    </resultMap>
+    
+    <!-- 人才需求推荐 -->
+    <select id="selectTalentRequirementRecommend" resultMap="selectTalentRequirementRecommendMap"
+        parameterType="com.shdatabank.puruan.model.TalentRequirementRecommend">
+        SELECT user_id,user_type,stars FROM (
+        SELECT
+        u.user_id,
+        u.user_type,
+        ROUND(AVG(cte.evaluate_star),1) stars
+        FROM user u 
+        LEFT JOIN creative_talent_evaluate cte
+        ON u.user_id = cte.user_id
+        WHERE u.user_type = 100502
+        GROUP BY u.user_id
+        LIMIT 5
+        UNION
+        SELECT
+        u.user_id,
+        u.user_type,
+        ROUND(AVG(cte.evaluate_star),1) stars
+        FROM user u
+        JOIN user_creative_talent uct
+        ON u.user_id = uct.user_id
+        JOIN talent_technology tt
+        ON uct.creative_talent_id = tt.creative_talent_id
+        LEFT JOIN creative_talent_evaluate cte
+        ON u.user_id = cte.user_id
+        WHERE u.user_type = 100501
+        AND tt.technology_id in 
+        (
+        SELECT 
+        GROUP_CONCAT(pt.technology_type) 
+        FROM publish_technology pt 
+        WHERE pt.publish_id = #{0}
+        )
+        GROUP BY u.user_id
+        LIMIT 5
+        ) users 
+        ORDER BY stars DESC
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.TalentRequirementRecommend" id="selectTalentRequirementRecommendMap">
+        <id property="userId" column="user_id" />
+    </resultMap>
+    
+    <!-- 插入创意需求推荐 -->
+    <insert id="insertTalentRequirementRecommend" parameterType="java.util.List" 
+        useGeneratedKeys="true">
+        INSERT INTO talent_requirement_recommend(
+        talent_id,
+        user_id,
+        create_time
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.talentId},#{item.userId},NOW())
+        </foreach>
+    </insert>
+    
+    <!-- 查询需求推荐的企业用户 -->
+    <select id="selectProjectCompany" resultMap="selectProjectMap"
+        parameterType="com.shdatabank.puruan.model.ProjectRequirementRecommend">
+        SELECT
+        u.user_id,
+        IFNULL(u.user_alias,'匿名') company_name,
+        u.user_email,
+        u.user_mobile,
+        ROUND(AVG(cte.evaluate_star),1) stars,
+        (
+        SELECT dd.data_value FROM dictionarydata dd
+        WHERE dd.data_id = pru.undertake_status
+        ) undertake_status,
+        (
+        IF((
+        SELECT count(*) FROM (
+        SELECT (IF(FROM_UNIXTIME((UNIX_TIMESTAMP(pru2.create_time) 
+        + pru2.pass_day * 24 * 60 * 60),'%Y-%m-%d')>NOW(),
+        IF(pru2.undertake_status = 401302,0,1),0)) a
+        FROM project_requirement_undertake pru2
+        WHERE pru2.project_requirement_id = #{projId}
+        ) t WHERE a = 1 
+        )=0,0,1)
+        ) is_choose
+        FROM user u 
+        LEFT JOIN creative_talent_evaluate cte
+        ON cte.user_id = u.user_id
+        JOIN project_requirement_recommend prr
+        ON prr.user_id = u.user_id
+        LEFT JOIN project_requirement_undertake pru
+        ON pru.project_requirement_id = prr.proj_id AND pru.user_id = u.user_id
+        WHERE prr.proj_id = #{projId}
+        AND u.user_type = 100501
+        GROUP BY u.user_id
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirementRecommend" id="selectProjectMap">
+        <id property="userId" column="user_id" />
+        <result property="userAlias" column="company_name" />
+        <result property="emails" column="user_email" />
+        <result property="mobile" column="user_mobile" />
+        <result property="stars" column="stars" />
+        <result property="undertakeStatus" column="undertake_status" />
+        <result property="isChoose" column="is_choose" />
+    </resultMap>
+    
+    <!-- 查询人才推荐的企业用户 -->
+    <select id="selectTalentCompany" resultMap="selectTalentMap"
+        parameterType="com.shdatabank.puruan.model.TalentRequirementRecommend">
+        SELECT
+        u.user_id,
+        IFNULL(u.user_alias,'匿名') company_name,
+        u.user_email,
+        u.user_mobile,
+        ROUND(AVG(cte.evaluate_star),1) stars,
+        (
+        SELECT dd.data_value FROM dictionarydata dd
+        WHERE dd.data_id = tt.transaction_status
+        ) transaction_status,
+        (
+        IF((
+        SELECT count(*) FROM (
+        SELECT (IF(FROM_UNIXTIME((UNIX_TIMESTAMP(tt2.create_time) 
+        + tt2.pass_day * 24 * 60 * 60),'%Y-%m-%d')>NOW(),
+        IF(tt2.transaction_status = 401302,0,1),0)) a
+        FROM talent_transaction tt2
+        WHERE tt2.talent_requirement_id = #{talentId}
+        ) t WHERE a = 1 
+        )=0,0,1)
+        ) is_choose
+        FROM user u
+        JOIN talent_requirement_recommend trr
+        ON trr.user_id = u.user_id
+        LEFT JOIN creative_talent_evaluate cte
+        ON cte.user_id = u.user_id
+        LEFT JOIN talent_transaction tt
+        ON tt.talent_requirement_id = trr.talent_id AND tt.user_id = u.user_id
+        WHERE trr.talent_id = #{talentId}
+        AND u.user_type = 100502
+        GROUP BY u.user_id
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.TalentRequirementRecommend" id="selectTalentMap">
+        <id property="userId" column="user_id" />
+        <result property="userAlias" column="company_name" />
+        <result property="emails" column="user_email" />
+        <result property="mobile" column="user_mobile" />
+        <result property="stars" column="stars" />
+        <result property="undertakeStatus" column="undertake_status" />
+        <result property="isChoose" column="is_choose" />
+    </resultMap>
+    
+    <!-- 查询需求推荐的个人用户 -->
+    <select id="selectProjectUser" resultMap="selectProjectMap"
+        parameterType="com.shdatabank.puruan.model.ProjectRequirementRecommend">
+        SELECT
+        u.user_id,
+        IFNULL(u.user_alias,'匿名') company_name,
+        u.user_email,
+        u.user_mobile,
+        ROUND(AVG(cte.evaluate_star),1) stars,
+        (
+        SELECT dd.data_value FROM dictionarydata dd
+        WHERE dd.data_id = pru.undertake_status
+        ) undertake_status,
+        (
+        IF((
+        SELECT count(*) FROM (
+        SELECT (IF(FROM_UNIXTIME((UNIX_TIMESTAMP(pru2.create_time) 
+        + pru2.pass_day * 24 * 60 * 60),'%Y-%m-%d')>NOW(),
+        IF(pru2.undertake_status = 401302,0,1),0)) a
+        FROM project_requirement_undertake pru2
+        WHERE pru2.project_requirement_id = #{projId}
+        ) t WHERE a = 1 
+        )=0,0,1)
+        ) is_choose
+        FROM user u 
+        LEFT JOIN creative_talent_evaluate cte
+        ON cte.user_id = u.user_id
+        JOIN project_requirement_recommend prr
+        ON prr.user_id = u.user_id
+        LEFT JOIN project_requirement_undertake pru
+        ON pru.project_requirement_id = prr.proj_id AND pru.user_id = u.user_id
+        WHERE prr.proj_id = #{projId}
+        AND u.user_type = 100501
+        GROUP BY u.user_id
+    </select>
+    
+    <!-- 查询人才推荐的个人用户 -->
+    <select id="selectTalentUser" resultMap="selectTalentMap"
+        parameterType="com.shdatabank.puruan.model.TalentRequirementRecommend">
+        SELECT
+        u.user_id,
+        IFNULL(u.user_alias,'匿名') company_name,
+        u.user_email,
+        u.user_mobile,
+        ROUND(AVG(cte.evaluate_star),1) stars,
+        (
+        SELECT dd.data_value FROM dictionarydata dd
+        WHERE dd.data_id = tt.transaction_status
+        ) transaction_status,
+        (
+        IF((
+        SELECT count(*) FROM (
+        SELECT (IF(FROM_UNIXTIME((UNIX_TIMESTAMP(tt2.create_time) 
+        + tt2.pass_day * 24 * 60 * 60),'%Y-%m-%d')>NOW(),
+        IF(tt2.transaction_status = 401302,0,1),0)) a
+        FROM talent_transaction tt2
+        WHERE tt2.talent_requirement_id = #{talentId}
+        ) t WHERE a = 1 
+        )=0,0,1)
+        ) is_choose
+        FROM user u
+        JOIN talent_requirement_recommend trr
+        ON trr.user_id = u.user_id
+        LEFT JOIN creative_talent_evaluate cte
+        ON cte.user_id = u.user_id
+        LEFT JOIN talent_transaction tt
+        ON tt.talent_requirement_id = trr.talent_id AND tt.user_id = u.user_id
+        WHERE trr.talent_id = #{talentId}
+        AND u.user_type = 100501
+        GROUP BY u.user_id
+    </select>
+    
+    <!-- 查询创意需求报名信息 -->
+    <select id="selectProjectEnroll" resultMap="selectProjectEnrollMap"
+        parameterType="com.shdatabank.puruan.model.ProjectEnroll">
+        SELECT 
+        pe.enroll_id,
+        u.user_id,
+        IFNULL(pe.enroll_name,IFNULL(c.company_name,IFNULL(u.user_alias,'匿名'))) user_alias,
+        pe.enroll_value,
+        pe.enroll_file_name,
+        pe.enroll_file_path,
+        pe.enroll_see_file_path
+        IFNULL(pe.enroll_email,u.user_email) user_email,
+        IFNULL(pe.enroll_mobile,u.user_mobile) user_mobile,
+        ROUND(AVG(cte.evaluate_star),1) stars,
+        (
+        SELECT dd.data_value FROM dictionarydata dd
+        WHERE dd.data_id = pru.undertake_status
+        ) undertake_status,
+        (
+        IF((
+        SELECT count(*) FROM (
+        SELECT (IF(FROM_UNIXTIME((UNIX_TIMESTAMP(pru2.create_time) 
+        + pru2.pass_day * 24 * 60 * 60),'%Y-%m-%d')>NOW(),
+        IF(pru2.undertake_status = 401302,0,1),0)) a
+        FROM project_requirement_undertake pru2
+        WHERE pru2.project_requirement_id = #{projectRequirementId}
+        ) t WHERE a = 1 
+        )=0,0,1)
+        ) is_choose
+        FROM user u
+        LEFT JOIN company c 
+        ON u.company_id = c.company_id
+        JOIN project_enroll pe
+        ON pe.user_id = u.user_id
+        LEFT JOIN creative_talent_evaluate cte
+        ON cte.user_id = u.user_id
+        LEFT JOIN project_requirement_undertake pru
+        ON pru.project_requirement_id = pe.project_requirement_id AND pru.user_id = u.user_id
+        WHERE pe.project_requirement_id = #{projectRequirementId}
+        AND u.active = 0
+        GROUP BY u.user_id
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectEnroll" id="selectProjectEnrollMap">
+        <id property="enrollId" column="enroll_id" />
+        <result property="userId" column="user_id" />
+        <result property="name" column="user_alias" />
+        <result property="enrollValue" column="enroll_value" />
+        <result property="enrollFileName" column="enroll_file_name" />
+        <result property="enrollFilePath" column="enroll_file_path" />
+        <result property="email" column="user_email" />
+        <result property="mobile" column="user_mobile" />
+        <result property="stars" column="stars" />
+        <result property="undertakeStatus" column="undertake_status" />
+        <result property="isChoose" column="is_choose" />
+    </resultMap>
+    
+    <!-- 查询人才需求报名信息 -->
+    <select id="selectTalentEnroll" resultMap="selectTalentEnrollMap" 
+        parameterType="com.shdatabank.puruan.model.TalentEnroll">
+        SELECT 
+        te.enroll_id,
+        u.user_id,
+        IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) user_alias,
+        te.enroll_value,
+        u.user_email,
+        u.user_mobile,
+        ROUND(AVG(cte.evaluate_star),1) stars,
+        (
+        SELECT dd.data_value FROM dictionarydata dd
+        WHERE dd.data_id = tt.transaction_status
+        ) transaction_status,
+        (
+        IF((
+        SELECT count(*) FROM (
+        SELECT (IF(FROM_UNIXTIME((UNIX_TIMESTAMP(tt2.create_time) 
+        + tt2.pass_day * 24 * 60 * 60),'%Y-%m-%d')>NOW(),
+        IF(tt2.transaction_status = 401302,0,1),0)) a
+        FROM talent_transaction tt2
+        WHERE tt2.talent_requirement_id = #{talentRequirementId}
+        ) t WHERE a = 1 
+        )=0,0,1)
+        ) is_choose
+        FROM user u
+        LEFT JOIN company c 
+        ON u.company_id = c.company_id
+        JOIN talent_enroll te
+        ON te.user_id = u.user_id
+        LEFT JOIN creative_talent_evaluate cte
+        ON cte.user_id = u.user_id
+        LEFT JOIN talent_transaction tt
+        ON tt.talent_requirement_id = te.talent_requirement_id AND tt.user_id = u.user_id
+        WHERE te.talent_requirement_id = #{talentRequirementId}
+        AND u.active = 0
+        GROUP BY u.user_id
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.TalentEnroll" id="selectTalentEnrollMap">
+        <id property="enrollId" column="enroll_id" />
+        <result property="userId" column="user_id" />
+        <result property="name" column="user_alias" />
+        <result property="enrollValue" column="enroll_value" />
+        <result property="email" column="user_email" />
+        <result property="mobile" column="user_mobile" />
+        <result property="enrollFileName" column="enroll_file_name" />
+        <result property="enrollFilePath" column="enroll_file_path" />
+        <result property="stars" column="stars" />
+        <result property="undertakeStatus" column="undertake_status" />
+        <result property="isChoose" column="is_choose" />
+    </resultMap>
+
+    <!-- 插入创意需求承接 -->
+    <insert id="insertProjectRequirementUndertake" 
+        parameterType="com.shdatabank.puruan.model.ProjectRequirementUndertake">
+        INSERT INTO project_requirement_undertake (
+        project_requirement_id,
+        user_id,
+        undertake_status,
+        create_time,
+        pass_day
+        ) VALUES (
+        #{projectRequirementId},
+        #{userId},
+        401301,
+        NOW(),
+        #{passDay}
+        )
+    </insert>
+    
+    <!-- 插入人才需求交易 -->
+    <insert id="insertTalentTransaction" parameterType="com.shdatabank.puruan.model.TalentTransaction">
+        INSERT INTO talent_transaction(
+        talent_requirement_id,
+        user_id,
+        transaction_status,
+        pass_day,
+        create_time
+        ) VALUES (
+        #{talentRequirementId},
+        #{userId},
+        401301,
+        #{passDay},
+        NOW()
+        )
+    </insert>
+    
+    <!-- 查询评价内容 -->
+    <select id="selectProjectUserReleation" resultMap="selectProjectUserReleationMap">
+        SELECT
+        pur.user_id,
+        (
+        SELECT 
+        IFNULL(u.user_alias,u.user_name)
+        FROM user u 
+        WHERE u.user_id = pur.user_id
+        ) user_name,
+        pur.project_duty
+        FROM project_user_releation pur
+        JOIN project p
+        ON p.project_id = pur.project_requirement_id
+        JOIN project_requirement pr
+        ON pr.proj_id = p.project_requirement_id
+        WHERE pr.proj_id = #{projectRequirementId}
+        AND pur.user_id = pr.manager_user_id
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectUserReleation" id="selectProjectUserReleationMap">
+        <id property="userId" column="user_id" />
+        <result property="userName" column="user_name" />
+        <result property="projectDuty" column="project_duty" />
+    </resultMap>
+    
+    <!-- 酬金托管 -->
+    <select id="selectProjectRequirement2" resultMap="selectProjectRequirement2Map"
+        parameterType="com.shdatabank.puruan.model.ProjectRequirement">
+        SELECT
+		pr.proj_id,
+		pr.proj_name,
+		pr.proj_service_fee,
+		ra.audit_datetime
+		FROM project_requirement pr
+		JOIN requirement_audit ra
+		ON ra.requirement_type = 700001 
+		AND ra.proj_requirement_id = pr.proj_id
+		WHERE ra.audit_status = 400702
+		AND pr.active = 0
+		AND pr.proj_id = #{projId}
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirement" id="selectProjectRequirement2Map">
+        <id property="projId" column="proj_id" />
+        <result property="projName" column="proj_name" />
+        <result property="projServiceFee" column="proj_service_fee" />
+        <result property="auditDatetime" column="audit_datetime" />
+    </resultMap>
+    
+    <!-- 更新酬金托管状态 -->
+    <update id="updateProjectRequirement" parameterType="com.shdatabank.puruan.model.ProjectRequirement">
+        UPDATE project_requirement SET is_fee_trusteeship = 0 WHERE proj_id = #{projId}
+    </update>
+</mapper>

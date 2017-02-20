@@ -1,0 +1,52 @@
+            <!--路径-->
+            <div class="nav borderNone">
+                <span>首页</span><span><img src="../../images/front/rightAngleBrackets.png" alt=""></span>
+                <span>角色管理</span><span><img src="../../images/front/rightAngleBrackets.png" alt=""></span>
+                <span>新增角色</span>
+            </div>
+            <!--内容详情-->
+            <div class="contentInfo white">
+                <div class="characterManageAdd">
+                    <div class="addPrompt">
+                        <img src="../../images/background/warning.png" alt="警告"/>
+                        <div class="addPromptWord">带*为必须填</div>
+                    </div>
+                    <div class="addContent">
+                        <div class="sui-msg msg-error addErrorTip" style="opacity:0;">
+                            <div class="msg-con">错误信息提示</div>
+                            <s 	 class="msg-icon"></s>
+                        </div>
+                        <div class="characterName">
+                            <label>*角色名称：</label>
+                            <input id="roleName" type="text">
+                        </div>
+                        <div class="resourceDirectory">
+                            <label>*资源目录：</label>
+                            <table class="sui-table table-bordered" id="tableData">
+                            	<thead>
+                            		<tr>
+                                    <td>一级资源目录</td>
+                                    <td>二级资源目录</td>
+                                	</tr>
+                            	</thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <div class="save fr">
+                                <button id="save">保存</button>
+                                <button id="back">返回</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script id="character_add_template" type="text/x-jquery-tmpl">
+	            <tr>
+	            <td class="parentCheck" ><div><input data-id="${resourceId}" value="${resourceName}" type="checkbox">${resourceName}</div></td>
+	            <td class="childCheck" >{{each $data.sysResources}}
+					<div><input data-id="${$data.sysResources[$index].resourceId}"  type="checkbox">${$data.sysResources[$index].resourceName}</div>
+					{{/each}}
+	            </td>
+	        	</tr>
+            </script>
+            <script type="text/javascript" src='../../js/background/characterManageAdd.js'></script>

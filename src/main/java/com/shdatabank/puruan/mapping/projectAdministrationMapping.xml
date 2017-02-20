@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IProjectAdministrationDao">
+    <!-- 查询已报名的项目 -->
+    <select id="selectEnrollTrue" parameterType="com.shdatabank.puruan.model.ProjectRequirement" resultMap="selectEnrollTrueMap">
+        SELECT 
+        pr.proj_id,
+        pr.proj_name,
+        (
+        SELECT
+        IFNULL(c.company_name,IFNULL(u.user_alias,u.user_name))
+        FROM user u 
+        LEFT JOIN company c
+        ON c.company_id = u.company_id
+        WHERE u.user_id = pr.publish_user_id
+        ) publish_user,
+        pr.proj_close_date,
+        (
+        SELECT COUNT(pee.enroll_id) 
+        FROM project_enroll pee
+        WHERE pr.proj_id = pee.project_requirement_id
+        ) user_count
+        FROM project_requirement pr
+        JOIN project_enroll pe
+        ON pr.proj_id = pe.project_requirement_id
+        WHERE pe.user_id = #{userId}
+        AND pr.proj_flow_status = 400102
+        AND pr.active = 0
+        <if test="null != name and '' != name">
+            AND pr.proj_name LIKE '%${name}%'
+        </if>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirement" id="selectEnrollTrueMap">
+        <id property="projId" column="proj_id" />
+        <result property="projName" column="proj_name" />
+        <result property="publishUser" column="publish_user" />
+        <result property="projCloseDate" column="proj_close_date" />
+        <result property="userCount" column="user_count" />
+    </resultMap>
+    
+    <!-- 取消报名 -->
+    <delete id="deleteEnroll" parameterType="com.shdatabank.puruan.model.ProjectRequirement">
+        DELETE FROM project_enroll WHERE project_requirement_id = #{projId} AND 
+        user_id = #{userId}
+    </delete>
+    
+    <!-- 查询未接纳的项目 -->
+    <select id="selectEnrollFalse" parameterType="com.shdatabank.puruan.model.ProjectRequirement" resultMap="selectEnrollFalseMap">
+        SELECT 
+        pr.proj_id,
+        pr.proj_name,
+        (
+        SELECT
+        IFNULL(u.user_alias,u.user_name)
+        FROM user u 
+        WHERE u.user_id = pr.publish_user_id
+        ) publish_user,
+        pr.proj_close_date,
+        (
+        SELECT COUNT(pee.enroll_id) 
+        FROM project_enroll pee
+        WHERE pr.proj_id = pee.project_requirement_id
+        ) user_count,
+        (
+        SELECT
+        IFNULL(u.user_alias,u.user_name)
+        FROM user u 
+        WHERE u.user_id = pr.manager_user_id
+        ) manager_user
+        FROM project_requirement pr
+        JOIN project_enroll pe
+        ON pr.proj_id = pe.project_requirement_id
+        WHERE pe.user_id = #{userId}
+        AND pr.manager_user_id &lt;&gt; #{userId}
+        AND pr.proj_flow_status = 400103
+        AND pr.active = 0
+        <if test="null != name and '' != name">
+            AND pr.proj_name LIKE '%${name}%'
+        </if>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirement" id="selectEnrollFalseMap">
+        <id property="projId" column="proj_id" />
+        <result property="projName" column="proj_name" />
+        <result property="publishUser" column="publish_user" />
+        <result property="managerUser" column="manager_user" />
+        <result property="projCloseDate" column="proj_close_date" />
+        <result property="userCount" column="user_count" />
+    </resultMap>
+    
+    <!-- 查询进行中的项目 -->
+    <select id="selectRunningObj" parameterType="com.shdatabank.puruan.model.ProjectRequirement" resultMap="selectRunningObjMap">
+        SELECT
+        p.project_id proj_id,
+        pr.proj_name,
+        (
+        SELECT
+        IFNULL(u.user_alias,u.user_name)
+        FROM user u
+        JOIN project_user_releation pur
+        ON pur.user_id = u.user_id
+        WHERE pur.project_requirement_id = p.project_id 
+        AND pur.releation_status IN (400801,400803)
+        ORDER BY pur.create_datetime DESC
+        LIMIT 1
+        ) member,
+        pr.proj_devlier_date,
+        (
+        SELECT 
+        pp.proj_plan_name
+        FROM 
+        project_plan pp
+        WHERE pp.plan_status = 400302
+        AND pp.active = 0
+        AND pp.proj_id = p.project_id
+        ORDER BY pp.plan_start_date ASC
+        LIMIT 1
+        ) proj_plan_name
+        FROM
+        project_requirement pr
+        JOIN project p
+        ON pr.proj_id = p.project_requirement_id
+        WHERE p.project_status = 400601
+        AND pr.manager_user_id = #{userId}
+        AND pr.active = 0
+        AND p.active = 0
+        <if test="null != name and '' != name">
+            AND pr.proj_name LIKE '%${name}%'
+        </if>
+        <if test="null != orderBys and '' != orderBys">
+            ORDER BY ${orderBys} 
+            <if test="null != ascs and '' != ascs">
+                ${ascs}
+            </if>
+        </if>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirement" id="selectRunningObjMap">
+        <id property="projId" column="proj_id" />
+        <result property="projName" column="proj_name" />
+        <result property="member" column="member" />
+        <result property="projDevlierDate" column="proj_devlier_date" />
+        <result property="managerUser" column="manager_user" />
+        <result property="projPlanTaskName" column="proj_plan_name" />
+    </resultMap>
+    
+    <!-- 查询已完成的项目 -->
+    <select id="selectEndObj" parameterType="com.shdatabank.puruan.model.ProjectRequirement" resultMap="selectEndObjMap">
+        SELECT
+        pr.proj_id,
+        pr.proj_name,
+        (
+        SELECT
+        IFNULL(u.user_alias,u.user_name)
+        FROM user u 
+        WHERE pr.publish_user_id = u.user_id
+        ) publish_user,
+        p.project_real_end_date,
+        (
+        SELECT
+        IFNULL(u.user_alias,u.user_name)
+        FROM user u 
+        WHERE pr.manager_user_id = u.user_id
+        ) manager_user,
+        (
+        SELECT 
+        COUNT(pe.evaluate_id)
+        FROM project_evaluate pe
+        WHERE pe.proj_id = pr.proj_id
+        AND pe.user_id = #{userId}
+        ) is_evaluate
+        FROM project_requirement pr
+        JOIN project p
+        ON pr.proj_id = p.project_requirement_id
+        WHERE p.project_status = 400602
+        AND pr.manager_user_id = #{userId}
+        AND pr.active = 0
+        AND p.active = 0
+        <if test="null != name and '' != name">
+            AND pr.proj_name LIKE '%${name}%'
+        </if>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirement" id="selectEndObjMap">
+        <id property="projId" column="proj_id" />
+        <result property="projName" column="proj_name" />
+        <result property="publishUser" column="publish_user" />
+        <result property="projectRealEndDate" column="project_real_end_date" />
+        <result property="managerUser" column="manager_user" />
+        <result property="isEvaluate" column="is_evaluate" />
+    </resultMap>
+</mapper>

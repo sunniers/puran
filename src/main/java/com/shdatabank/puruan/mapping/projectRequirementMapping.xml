@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IProjectRequirementDao">
+    <!-- 查询需求详细和需求分包 -->
+    <select id="selectProjectRequirement" resultMap="selectProjectRequirementMap"
+        parameterType="com.shdatabank.puruan.model.ProjectRequirement">
+        SELECT
+        pr.proj_id,
+        pr.proj_name,
+        prd.proj_require_description_content,
+        pr.proj_file_name,
+        pr.proj_attach_file,
+        pr2.proj_id,
+        pr2.proj_name,
+        (
+        SELECT
+        IFNULL(u.user_alias,u.user_name)
+        FROM user u
+        WHERE u.user_id = pr2.manager_user_id
+        ) user_name,
+        prd2.proj_require_description_content,
+        pr2.proj_file_name,
+        pr2.proj_attach_file
+        FROM project_requirement pr
+        LEFT JOIN project_requirement_description prd
+        ON prd.proj_require_id = pr.proj_id
+        LEFT JOIN project_requirement pr2
+        ON pr2.parent_proj_id = pr.proj_id
+        LEFT JOIN project_requirement_description prd2
+        ON prd2.proj_require_id = pr2.proj_id
+        WHERE pr.proj_id = #{projId}
+        AND pr.active = 0
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirement" id="selectProjectRequirementMap">
+        <id property="projId" column="proj_id" />
+        <result property="projName" column="proj_name" />
+        <result property="projRequireDescriptionContent" column="proj_require_description_content" />
+        <result property="projFileName" column="proj_file_name" />
+        <result property="projAttachFile" column="proj_attach_file" />
+        <collection property="projectRequirements" ofType="com.shdatabank.puruan.model.ProjectRequirement">
+            <id property="projId" column="proj_id1" />
+            <result property="parentProjName" column="proj_name"/>
+            <result property="projName" column="proj_name1" />
+            <result property="managerUser" column="user_name" />
+            <result property="projRequireDescriptionContent" column="proj_require_description_content1" />
+            <result property="projFileName" column="proj_file_name1" />
+            <result property="projAttachFile" column="proj_attach_file1" />
+        </collection>
+    </resultMap>
+</mapper>

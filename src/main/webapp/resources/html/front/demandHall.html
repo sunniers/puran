@@ -1,0 +1,148 @@
+
+<!--路径-->
+<div class="nav borderNone">
+	<span>首页</span> <span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>需求大厅</span>
+	<span class="collapseBtn"> <span>隐藏筛选 </span> <img
+		src="resources/images/front/slide.png" alt="">
+	</span>
+</div>
+<div class="conditions" id="upConditions">
+</div>
+<div class="choose">
+	<div class="cBtn">
+		<span>综合排序</span>
+	</div>
+	<div data-id="create_datetime" class="cBtn rank">
+		<span>发布时间</span> 
+		<span>
+			<img class="up blur" src="resources/images/front/triangleUp.png" alt="">
+			<img class="down blur" src="resources/images/front/triangleDown.png" alt="">
+		</span>
+	</div>
+	<div data-id="user_count" class="cBtn rank">
+		<span>报名人数</span> 
+		<span>
+		 <img class="up blur" src="resources/images/front/triangleUp.png" alt=""> 
+		 <img class="down blur" src="resources/images/front/triangleDown.png" alt="">
+		</span>
+	</div>
+	<div data-id="proj_service_fee" class="cBtn rank">
+		<span>价格</span> 
+		<span> 
+		<img class="up blur" src="resources/images/front/triangleUp.png" alt="">
+		<img class="down blur" src="resources/images/front/triangleDown.png" alt="">
+		</span>
+	</div>
+	<div class="cSearch">
+		<span class="searchIcon"><img
+			src="resources/images/front/search.png" alt=""></span> <span>
+			<input id="search"	type="text"></span>
+
+	</div>
+</div>
+<!--内容详情-->
+<div class="contentInfo">
+	<div class="searchInfo demandHall">
+		
+	</div>
+	<div class="deHallBox" style="padding-left:230px;">
+		<div id="paginator" style="margin: auto;" ></div>
+	</div>
+</div>
+<script id="search_condition_template" type="text/x-jquery-tmpl">
+			<div class="sui-row row1">
+			<div class="span1">&nbsp;${dictName}：</div>
+			{{if $data.dictId=="100100"}}
+			<div class="span7 demandClass">
+					{{each $data.dictionarydatas}}
+						<span data-id="${$data.dictionarydatas[$index].dataId}">${$data.dictionarydatas[$index].dataValue}</span>
+					{{/each}}
+			</div>
+			{{/if}}
+			{{if $data.dictId=="100200"}}
+			<div class="span7 demandType">
+					{{each $data.dictionarydatas}}
+						<span data-id="${$data.dictionarydatas[$index].dataId}">${$data.dictionarydatas[$index].dataValue}</span>
+					{{/each}}
+			</div>
+			{{/if}}
+			{{if $data.dictId=="100300"}}
+			<div class="span7 demandFee">
+					{{each $data.dictionarydatas}}
+						<span data-id="${$data.dictionarydatas[$index].dataId}">${$data.dictionarydatas[$index].dataValue}</span>
+					{{/each}}
+			</div>
+			{{/if}}
+			</div>
+</script>
+<script id="demand_hall_template" type="text/x-jquery-tmpl">
+		<div class="m">
+			<div class="ml" data-id="${projId}" data-status="${projType1}">
+				<div class="mUp" >
+					{{if $data.projType1=="100202"}}
+						${projName} <span>[${projEnrollStatusValue}]</span>
+					{{else}}
+						${projName} <span></span>
+					{{/if}}
+				</div>
+				<div class="mCenter">${projRequireDescriptionContent}</div>
+				<div class="mDown">
+					<span>发布方：</span> <span>${publishUser}</span> <span>
+					<img src="resources/images/front/time.png" alt=""></span>
+					{{if $data.projType1=="100202"}}
+					 剩余 <span>${projCloseDate}</span>
+					{{else}}
+					发布时间：<span>${createDatetime}</span>
+					{{/if}}
+				</div>
+			</div>
+			<div class="mc">
+				<div class="mTip">
+					{{if $data.projType1  =="100203"}}
+					{{else}}
+					<span> <img src="resources/images/front/heart.png" alt="">
+					</span> <span>报名人数：</span> <span>${userCount}人</span>
+					{{/if}}
+				</div>
+				<div class="mTip">
+					<span> <img src="resources/images/front/collect.png" alt="">
+					</span> <span>收藏人数：</span> <span>${userHouse}人</span>
+				</div>
+				<div class="mTip">
+					<span> <img src="resources/images/front/safeguard.png" alt="">
+					</span> <span>服务保障：</span> <span>
+						{{if $data.authentication=="2"}} 
+						<img src="resources/images/front/certificationBlue.png" alt="">
+						{{/if}} 
+						{{if $data.authentication=="1"}} 
+						<img src="resources/images/front/identityAuthentication.png" alt="">
+						{{/if}}
+						{{if $data.userEmail!=null}} 
+						<img src="resources/images/front/phoneMakeSureBlue.png" alt="">
+						{{/if}}
+						{{if $data.userMobile!=null}} 
+						<img src="resources/images/front/emailAuthentication.png" alt="">
+						{{/if}} 
+					</span>
+				</div>
+			</div>
+			<div class="mr">
+				<div class="tipImg">
+					{{if $data.projType1  =="100202"}}
+					<img src="resources/images/front/demand.png" alt="">
+					{{/if}}
+					{{if $data.projType1  =="100201"}}
+					<img src="resources/images/front/recruiting.png" alt="">
+					{{/if}}
+					{{if $data.projType1  =="100203"}}
+					<img src="resources/images/front/financingLabel.png" alt="">
+					{{/if}}
+				</div>
+				<div class="price">
+					<span>¥</span><span>${projServiceFee}</span>
+				</div>
+			</div>
+		</div>
+</script>
+<script src="resources/js/front/demandHall.js" type="text/javascript"></script>

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.CreativeResourceDao">
+	<!-- 创意资源resultMap -->
+	<resultMap type="com.shdatabank.puruan.model.CreativeResource" id="CreativeResource_Map">
+		<id property="creativeResourceId" column="creative_resource_id"/>
+		<result property="userId" column="user_id"/>
+		<result property="resourceName" column="resource_name"/>
+		<result property="resourceImage" column="resource_image"/>
+		<result property="resourceImageName" column="resource_image_name"/>
+		<result property="resourceNumber" column="resource_number"/>
+		<result property="resourceDescription" column="resource_description"/>
+		<result property="showAddress" column="show_address"/>
+		<result property="resourceAttach" column="resource_attach"/>
+		<result property="resourceAttachName" column="resource_attach_name"/>
+		<result property="resourceCurrency" column="resource_currency"/>
+		<result property="resourcePrice" column="resource_price"/>
+		<result property="resourceStatus" column="resource_status"/>
+		<result property="active" column="ACTIVE"/>
+		<result property="publishDatetime" column="publish_datetime"/>
+	</resultMap>
+
+	<!-- 创意资源columns -->
+	<sql id="CreativeResource_columns">
+		creative_resource_id,
+		user_id,
+		resource_name,
+		resource_image,
+		resource_image_name,
+		resource_number,
+		resource_description,
+		show_address,
+		resource_attach,
+		resource_attach_name,
+		resource_currency,
+		resource_price,
+		resource_status,
+		ACTIVE, 
+		publish_datetime
+	</sql>
+	
+	<!-- 插入创意资源信息 -->
+	<insert id="insertCreativeResource" parameterType="com.shdatabank.puruan.model.CreativeResource"
+	useGeneratedKeys="true" keyProperty="creativeResourceId">
+    	<![CDATA[
+    		INSERT INTO creative_resource(user_id,resource_name,resource_image,resource_image_name,resource_number,
+			resource_description,show_address,resource_attach,resource_attach_name,resource_currency,
+			resource_price,resource_status,active,publish_datetime)
+			VALUES(#{userId},#{resourceName},#{resourceImage},#{resourceImageName},#{resourceNumber},#{resourceDescription},
+					#{showAddress},#{resourceAttach},#{resourceAttachName},#{resourceCurrency},#{resourcePrice},
+					#{resourceStatus},0,NOW())
+    	]]>    	   
+    </insert>
+    
+  	<!-- 根据资源id查询创意资源信息 -->
+    <select id="selectCreativeResource" resultMap="CreativeResource_Map" parameterType="com.shdatabank.puruan.model.CreativeResource">
+    	select <include refid="CreativeResource_columns"/> FROM creative_resource
+		WHERE creative_resource_id = #{creativeResourceId}
+    </select>
+    
+    <!-- 根据资源id更新创意资源信息 -->
+	<update id="updateCreativeResource" parameterType="com.shdatabank.puruan.model.CreativeResource">
+		UPDATE creative_resource
+		<set>
+				<if test="resourceName != null and resourceName != ''">
+					resource_name = #{resourceName},
+				</if>
+				<if test="resourceImage != null and resourceImage != ''">
+					resource_image = #{resourceImage},
+				</if>
+				<if test="resourceImageName != null and resourceImageName != ''">
+					resource_image_name = #{resourceImageName},
+				</if>
+				<if test="resourceNumber != null and resourceNumber != ''">
+					resource_number = #{resourceNumber},
+				</if>
+				<if test="resourceDescription != null and resourceDescription != ''">
+					resource_description = #{resourceDescription},
+				</if>
+				<if test="showAddress != null and showAddress != ''">
+					show_address = #{showAddress},
+				</if>
+				<if test="resourceAttach != null and resourceAttach != ''">
+					resource_attach = #{resourceAttach},
+				</if>
+				<if test="resourceAttachName != null and resourceAttachName != ''">
+					resource_attach_name = #{resourceAttachName},
+				</if>
+				<if test="resourceCurrency != null and resourceCurrency != ''">
+					resource_currency = #{resourceCurrency},
+				</if>
+				<if test="resourcePrice != null and resourcePrice != ''">
+					resource_price = #{resourcePrice},
+				</if>
+				<if test="resourceStatus != null and resourceStatus != ''">
+					resource_status = #{resourceStatus},
+				</if>
+				<if test="active != null and active != ''">
+					ACTIVE = #{active,jdbcType=BIT},
+				</if>
+		
+					publish_datetime = NOW()
+			
+		</set>
+		WHERE creative_resource_id = #{creativeResourceId}
+	</update>
+	<!-- 修改发布 -->
+	<update id="updateCreativeResourceActive" parameterType="java.lang.Long">
+		UPDATE creative_resource  p set p.active=0,p.resource_status=401202 where p.creative_resource_id=#{creativeResourceId}  
+	</update>
+	<!-- 修改保存为草稿 -->
+	<update id="updateCreativeResourceSave" parameterType="java.lang.Long">
+		UPDATE creative_resource  p set p.active=0,p.resource_status=401201 where p.creative_resource_id=#{creativeResourceId}  
+	</update>
+	<!-- 条件查询创意资源集合  未删除状态 -->
+	<select id="selectAllCreativeResource" resultMap="CreativeResource_Map">
+	    		select <include refid="CreativeResource_columns"/> from creative_resource
+	    		<where>
+	    			user_id = #{userId}
+	    			<if test="resourceStatus != null and resourceStatus != ''">
+	    				and resource_status = #{resourceStatus}
+	    			</if>
+	    				and ACTIVE = 0
+	    		</where>
+	 </select>
+	 
+	 <!-- 条件查询创意资源集合  已删除状态-->
+	<select id="selectAllCreativeResourceActive" resultMap="CreativeResource_Map">
+	    		select <include refid="CreativeResource_columns"/> from creative_resource
+	    		<where>
+	    			user_id = #{userId}
+	    			<if test="resourceStatus != null and resourceStatus != ''">
+	    				and resource_status = #{resourceStatus}
+	    			</if>
+	    				and ACTIVE = 1
+	    		</where>
+	 </select>    
+	 
+	 <!-- 资源仓库默认页面 -->
+	 <select id="selectAllCreativeResourceDefault" resultMap="CreativeResource_Map">
+	    		select <include refid="CreativeResource_columns"/> from creative_resource
+	    		where resource_status in(401203,401205) and user_id = #{userId}
+	 </select>
+	 
+	 
+	 <!-- 首页分页条件查询创意资源列表 -->	 
+	 <select id="selectAllCreativeResourceFront" resultType="com.shdatabank.puruan.model.CreativeResourceFront">
+		 	SELECT DISTINCT cr.creative_resource_id creativeResourceId,cr.resource_name resourceName,
+		 		cr.resource_image resourceImage,cr.resource_price resourcePrice,
+				(
+					SELECT AVG(cre.evaluate_star) FROM creative_resource_evaluate cre
+					JOIN ceative_resource_transaction crt ON cre.transaction_id = crt.resource_transaction_id
+					WHERE crt.creative_resource_id = cr.creative_resource_id
+					GROUP BY cr.creative_resource_id
+				) evaluateStar,
+				(
+					SELECT COUNT(*) FROM ceative_resource_transaction crt2
+					WHERE crt2.creative_resource_id = cr.creative_resource_id
+				) count
+			FROM creative_resource cr LEFT JOIN creative_resource_classifier crc 
+			ON cr.creative_resource_id = crc.creative_resource_id
+			<where>
+				cr.resource_status = 401203
+				<if test="name != null and name != ''">
+					<![CDATA[
+						AND cr.resource_name LIKE '%${name}%'
+					]]>
+				</if>
+				<if test="classArray != null and classArray.length != 0">
+					AND crc.classifier_value IN
+					<foreach collection="classArray" index="index" item="item" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if>			
+			</where>
+			<if test="orderBys != null and orderBys != ''">
+				ORDER BY ${orderBys}
+			</if>
+			<if test="ascs != null and ascs != ''">
+	            ${ascs}
+	        </if>
+	 </select>
+	        
+     <!--创意资源类型-->
+     <resultMap id="Dictionary_resultMap" type="com.shdatabank.puruan.model.Dictionary">
+	    <id property="dictId" column="dict_id" />
+	    <result property="parentId" column="parent_id" />
+	    <result property="dictName" column="dict_name" />
+	    <collection property="dictionarydatas" ofType="com.shdatabank.puruan.model.Dictionarydata">
+	        <id property="dataId" column="data_id" />
+	        <result property="dictId" column="dictid" />
+	        <result property="dataValue" column="data_value" />
+	    </collection> 
+	</resultMap>
+	<!-- 查询创意资源类型集合 -->
+	<select id="selectAllCreativeResourceType" resultMap="Dictionary_resultMap">
+		select d.dict_id,d.parent_id,d.dict_name,dd.data_id,dd.dict_id dictid,dd.data_value 
+		from dictionary d LEFT JOIN dictionarydata dd ON d.dict_id = dd.dict_id
+		WHERE d.parent_id = 200000
+		ORDER BY d.dict_id
+	</select>
+	
+	<!-- 创意资源分类map -->
+	<resultMap type="com.shdatabank.puruan.model.CreativeResourceClassifier" id="creativeResourceClassifier_Map">
+		<id property="classifierId" column="classifier_id" />
+	    <result property="creativeResourceId" column="creative_resource_id" />
+	    <result property="classifierValue" column="classifier_value" />
+	    <collection property="dictionarydataList" ofType="com.shdatabank.puruan.model.Dictionarydata">
+	    	<id property="dataId" column="data_id" />
+	        <result property="dictId" column="dict_id" />
+	        <result property="dataValue" column="data_value" />
+	    </collection>
+	</resultMap>
+	<sql id="classifierAndDictionaryList_sql">
+		crc.classifier_id,
+		crc.creative_resource_id,
+		crc.classifier_value,
+		dd.data_id,
+		dd.dict_id,
+		dd.data_value
+	</sql>
+	
+	<!-- 给创意资源添加类型 -->
+	<insert id="insertCreativeResourceClassifier" parameterType="java.util.List" useGeneratedKeys="true">
+		INSERT INTO creative_resource_classifier (creative_resource_id,classifier_value)VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.creativeResourceId}, #{item.classifierValue})
+		</foreach>
+	</insert>
+	
+	<!-- 根据资源id删除该资源id的所有类型 -->
+	<delete id="deleteCreativeResourceClassifier" parameterType="java.lang.Long">
+		delete from creative_resource_classifier where creative_resource_id = #{creativeResourceId}
+	</delete>
+		
+	<!-- 根据id查询单条分类消息 -->
+	<select id="selectAllCreativeResourceClassifier" resultMap="creativeResourceClassifier_Map">
+    	SELECT <include refid="classifierAndDictionaryList_sql"/>
+		FROM creative_resource_classifier crc
+		LEFT JOIN dictionarydata dd ON crc.classifier_value = dd.data_id
+		WHERE crc.creative_resource_id = #{creativeResourceId}
+    </select>
+    
+    <!-- 首页已出售的创意资源详情 -->
+    <select id="selectCreativeResourceFront" resultType="com.shdatabank.puruan.model.CreativeResourceFront">
+    	select cr.creative_resource_id creativeResourceId,
+			cr.resource_image resourceImage,
+			cr.resource_name resourceName,
+			cr.resource_price resourcePrice,
+			cr.resource_number resourceNumber,
+			cr.show_address showAddress,
+			cr.resource_description resourceDescription,
+			(select count(*)
+		from ceative_resource_transaction crt
+		right join creative_resource_evaluate cre 
+		on crt.resource_transaction_id = cre.transaction_id
+		where crt.creative_resource_id = cr.creative_resource_id ) countEvalute,
+		(select count(*)
+		from ceative_resource_transaction crt
+		where crt.creative_resource_id = cr.creative_resource_id and crt.transaction_status = 400505) countTransaction
+		from creative_resource cr
+		where  cr.creative_resource_id = #{creativeResourceId}
+    </select>
+</mapper>

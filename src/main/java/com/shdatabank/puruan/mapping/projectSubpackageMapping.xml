@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IProjectSubpackageDao">
+    <!-- 查询分包信息 -->
+    <select id="selectProjectSubpackage" resultMap="selectProjectSubpackageMap"
+        parameterType="com.shdatabank.puruan.model.ProjectRequirement">
+        SELECT
+        pr.proj_id,
+        pr.proj_name,
+        pr2.proj_name,
+        pr2.proj_enroll_status,
+        (
+        SELECT 
+        dd.data_value
+        FROM dictionarydata dd
+        WHERE dd.data_id = pr2.proj_enroll_status
+        ) proj_enroll_status_value,
+        (
+        SELECT 
+        ra.audit_datetime
+        FROM requirement_audit ra
+        WHERE ra.requirement_type = 700001 
+        AND ra.proj_requirement_id = pr2.proj_id
+        AND ra.audit_status = 400702
+        ORDER BY ra.audit_datetime DESC
+        LIMIT 1
+        ) audit_datetime,
+        pr2.proj_close_date,
+        FROM_UNIXTIME((UNIX_TIMESTAMP(pr2.proj_close_date) + pr2.proj_estimate * 24 * 60 * 60),'%Y-%m-%d') finish_date,
+        pru.undertake_datetime
+        FROM project_requirement pr
+        LEFT JOIN project_requirement_description prd
+        ON prd.proj_require_id = pr.proj_id
+        LEFT JOIN project_requirement pr2
+        ON pr2.parent_proj_id = pr.proj_id
+        LEFT JOIN project_requirement_description prd2
+        ON prd2.proj_require_id = pr2.proj_id
+        LEFT JOIN project_requirement_undertake pru
+        ON pru.project_requirement_id = pr2.proj_id
+        WHERE pr.proj_id = #{projId}
+        AND pr.active = 0
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirement" id="selectProjectSubpackageMap">
+        <id property="projId" column="proj_id" />
+        <result property="projName" column="proj_name" />
+        <collection property="projectRequirements" ofType="com.shdatabank.puruan.model.ProjectRequirement">
+            <id property="projId" column="proj_id1" />
+            <result property="projName" column="proj_name1" />
+            <result property="projEnrollStatus" column="proj_enroll_status" />
+            <result property="projEnrollStatusValue" column="proj_enroll_status_value" />
+            <result property="auditDatetime" column="audit_datetime" />
+            <result property="projCloseDate" column="proj_close_date" />
+            <result property="finishDate" column="finish_date" />
+            <result property="undertakeDatetime" column="undertake_datetime" />
+        </collection>
+    </resultMap>
+</mapper>

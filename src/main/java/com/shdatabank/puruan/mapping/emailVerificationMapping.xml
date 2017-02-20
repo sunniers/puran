@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IEmailVerificationDao">
+    <!-- 保存验证信息 -->
+    <insert id="insertEmailAuth" parameterType="com.shdatabank.puruan.model.EmailAuth">
+	        INSERT INTO email_auth(user_id,auth_code,create_time) VALUES(
+	        #{userId},
+	        #{authCode},
+	        #{createTime})
+    </insert>
+    
+    <!-- 验证信息 -->
+    <select id="selectEmailAuth" parameterType="com.shdatabank.puruan.model.EmailAuth" resultMap="selectEmailAuthMap">
+        <![CDATA[
+            SELECT auth_id,user_id,auth_code,create_time FROM email_auth WHERE 
+            user_id = #{userId} AND auth_code = #{authCode} AND #{createTime} - create_time < 24 * 60 * 60
+        ]]>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.EmailAuth" id="selectEmailAuthMap">
+        <id property="authId" column="auth_id" />
+        <result property="userId" column="user_id" />
+        <result property="authCode" column="auth_code" />
+        <result property="createTime" column="create_time" />
+    </resultMap>
+    
+    <!-- 删除信息 -->
+    <delete id="deleteEmailAuth" parameterType="com.shdatabank.puruan.model.EmailAuth">
+        <![CDATA[
+            DELETE FROM email_auth WHERE auth_id = #{authId}
+        ]]>
+    </delete>
+</mapper>

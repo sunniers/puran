@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IProjectTeamDao">
+    <!-- 查询小组成员 -->
+    <select id="selectTeamMember" parameterType="com.shdatabank.puruan.model.ProjectUserReleation" resultMap="selectTeamMemberMap">
+        <![CDATA[
+            SELECT 
+            pur.releation_id,
+            pur.project_requirement_id,
+            pur.user_id,
+            (
+            SELECT u.user_alias 
+            FROM user u 
+            WHERE u.user_id = pur.user_id
+            ) user_name,
+            pur.join_date,
+            pur.leave_datetime,
+            pur.project_duty,
+            (
+            SELECT dd.data_value
+            FROM dictionarydata dd
+            WHERE dd.data_id = pur.releation_status
+            ) releation_status
+            FROM project_user_releation pur
+            JOIN project_requirement pr
+            ON pur.project_requirement_id = pr.proj_id
+            WHERE pur.project_requirement_id = #{projectRequirementId}
+            AND pr.manager_user_id = #{userId}
+            AND pr.active = 0
+            AND pur.active = 0
+        ]]>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectUserReleation" id="selectTeamMemberMap">
+        <id property="releationId" column="releation_id" />
+        <result property="projectRequirementId" column="project_requirement_id" />
+        <result property="userId" column="user_id" />
+        <result property="userName" column="user_name" />
+        <result property="joinDate" column="join_date" />
+        <result property="leaveDatetime" column="leave_datetime" />
+        <result property="projectDuty" column="project_duty" />
+        <result property="releationStatus" column="releation_status" />
+    </resultMap>
+    
+    <!-- 查询我的圈子中不在项目中的人 -->
+    <select id="selectMyCommunity" parameterType="com.shdatabank.puruan.model.ProjectUserReleation" resultMap="selectMyCommunityMap">
+        SELECT * FROM user u2 JOIN my_community mc2 ON u2.user_id = mc2.community_user_id WHERE mc2.community_user_id not in(
+        SELECT u.user_id FROM user u JOIN my_community mc ON u.user_id = mc.community_user_id 
+        JOIN project_user_releation pur ON u.user_id = pur.user_id 
+        WHERE mc.user_id = #{userId} AND pur.project_requirement_id = #{projectRequirementId}
+        ) AND u2.active = 0 AND mc2.user_id = #{userId}
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.User" id="selectMyCommunityMap">
+        <id property="userId" column="user_id" />
+        <result property="companyId" column="company_id" />
+        <result property="userAlias" column="user_alias" />
+        <result property="userName" column="user_name" />
+        <result property="userType" column="user_type" />
+        <result property="userHeaderImg" column="user_header_img" />
+        <result property="userPwd" column="user_pwd" />
+        <result property="userMobile" column="user_mobile" />
+        <result property="userEmail" column="user_email" />
+        <result property="createDatetime" column="create_datetime" />
+        <result property="active" column="active" />
+    </resultMap>
+
+    <!-- 删除小组成员 -->
+    <delete id="deleteTeamMember" parameterType="com.shdatabank.puruan.model.ProjectUserReleation">
+        <![CDATA[
+            UPDATE project_user_releation 
+            SET releation_status = 400802,
+            leave_datetime = NOW()
+            WHERE project_requirement_id = #{projectRequirementId}
+            AND user_id = #{userId}
+        ]]>
+    </delete>
+    
+    <!-- 请假 -->
+    <insert id="insertProjectLeave" parameterType="com.shdatabank.puruan.model.ProjectLeave">
+        INSERT INTO project_leave(
+        project_id,
+        user_id,
+        start_date,
+        end_date,
+        create_time
+        ) VALUES (
+        #{projectId},
+        #{userId},
+        #{startDate},
+        #{endDate},
+        NOW()
+        )
+    </insert>
+    
+    <!-- 改变成员状态 -->
+    <update id="updateProjectLeave" parameterType="com.shdatabank.puruan.model.ProjectLeave">
+        UPDATE project_user_releation
+        SET releation_status = 400803
+        WHERE project_requirement_id = #{projectId}
+        AND user_id = #{userId}
+    </update>
+</mapper>

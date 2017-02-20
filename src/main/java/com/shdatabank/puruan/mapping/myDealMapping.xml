@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.MyDealDao">
+
+	<!-- 项目承接 -->
+	<resultMap id="selectResoursebyNameMap" type="com.shdatabank.puruan.model.MyDeal">
+		<result property="id" column="id" />
+		<result property="sign" column="sign" />
+		<result property="name" column="name" />
+		<result property="description" column="description" />
+		<result property="endTime" column="endTime" />
+		<result property="startTime" column="startTime" />
+		<result property="number" column="number" />
+		<result property="transactionStatus" column="transactionStatus" />
+		<result property="userId" column="userId" />
+	</resultMap>
+	<!--项目需求map  -->
+	<resultMap id="ProjectRequirementMap" type="com.shdatabank.puruan.model.ProjectRequirement">
+		<result property="projId" column="proj_id" />
+		<result property="parentProjId" column="parent_proj_id" />
+		<result property="publishUserId" column="publish_user_id" />
+		<result property="projName" column="proj_name" />
+		<result property="projCloseDate" column="proj_close_date" />
+		<result property="projDevlierDate" column="proj_devlier_date" />
+		<result property="projEstimate" column="proj_estimate" />
+		<result property="projAttachFile" column="proj_attach_file" />
+		<result property="projServiceFee" column="proj_service_fee" />
+		<result property="managerUserId" column="manager_user_id" />
+		<result property="projFeeCurrency" column="proj_fee_currency" />
+		<result property="active" column="active" />
+		<result property="isProject" column="is_project" />
+		<result property="createDatetime" column="create_datetime" />
+		<result property="projStartDate" column="proj_start_date" />
+		<result property="projEnrollStatus" column="proj_enroll_status" />
+		<result property="providerType" column="provider_type" />
+		<result property="authenticationRequirement" column="authentication_requirement" />
+		<result property="publishWay" column="publish_way" />
+		<!-- <result property="isFeeTrusteeship" column="is_fee_trusteeship" /> -->
+	</resultMap>
+	<!-- 创意人才需求map -->
+	<resultMap type="com.shdatabank.puruan.model.TalentRequirement" id="TalentRequirementMap">
+		<id property="talentRequirementId" column="talent_requirement_id"/>
+		<result property="userId" column="user_id"/>
+		<result property="talentRequirementName" column="talent_requirement_name"/>
+		<result property="workMode" column="work_mode"/>
+		<result property="professionalSkills" column="professional_skills"/>
+		<result property="talentBuget" column="talent_buget"/>
+		<result property="requirementDescription" column="requirement_description"/>
+		<result property="workSpace" column="work_space"/>
+		<result property="effectiveDatetime" column="effective_datetime"/>
+		<result property="requirementClassifier" column="requirement_classifier"/>
+		<result property="cooperateType" column="cooperate_type"/>
+		<result property="active" column="active"/>
+		<result property="requirementStatus" column="requirement_status"/>
+		<result property="talentAttachment" column="talent_attachment"/>
+		<result property="workDuty" column="work_duty"/>
+		<result property="talentRequire" column="talent_require"/>
+		<result property="publishWay" column="publish_way"/>
+		<result property="createTime" column="create_time"/>
+	</resultMap>
+	<!--创意资源map  -->
+	<resultMap type="com.shdatabank.puruan.model.CreativeResource" id="CreativeResourceMap">
+	<id property="creativeResourceId" column="creative_resource_id"/>
+		<result property="userId" column="user_id"/>
+		<result property="resourceName" column="resource_name"/>
+		<result property="resourceImage" column="resource_image"/>
+		<result property="resourceNumber" column="resource_number"/>
+		<result property="resourceDescription" column="resource_description"/>
+		<result property="showAddress" column="show_address"/>
+		<result property="resourceAttach" column="resource_attach"/>
+		<result property="resourceAttachName" column="resource_attach_name"/>
+		<result property="resourceCurrency" column="resource_currency"/>
+		<result property="resourcePrice" column="resource_price"/>
+		<result property="resourceStatus" column="resource_status"/>
+		<result property="active" column="active"/>
+		<result property="publishDatetime" column="publish_datetime"/>
+	</resultMap>
+	<!--人才交易map  -->
+	<resultMap type="com.shdatabank.puruan.model.TalentTransaction" id="TalentTransactionMap">
+		<id property="transactionId" column="transaction_id"/>
+		<result property="talentRequirementId" column="talent_requirement_id"/>
+		<result property="creativeTalentId" column="creative_talent_id"/>
+		<result property="transactionDatetime" column="transaction_datetime"/>
+		<result property="transactionDatetimeMapping" column="transaction_money"/>
+		<result property="transactionMoney" column="transaction_currency"/>
+		<result property="transactionCurrency" column="transaction_status"/>
+	</resultMap>
+	<!-- 资源交易map -->
+	<resultMap type="com.shdatabank.puruan.model.CeativeResourceTransaction" id="CeativeResourceTransactionMap">
+		<id property="resourceTransactionId" column="resource_transaction_id"/>
+		<result property="creativeResourceId" column="creative_resource_id"/>
+		<result property="buyUserId" column="buy_user_id"/>
+		<result property="transactionNumber" column="transaction_number"/>
+		<result property="transactionPrice" column="transaction_price"/>
+		<result property="transactionMoney" column="transaction_money"/>
+		<result property="transactionDatetime" column="transaction_datetime"/>
+		<result property="transactionStatus" column="transaction_status"/>
+		<result property="active" column="active"/>
+	</resultMap>
+	<!-- 项目承接map -->
+	<resultMap type="com.shdatabank.puruan.model.ProjectRequirementUndertake" id="ProjectRequirementUndertakeMap">
+		<id property="undertakeId" column="undertake_id"/>
+		<result property="projectRequirementId" column="project_requirement_id"/>
+		<result property="userId" column="user_id"/>
+		<result property="undertakeDatetime" column="undertake_datetime"/>
+		<result property="undertakeDatetimeMapping" column="active"/>
+		<result property="active" column="undertake_status"/>
+	</resultMap>
+	<!--我的成交 -->
+	<select id="selectMyBargain" resultMap="selectResoursebyNameMap" >
+		SELECT * from
+		(
+		<!-- 项目需求:项目发布者ID关联用户ID -->
+		SELECT * from 
+		(SELECT pr.publish_user_id userId,pr.proj_id id,'800001' sign,pr.proj_name name,1 number,pr.proj_devlier_date time,cr.resource_description description  
+		from project_requirement pr, user u,creative_resource cr
+		where pr.publish_user_id = u.user_id  and cr.creative_resource_id = pr.proj_id 
+		)a 
+		UNION 
+		<!-- 招募：需求表中的用户ID关联用户ID -->
+		SELECT * from 
+		(SELECT tr.user_id userId,tr.talent_requirement_id id,'800002' sign,tr.talent_requirement_name name,1 number,tr.effective_datetime time,tr.requirement_description description  from talent_requirement tr,user u 
+		where tr.user_id = u.user_id )b
+		UNION 
+		<!-- 出售：创意资源表中的所有者的ID关联用户ID -->
+		SELECT * from 
+		(SELECT cr.user_id userId,cr.creative_resource_id id,'800003' sign,cr.resource_name name,cr.resource_number number,cr.publish_datetime time,cr.resource_description description from creative_resource cr,user u 
+		where cr.user_id = u.user_id )c
+		UNION 
+		<!-- 人才：创意人才表中的创意人才ID关联用户ID -->
+		SELECT * from 
+		(SELECT tt.user_id userId,tt.transaction_id id,'800004' sign,u.user_name name,1 number ,tt.transaction_datetime time,tr.requirement_description description from talent_transaction tt,user u,talent_requirement tr 
+		where tt.user_id = u.user_id and tr.talent_requirement_id = tt.talent_requirement_id
+		UNION 
+		SELECT pru.user_id userId,pru.undertake_id id,'800004' sign,u.user_name name,1 number,pru.undertake_datetime time,prd.proj_require_description_content description  from 
+		project_requirement_undertake pru, user u,project_requirement pr,project_requirement_description prd 
+		where pru.user_id = u.user_id and  pru.project_requirement_id = pr.proj_id and pr.proj_id = prd.proj_require_id
+		)d
+		UNION 
+		<!-- 承接人才：创意承接中的承接用户ID关联用户ID -->
+		<!-- SELECT * from 
+		(SELECT pru.undertake_id id,'800006' sign,u.user_name name,1 number,pru.undertake_datetime time,prd.proj_require_description_content description  from 
+		project_requirement_undertake pru, user u,project_requirement pr,project_requirement_description prd 
+		where pru.user_id = u.user_id and  pru.project_requirement_id = pr.proj_id and pr.proj_id = prd.proj_require_id )e
+		UNION  -->
+		<!-- 购买：创意资源交易中的创意资源ID关联创意资源ID，资源交易中交易ID关联用户ID -->
+		SELECT * from 
+		(SELECT crt.buy_user_id userId,cr.creative_resource_id id,'800005' sign,cr.resource_name name,crt.transaction_number number,crt.transaction_datetime time,cr.resource_description  description from ceative_resource_transaction crt,creative_resource cr,user u 
+			where crt.creative_resource_id = cr.creative_resource_id and crt.buy_user_id = u.user_id)f
+     ) h   
+	where userId=#{userId}
+	</select>
+	<!-- 查询：根据姓名，时间，类型 -->
+	<select id="selectMyCommunity" resultMap="selectResoursebyNameMap" >
+		SELECT * from
+		(
+		<!-- 项目需求:项目发布者ID关联用户ID -->
+		SELECT * from 
+		(SELECT pr.publish_user_id userId,pr.proj_id id,'800001' sign,pr.proj_name name,1 number,pr.proj_devlier_date time,cr.resource_description description  
+		from project_requirement pr, user u,creative_resource cr
+		where pr.publish_user_id = u.user_id  and cr.creative_resource_id = pr.proj_id 
+		)a 
+		<where>
+			 userId=#{userId} 
+			<if test="null !=  name  and '' !=  name ">
+			  and  name like '%${name}%' 
+			</if>
+			<if test="null !=startTime  and '' != startTime ">
+			  and time &gt;=  #{startTime}
+			</if>
+			<if test="null != endTime  and '' != endTime ">
+			  and time &lt;=#{endTime}
+			</if>
+			<if test="null != sign  and '' != sign ">
+			  and  sign =#{sign} 
+			</if>   
+		</where> 
+		UNION 
+		<!-- 招募：需求表中的用户ID关联用户ID -->
+		SELECT * from 
+		(SELECT tr.user_id userId,tr.talent_requirement_id id,'800002' sign,tr.talent_requirement_name name,1 number,tr.effective_datetime time,tr.requirement_description description  from talent_requirement tr,user u 
+		where tr.user_id = u.user_id )b
+		<where>
+		 	userId=#{userId} 
+			<if test="null !=  name  and '' !=  name ">
+			  and  name like '%${name}%' 
+			</if>
+			<if test="null !=startTime  and '' != startTime ">
+			  and time &gt;=  #{startTime}
+			</if>
+			<if test="null != endTime  and '' != endTime ">
+			  and time &lt;=#{endTime}
+			</if>
+			<if test="null != sign  and '' != sign ">
+			  and  sign =#{sign} 
+			</if>  
+		</where> 
+		UNION 
+		<!-- 出售：创意资源表中的所有者的ID关联用户ID -->
+		SELECT * from 
+		(SELECT cr.user_id userId,cr.creative_resource_id id,'800003' sign,cr.resource_name name,cr.resource_number number,cr.publish_datetime time,cr.resource_description description from creative_resource cr,user u 
+		where cr.user_id = u.user_id)c
+		<where>
+			 userId=#{userId} 
+			<if test="null !=  name  and '' !=  name ">
+			  and  name like '%${name}%' 
+			</if>
+			<if test="null !=startTime  and '' != startTime ">
+			  and time &gt;=  #{startTime}
+			</if>
+			<if test="null != endTime  and '' != endTime ">
+			  and time &lt;=#{endTime}
+			</if>
+			<if test="null != sign  and '' != sign ">
+			  and  sign =#{sign} 
+			</if> 
+		</where> 
+		UNION 
+		<!-- 人才：创意人才表中的创意人才ID关联用户ID -->
+		SELECT * from 
+		(SELECT tt.user_id userId,tt.transaction_id id,'800004' sign,u.user_name name,1 number ,tt.transaction_datetime time,tr.requirement_description description from talent_transaction tt,user u,talent_requirement tr 
+		where tt.user_id = u.user_id and tr.talent_requirement_id = tt.talent_requirement_id
+		UNION 
+		SELECT pru.user_id userId,pru.undertake_id id,'800004' sign,u.user_name name,1 number,pru.undertake_datetime time,prd.proj_require_description_content description  from 
+		project_requirement_undertake pru, user u,project_requirement pr,project_requirement_description prd 
+		where pru.user_id = u.user_id and  pru.project_requirement_id = pr.proj_id and pr.proj_id = prd.proj_require_id
+		)d
+		<where>
+		 	userId=#{userId} 
+			<if test="null !=  name  and '' !=  name ">
+			  and  name like '%${name}%' 
+			</if>
+			<if test="null !=startTime  and '' != startTime ">
+			  and time &gt;=  #{startTime}
+			</if>
+			<if test="null != endTime  and '' != endTime ">
+			  and time &lt;=#{endTime}
+			</if>
+			<if test="null != sign  and '' != sign ">
+			  and  sign =#{sign} 
+			</if>  
+		</where> 
+		<!-- 承接人才：创意承接中的承接用户ID关联用户ID -->
+	<!-- 	SELECT * from 
+		(SELECT pru.undertake_id id,'800004' sign,u.user_name name,1 number,pru.undertake_datetime time,prd.proj_require_description_content description  from 
+		project_requirement_undertake pru, user u,project_requirement pr,project_requirement_description prd 
+		where pru.user_id = u.user_id and  pru.project_requirement_id = pr.proj_id and pr.proj_id = prd.proj_require_id)e
+		<where>
+			<if test="null !=  name  and '' !=  name ">
+			  and  name like '%${name}%' 
+			</if>
+			<if test="null !=startTime  and '' != startTime ">
+			  and time &gt;=  #{startTime}
+			</if>
+			<if test="null != endTime  and '' != endTime ">
+			  and time &lt;=#{endTime}
+			</if>
+			<if test="null != sign  and '' != sign ">
+			  and  sign =#{sign} 
+			</if> 
+		</where>  -->
+		UNION 
+		<!-- 购买：创意资源交易中的创意资源ID关联创意资源ID，资源交易中交易ID关联用户ID -->
+		SELECT * from 
+		(SELECT crt.buy_user_id userId,cr.creative_resource_id id,'800005' sign,cr.resource_name name,crt.transaction_number number,crt.transaction_datetime time,cr.resource_description  description from ceative_resource_transaction crt,creative_resource cr,user u 
+			where crt.creative_resource_id = cr.creative_resource_id and crt.buy_user_id = u.user_id)f
+		<where>
+			 userId=#{userId} 
+			<if test="null !=  name  and '' !=  name ">
+			  and  name like '%${name}%' 
+			</if>
+			<if test="null !=startTime  and '' != startTime ">
+			  and time &gt;=  #{startTime}
+			</if>
+			<if test="null != endTime  and '' != endTime ">
+			  and time &lt;=#{endTime}
+			</if>
+			<if test="null != sign  and '' != sign ">
+			  and  sign =#{sign} 
+			</if> 
+		</where> 
+     ) h   
+	ORDER BY time DESC
+	</select>
+	<!-- 查看：以下6种 -->
+	<!-- 项目需求 -->
+	<select id="selectDemand" resultMap="ProjectRequirementMap">
+	SELECT pr.*,'800001' sign,cr.resource_description description   from project_requirement pr, user u,creative_resource cr 
+		where pr.publish_user_id = u.user_id and cr.creative_resource_id = pr.proj_id and pr.proj_id=#{id} 
+	</select>
+	<!-- 招募 -->
+	<select id="selectRecruit" resultMap="TalentRequirementMap">
+		SELECT tr.*,'800002' sign  from talent_requirement tr,user u 
+		where tr.user_id = u.user_id and tr.talent_requirement_id=#{id} 
+	</select>
+	<!-- 出售 -->
+	<select id="selectSell" resultMap="CreativeResourceMap">
+		SELECT cr.*,'800003' sign from creative_resource cr,user u 
+		where cr.user_id = u.user_id and cr.creative_resource_id=#{id}
+	</select>
+	<!-- 人才 -->
+	<select id="selectTalents" resultMap="TalentTransactionMap">
+		SELECT '800004' sign,tr.requirement_description description  from talent_transaction tt,user u,talent_requirement tr  
+		where tt.user_id = u.user_id and tr.talent_requirement_id = tt.talent_requirement_id and tt.transaction_id=#{id}
+		UNION ALL
+		SELECT '800004' sign,prd.proj_require_description_content description from project_requirement_undertake pru, user u,project_requirement pr,project_requirement_description prd  
+		where pru.user_id = u.user_id and  pru.project_requirement_id = pr.proj_id and pr.proj_id = prd.proj_require_id and pru.undertake_id=#{id}
+	</select>
+	<!-- 承接人才 -->
+<!-- 	<select id="selectPrTalents" resultMap="ProjectRequirementUndertakeMap">
+		SELECT pru.*,'800006' sign,prd.proj_require_description_content description from project_requirement_undertake pru, user u,project_requirement pr,project_requirement_description prd  
+		where pru.user_id = u.user_id and  pru.project_requirement_id = pr.proj_id and pr.proj_id = prd.proj_require_id and pru.undertake_id=#{id}
+	</select> -->
+	<!-- 购买 -->
+	<select id="selectBuy" resultMap="CeativeResourceTransactionMap">
+		SELECT crt.* ,'800005' sign  from ceative_resource_transaction crt,creative_resource cr,user u 
+			where crt.creative_resource_id = cr.creative_resource_id and crt.buy_user_id = u.user_id and crt.resource_transaction_id=#{id}
+	</select>
+	<!--查询项目需求类型-->
+     <resultMap id="Dictionary_resultMap" type="com.shdatabank.puruan.model.Dictionary">
+	    <id property="dictId" column="dict_id" />
+	    <result property="parentId" column="parent_id" />
+	    <result property="dictName" column="dict_name" />
+	    <collection property="dictionarydatas" ofType="com.shdatabank.puruan.model.Dictionarydata">
+	        <id property="dataId" column="data_id" />
+	        <result property="dictId" column="dictid" />
+	        <result property="dataValue" column="data_value" />
+	    </collection> 
+	</resultMap>
+	<!-- 查询出所有需求类型包含子类型 -->
+	<select id="selectAllRequirementType" resultMap="Dictionary_resultMap">
+		select d.dict_id,d.parent_id,d.dict_name,dd.data_id,dd.dict_id dictid,dd.data_value 
+		from dictionary d LEFT JOIN dictionarydata dd ON d.dict_id = dd.dict_id
+		WHERE dd.dict_id = 800000
+		ORDER BY d.dict_id
+	</select> 
+	
+</mapper>

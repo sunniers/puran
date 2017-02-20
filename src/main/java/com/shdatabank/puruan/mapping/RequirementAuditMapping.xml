@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.RequirementAuditDao">
+	<!--查询审核的结果 -->
+	<resultMap id="selectRequirementByStatusMap" type="com.shdatabank.puruan.model.RequirementAudit">
+		<id property="auditId" column="audit_it" />
+		<result property="projId" column="id" />
+		<result property="projName" column="name" />
+		<result property="publishName" column="publishName" />
+		<result property="requirementTypeValue" column="requirementTypeValue" />
+		<result property="requirementType" column="requirementType" />
+		<result property="auditDateTime" column="auditTime" />
+		<result property="auditStatus" column="auditStatus" />
+		<result property="auditStatusId" column="auditStatusId" />
+		<result property="createDatetime" column="createDatetime" />
+	</resultMap>
+
+	<!-- 时间排序 --> 
+	<sql id="sql_form">
+		SELECT
+		a.audit_it,a.audit_status
+		,a.audit_datetime,a.requirement_type,a.proj_requirement_id,a.active
+		from
+		requirement_audit a ORDER BY a.audit_datetime DESC
+	</sql>
+	<!-- 查询已审核需求发布 -->
+	<select id="selectAllRequirementYes" resultMap="selectRequirementByStatusMap"
+		parameterType="com.shdatabank.puruan.model.RequirementAudit">
+		SELECT * FROM (
+		SELECT r.proj_id id ,r.proj_name name,(
+		SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user u
+		LEFT JOIN
+		company c
+		ON u.company_id = c.company_id
+		WHERE u.user_id =
+		r.publish_user_id) publishName , (SELECT c.data_value from
+		dictionarydata c where c.data_id=700001) requirementTypeValue,700001
+		requirementType
+		,t.audit_datetime
+		auditTime,d.data_value auditStatus,t.audit_status auditStatusId
+		from
+		(
+		<include refid="sql_form" />
+		) t
+		LEFT JOIN
+		project_requirement r on r.proj_id=t.proj_requirement_id
+		LEFT JOIN
+		dictionarydata d on d.data_id=t.audit_status
+		where
+		t.requirement_type=700001 and t.active=0 and r.active=0<!--创意需求的类型  -->
+		GROUP BY
+		r.proj_id
+		UNION ALL
+		SELECT
+		r.talent_requirement_id id
+		,r.talent_requirement_name name,(
+		SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user u
+		LEFT JOIN
+		company c
+		ON u.company_id = c.company_id
+		WHERE u.user_id = r.user_id)
+		publishName , (SELECT c.data_value from dictionarydata c where
+		c.data_id=700002) requirementTypeValue,700002 requirementType
+		,t.audit_datetime
+		auditTime,d.data_value auditStatus,t.audit_status auditStatusId
+		from (
+		<include refid="sql_form" />
+		) t
+		LEFT JOIN
+		talent_requirement r on
+		r.talent_requirement_id=t.proj_requirement_id
+		LEFT JOIN dictionarydata
+		d on d.data_id=t.audit_status
+		where
+		t.requirement_type=700002 and<!--人才需求的类型  -->
+		t.active=0 and r.active=0
+		GROUP BY
+		r.talent_requirement_id
+		UNION ALL
+		SELECT r.fancing_id id ,r.project_name
+		name,(
+		SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user
+		u
+		LEFT JOIN
+		company c
+		ON u.company_id = c.company_id
+		WHERE u.user_id =
+		r.user_id)
+		publishName , (SELECT c.data_value from dictionarydata c
+		where
+		c.data_id=700003) requirementTypeValue,700003 requirementType
+		,t.audit_datetime
+		auditTime,d.data_value auditStatus,t.audit_status auditStatusId
+		from (
+		<include refid="sql_form" />
+		) t
+		LEFT JOIN fancing
+		r on r.fancing_id=t.proj_requirement_id
+		LEFT JOIN
+		dictionarydata d on
+		d.data_id=t.audit_status
+		where
+		t.requirement_type=700003 and t.active=0 and r.active=0<!--融资需求的类型  -->
+		GROUP BY
+		r.fancing_id) h
+		<if test="projName!='' and projName!=null">
+			where h.name LIKE '%${projName}%'
+		</if>
+		ORDER BY h.auditTime DESC
+	</select>
+	<!-- 查询未审核需求发布 -->
+	<select id="selectAllRequirementNo" resultMap="selectRequirementByStatusMap"
+		parameterType="com.shdatabank.puruan.model.RequirementAudit">
+		SELECT * from
+		(
+		SELECT p.proj_id id ,p.proj_name name ,
+		(SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user u
+		LEFT JOIN
+		company c
+		ON u.company_id = c.company_id
+		WHERE u.user_id =
+		p.publish_user_id) publishName,(SELECT c.data_value from
+		dictionarydata c where c.data_id=700001) requirementTypeValue,700001
+		requirementType
+		,p.create_datetime
+		createDatetime
+		from
+		project_requirement p
+		where p.proj_flow_status=400101 AND p.active=0<!--创意需求的类型  -->
+		UNION ALL
+		SELECT t.talent_requirement_id id
+		,t.talent_requirement_name,
+		(SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user u
+		LEFT JOIN
+		company c
+		ON u.company_id = c.company_id
+		WHERE u.user_id =
+		t.user_id)
+		publishName ,(SELECT c.data_value from dictionarydata c
+		where
+		c.data_id=700002) requirementTypeValue,700002
+		requirementType,t.create_time
+		from talent_requirement t
+		where
+		t.requirement_status =400101 AND t.active=0<!--人才需求的类型  -->
+		UNION ALL
+		SELECT
+		f.fancing_id id ,
+		f.project_name,
+		(SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user u
+		LEFT JOIN
+		company c
+		ON u.company_id = c.company_id
+		WHERE u.user_id = f.user_id)
+		publishName ,(SELECT c.data_value from dictionarydata c where
+		c.data_id=700003) requirementTypeValue,700003
+		requirementType,f.create_datetime
+		createDatetime
+		from
+		fancing f
+		where
+		f.fancing_status =140402 AND f.active=0<!--融资需求的类型  -->
+		) h
+		<if test="projName!='' and projName!=null">
+			where h.name LIKE '%${projName}%'
+		</if>
+		ORDER BY h.createDatetime DESC
+	</select>
+	<!-- 项目审核信息Map -->
+	<resultMap id="selectRequirementMap"
+		type="com.shdatabank.puruan.model.ProjectRequirement">
+		<id property="projId" column="proj_id" />
+		<result property="projName" column="proj_name" />
+		<result property="publishUser" column="company_name" />
+		<result property="requirementType" column="requirement_type" />
+		<result property="projServiceFee" column="proj_service_fee" />
+		<result property="projStartDate" column="proj_start_date" />
+		<result property="projCloseDate" column="proj_close_date" />
+		<result property="projEstimate" column="proj_estimate" />
+		<result property="createDatetime" column="create_datetime" />
+		<result property="projRequireDescriptionContent" column="proj_require_description_content" />
+		<result property="projAttachFile" column="proj_attach_file" />
+	</resultMap>
+
+	<!-- 添加需求审核 -->
+	<insert id="insertRequirementAudit" parameterType="com.shdatabank.puruan.model.RequirementAudit"
+		useGeneratedKeys="true" keyProperty="auditId">
+		INSERT INTO
+		requirement_audit(proj_requirement_id,requirement_type,back_user_id,audit_datetime,audit_content,audit_status,active)
+		VALUES(
+		#{projId},
+		#{requirementType},
+		#{backUserId},
+		now(),
+		#{auditContent},
+		#{auditStatusId},
+		0
+		)
+	</insert>
+	<!-- 创意需求查看，根据ID查询创意需求 -->
+	<select id="selectRequirementProj" resultType="com.shdatabank.puruan.model.RequireProjlInformation"
+		parameterType="java.lang.Long">
+		SELECT
+			r.proj_id id, 
+			r.proj_name projName ,
+			(SELECT
+			IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user u
+			LEFT JOIN
+			company c
+			ON u.company_id = c.company_id
+			WHERE u.user_id =
+			r.publish_user_id) publishName,
+			(SELECT c.data_value from
+			dictionarydata c where c.data_id=700001) requirementTypeValue,
+			'700001' requirementType ,
+			r.proj_service_fee ServiceFee,
+			r.proj_start_date projStartDate,
+			r.proj_close_date projCloseDate,
+			r.proj_estimate projEstimate,
+			r.create_datetime createDatetime,
+			group_concat(DISTINCT d.data_value) as requirementClass,
+			t.proj_require_description_content,
+			r.proj_file_name fileName,
+			r.proj_attach_file attachFile,
+			r.proj_see_file_path seeFile,
+			b.data_value auditStatus,
+			a.audit_status auditStatusId,
+			a.audit_datetime requirementDatetime
+		from project_requirement r
+		LEFT JOIN
+		project_requirement_description t on t.proj_require_id=r.proj_id
+		LEFT
+		JOIN project_requirement_class p on p.proj_require_id=r.proj_id
+		LEFT
+		JOIN dictionarydata d on d.data_id=p.proj_require_class_value
+		LEFT JOIN
+		requirement_audit a on a.proj_requirement_id=r.proj_id and a.requirement_type=700001
+		LEFT JOIN
+		dictionarydata b on a.audit_status=b.data_id 
+		where r.proj_id=#{id}
+	</select>
+	<!-- 创意人才查看，根据ID查询创意需求 -->
+	<select id="selectRequirementTalent" resultType="com.shdatabank.puruan.model.RequireTalentInformation"
+		parameterType="java.lang.Long">
+		SELECT
+			tr.talent_requirement_id id,
+			tr.talent_requirement_name requireName,
+			(SELECT
+			IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user u
+			LEFT JOIN
+			company c
+			ON u.company_id = c.company_id
+			WHERE u.user_id =
+			tr.user_id) publishName,
+			(SELECT c.data_value from
+			dictionarydata c where c.data_id=700002) requirementTypeValue,
+			'700002' requirementType ,
+			tr.work_mode workMode,
+			tr.professional_skills professionalSkills,
+			tr.talent_buget talentBuget,
+			tr.requirement_description requirementDescription,
+			tr.work_space workSpace,
+			tr.effective_datetime effectiveDatetime,
+			tr.cooperate_type cooperateType,
+			tr.talent_attachment_name fileName,
+			tr.talent_attachment attachFile,
+			tr.talent_attachment_see_path seeFile,
+			tr.work_duty workDuty ,
+			tr.create_time createDatetime,
+			GROUP_CONCAT(a.data_value) requirementClass,
+			tr.talent_require talentRequire,
+			ra.audit_status auditStatusId,
+			d.data_value auditStatus,
+			ra.audit_datetime requirementDatetime
+		from talent_requirement tr
+		LEFT JOIN  requirement_audit ra on tr.talent_requirement_id=ra.proj_requirement_id and ra.requirement_type=700002
+		LEFT JOIN dictionarydata d on d.data_id=ra.audit_status 
+		LEFT JOIN talent_requirement_class trc on trc.talent_requirement_id=tr.talent_requirement_id
+		LEFT JOIN dictionarydata a on a.data_id=trc.talent_requirement_class_value
+		where  tr.talent_requirement_id=#{id}
+	</select>
+	<!-- 创意融资查看，根据ID查询创意需求 -->
+	<select id="selectRequirementFancing" resultType="com.shdatabank.puruan.model.RequireFancingInformation"
+		parameterType="java.lang.Long">
+		SELECT 
+			f.fancing_id id, 
+			f.project_name,
+			(SELECT
+			IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user u
+			LEFT JOIN company c
+			ON u.company_id = c.company_id
+			WHERE u.user_id =
+			f.user_id) publishName,
+			(SELECT c.data_value from
+			dictionarydata c where c.data_id=700003) requirementTypeValue,
+			'700003' requirementType ,
+			f.fancing_money fancingMoney,
+			f.fancing_description fancingDescription,
+			f.fancing_use fancingUse,
+			f.publish_way publishWay,
+			f.fancing_body fancingBody,
+			f.fancing_file_see_path seeFile,
+			f.fancing_file_name fancingFileName,
+			f.fancing_attachment fancingAttachment,
+			d.data_value fancingWay,
+			f.create_datetime createDatetime,
+			GROUP_CONCAT(DISTINCT a.data_value) requirementClass,
+			ra.audit_status auditStatusId,
+			c.data_value auditStatus,
+			ra.audit_datetime requirementDatetime
+		from fancing f
+		LEFT JOIN requirement_audit ra on ra.proj_requirement_id=f.fancing_id and ra.requirement_type=700003
+		LEFT JOIN fancing_classifier fc on fc.fancing_id=f.fancing_id
+		LEFT JOIN dictionarydata d on d.data_id=f.fancing_way
+		LEFT JOIN dictionarydata a on a.data_id=fc.fancing_classifier_value
+		LEFT JOIN dictionarydata c on c.data_id=ra.audit_status 
+		where f.fancing_id=#{id}
+	</select>
+
+	<!-- 更新创意需求状态 -->
+	<update id="updateRequirementProj" parameterType="com.shdatabank.puruan.model.RequirementAudit">
+		UPDATE
+		project_requirement p set p.proj_flow_status=#{statusId} where
+		p.proj_id=#{projId}
+	</update>
+	<!-- 更新融资需求状态 -->
+	<update id="updateRequirementFancing" parameterType="com.shdatabank.puruan.model.RequirementAudit">
+		UPDATE
+		fancing f set f.fancing_status=#{statusId} where
+		f.fancing_id=#{projId}
+	</update>
+	<!-- 更新人才需求状态 -->
+	<update id="updateRequirementTalent" parameterType="com.shdatabank.puruan.model.RequirementAudit">
+		UPDATE
+		talent_requirement tr set tr.requirement_status=#{statusId} where
+		tr.talent_requirement_id=#{projId}
+	</update>
+
+</mapper>

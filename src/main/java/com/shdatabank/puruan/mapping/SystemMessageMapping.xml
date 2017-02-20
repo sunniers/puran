@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.SystemMessageDao">
+	<resultMap id="sysMessageResultMap" type="com.shdatabank.puruan.model.SysMessage">
+  		<id property="sysMessageId" column="sys_message_id"/>
+ 		<result property="messageSubject" column="message_subject"/>
+  		<result property="messageTitle" column="message_title"/>
+  		<result property="messageSender" column="message_sender"/>
+  		<result property="messageReceiver" column="message_receiver"/>
+  		<result property="messageContent" column="message_content"/>
+	</resultMap>
+	<!-- 插入消息 -->
+	<insert id="insertSysMessage">
+		insert into sys_message(message_subject,message_title,message_content,generate_datetime,
+		message_sender,receive_message_type,message_receiver) values(
+		#{messageSubject,jdbcType=VARCHAR},#{messageTitle,jdbcType=VARCHAR},
+		#{messageContent,jdbcType=VARCHAR},NOW(),
+		#{messageSender,jdbcType=INTEGER},#{receiveMessageType,jdbcType=VARCHAR},
+		#{messageReceiver,jdbcType=VARCHAR})
+	</insert>
+	<!-- 插入接收消息 -->
+	<insert id="insertAcceptMessage" parameterType="java.util.Map" useGeneratedKeys="true"
+	 keyProperty="receive_id">
+		insert into user_receive_message(message_id,user_id,receive_datetime) 
+		VALUES(#{msgId},#{userId},NOW())
+	</insert>
+	<!-- 获取不同类型的消息 -->
+	<select id="getSysMessageByType" parameterType="java.util.Map" resultMap="sysMessageResultMap">
+		SELECT sys_message_id,message_title,message_content,generate_datetime,
+		message_sender,receive_message_type,b.user_name as message_sender_name,message_receiver
+		 from sys_message a
+		LEFT JOIN `user` b on a.message_sender = b.user_id
+		where message_receiver = #{userId,jdbcType=INTEGER}
+		<!-- 已接收 -->
+		<if test="msgType!=null and msgType==1">
+              and sys_message_id in 
+			(
+			   SELECT message_id from user_receive_message
+			)
+        </if>
+        <!-- 未接收 -->
+        <if test="msgType!=null and msgType==2">
+              and sys_message_id NOT in 
+			(
+			   SELECT message_id from user_receive_message
+			)
+        </if> 
+	</select>
+</mapper>

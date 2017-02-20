@@ -1,0 +1,79 @@
+<!--路径-->
+                <div class="nav">
+                    <span>首页</span><span><img src="../../images/background/rightCusp.png" alt=""></span>
+                    <span>发布信息审核</span><span><img src="../../images/background/rightCusp.png" alt=""></span>
+                    <span>资源审核</span><span><img src="../../images/background/rightCusp.png" alt=""></span>
+                    <span>审核</span>
+                </div>
+
+                <!--内容详情-->
+                <div class="contentInfo">
+					 <div class="needReRe">
+
+					</div>
+                </div>
+                
+                
+                
+                
+          <script id="resources_resource_tmplate" type="text/x-jquery-tmpl">             
+                		<div class="tTable">
+					 	<div class="tTitle">
+					 		<h1>${resourceName}</h1>
+							<!--拒绝通过-->
+							{{if $data.auditStatus=="未通过"}}
+							<img src="../../images/background/refusePass.png" alt="拒绝通过" />
+							{{/if}}
+							<!--已通过-->
+							{{if $data.auditStatus=="已通过"}}
+							<img src="../../images/background/auditPass.png" alt="已通过" />
+							{{/if}}
+					 	</div>
+					 	<div class="tHead">
+					 		<div class="tTr">
+					 			<div class="tName">发布方</div>
+					 			<div class="tValue" style="width:132px;">${publishName}</div>
+					 			<div class="tName">单价</div>
+					 			<div class="tValue" style="width:100px;">${resourcePrice}</div>
+					 			<div class="tName">库存</div>
+					 			<div class="tValue" style="width:100px;">${resourceNumber}</div>
+					 			<div class="tName">提交时间</div>
+					 			<div class="tValue" style="width:100px;">${publishDatetime}</div>
+					 		</div>
+					 		<div class="tTr">
+					 			<div class="tName">资源演示</div>
+					 			<div class="tValue" style="width:717px;"><a href="${showAddress}">${showAddress}</a></div>
+					 		</div>
+					 		<div class="tTr">
+					 			<div class="tName">资源分类</div>
+					 			<div class="tValue" style="width:717px;">${resourceType}</div>
+					 		</div>
+					 	</div>
+					 	<div class="tBody">
+					 		<div class="item">
+					 			<div class="itemName"><div class="itemStyle"></div>资源图片</div>
+					 			<div class="itemContent">
+					 				<div class="img">
+					 					<img alt="资源图片" src="${resourceImage}">
+					 				</div>
+						 			<sub><a href="${resourceImage}" target="_blank">查看大图</a> </sub>
+					 			</div>
+					 		</div>
+					 		<div class="item">
+					 			<div class="itemName"><div class="itemStyle"></div>资源描述</div>
+					 			<div class="itemContent">
+									业务需求：<br>
+									${resourceDescription}
+								</div>
+					 		</div>
+					 	</div>
+					 </div>
+					 <div class="tHandle">
+						{{if $data.auditStatus==null}}
+					 	<div class="refuse"><div class="resRefuse">不予通过</div></div>
+					 	<div class="pass"><div class="resPass">审核通过</div></div>
+						{{/if}}
+					 </div>
+
+		</script>
+                <script type="text/javascript" src="../../js/background/resourceReviewReview.js"></script>

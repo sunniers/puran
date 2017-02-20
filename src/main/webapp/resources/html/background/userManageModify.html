@@ -1,0 +1,58 @@
+            <!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="../../images/background/rightCusp.png" alt=""></span>
+                <span>用户管理</span><span><img src="../../images/background/rightCusp.png" alt=""></span>
+                <span>用户信息修改</span>
+            </div>
+
+            <!--内容详情-->
+            <div class="contentInfo white">
+                <div class="userManageModify">
+                    <div class="addUserPrompt">
+                        <img src="../../images/background/warning.png" alt="警告"/>
+                        <div class="addUserPromptWord">用户信息修改</div>
+                    </div>
+                    <div class="addUserContent">
+                        <div style="display:none;" class="sui-msg msg-error userNamePrompt">
+                            <div class="msg-con">错误信息提示</div>
+                            <s class="msg-icon"></s>
+                        </div>
+                        <div class="userName fr">
+                            <label>*用户名称:</label>
+                            <input id="userAlias" type="text">
+                        </div>
+                        <div class="department fr">
+                            <label>*部门:</label>
+                            <select id="department"></select>
+                        </div>
+                        <div class="phoneNumber fr">
+                            <label>手机号:</label>
+                            <input id="phoneNumber" type="text">
+                        </div>
+                        <div class="mailbox fr">
+                            <label>邮箱:</label>
+                            <input id="mailbox" type="text">
+                        </div>
+                        <div class="role fr">
+                            <label>角色:</label>
+                            <input id="role" type="text" disabled >
+                        </div>
+                        <div id="roles" class="roles fr">
+                            <!-- <div class="administrators"><input type="checkbox">管理员</div>
+                            <div class="administrators"><input type="checkbox">管理员</div>
+                            <div class="administrators"><input type="checkbox">管理员</div>
+                            <div class="administrators"><input type="checkbox">管理员</div>
+                            <div class="administrators"><input type="checkbox">管理员</div>
+                            <div class="administrators"><input type="checkbox">管理员</div>
+                            <div class="administrators"><input type="checkbox">管理员</div>
+                            <div class="administrators"><input type="checkbox">管理员</div> -->
+                        </div>
+                        <div class="save fr">
+                            <button id="save">保存</button>
+                            <button id="back">返回</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript" src="../../js/background/userManageModify.js"></script>
+            

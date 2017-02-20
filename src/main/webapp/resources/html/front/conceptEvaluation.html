@@ -1,0 +1,53 @@
+<!--路径-->
+      <div class="nav">
+          <span>首页</span><span><img src="../resources/images/front/rightAngleBrackets.png" alt=""></span>
+          <span>软件评估</span>
+      </div>
+      
+<div class="conceptEvaluation">
+	<div class="apply"><button>申请认证</button></div>
+	<div class="tableData">
+		<table class="sui-table table-bordered">
+		  <thead>
+		    <tr>
+		      <th>项目名称</th>
+		      <th>申请时间</th>
+		      <th>项目描述</th>
+		      <th>状态</th>
+		      <th>操作</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    
+		  </tbody>
+		</table>
+	</div>
+	<div class="page">
+			<div id="paginator" style="margin: auto;"></div>
+	</div>
+</div> 
+<script  id="coneva_list_template" type="text/x-jquery-tmpl">
+				<tr>
+		      		<td>${projectName}</td>
+		      		<td>${assessmentDate}</td>
+		      		<td>${projectDescribe}</td>
+					{{if $data.assessmentStatus=='900001'}}
+		      		<td>审核中</td>
+		      		<td><button data-id="${assessmentId}" class="detail">详情</button></td>
+					{{/if}}
+					{{if $data.assessmentStatus=='900002'}}
+		      		<td>审核不通过</td>
+		      		<td><button data-id="${assessmentId}" class="detail">详情</button>|<button data-id="${assessmentId}" class="edit">修改</button></td>
+					{{/if}}
+					{{if $data.assessmentStatus=='900003'}}
+		      		<td>评估中</td>
+		      		<td><button data-id="${assessmentId}" class="detail">详情</button></td>
+					{{/if}}
+					{{if $data.assessmentStatus=='900004'}}
+		      		<td>已完成</td>
+		      		<td><button data-id="${assessmentId}" class="result">结果</button></td>
+					{{/if}}
+		    	</tr>
+</script>
+<script type="text/javascript" src="resources/js/front/conceptEvaluation.js"></script>
+        

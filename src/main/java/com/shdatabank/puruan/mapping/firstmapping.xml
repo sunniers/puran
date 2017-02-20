@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shdatabank.puruan.dao.FirstDao" >
+   <resultMap type="com.shdatabank.puruan.model.FirstModel" id="baseMap">
+   		
+   </resultMap>
+  
+  <!-- 获取某个建筑物 -->
+  <select id="getBuildingByID"  resultMap="baseMap" parameterType="java.lang.Integer">
+  <![CDATA[
+  	   SELECT building_id,building_name,building_photo,building_longitude,building_latitude,building_address
+  	   ,building_street,building_committee
+  	    from buildings where building_id = #{id,jdbcType=INTEGER}
+	]]>
+  </select>
+  
+  
+  
+  
+</mapper>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.ModifyPwdDao">
+	<!-- 验证旧密码是否正确 -->
+	<select id="selectBackUserOldPwd" resultType="java.lang.Integer" parameterType="com.shdatabank.puruan.model.BackUser">
+		<![CDATA[
+			SELECT COUNT(*) FROM back_user WHERE 
+			user_name = #{userName,jdbcType=VARCHAR} AND 
+			user_pwd = #{userPwd,jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<!-- 更新旧密码，插入新密码 -->
+	<update id="updateBackUserNewPwd" parameterType="com.shdatabank.puruan.model.BackUser">
+		<![CDATA[
+			UPDATE back_user SET user_pwd = #{newBackUserPwd,jdbcType=VARCHAR} WHERE 
+			user_name = #{userName,jdbcType=VARCHAR} AND 
+			user_pwd = #{userPwd,jdbcType=VARCHAR}
+		]]>
+	</update>
+	
+	<!-- 验证旧密码是否正确 -->
+	<select id="selectUserOldPwd" resultType="java.lang.Integer" parameterType="com.shdatabank.puruan.model.User">
+		<![CDATA[
+			SELECT COUNT(*) FROM user WHERE 
+			user_name = #{userName,jdbcType=VARCHAR} AND
+			user_pwd = #{userPwd,jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<!-- 更新旧密码，插入新密码 -->
+	<update id="updateUserNewPwd" parameterType="com.shdatabank.puruan.model.User">
+		<![CDATA[
+			UPDATE user SET user_pwd = #{newUserPwd,jdbcType=VARCHAR} WHERE 
+			user_name = #{userName,jdbcType=VARCHAR} AND
+			user_pwd = #{userPwd,jdbcType=VARCHAR}
+		]]>
+	</update>
+</mapper>

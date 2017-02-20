@@ -1,0 +1,65 @@
+
+<!--路径-->
+<div class="nav">
+	<span>首页</span><span><img
+		src="../../images/background/rightCusp.png" alt=""></span> <span>展示大厅</span><span><img
+		src="../../images/background/rightCusp.png" alt=""></span> <span>供需信息</span>
+</div>
+
+<!--内容详情-->
+<div class="contentInfo">
+	<div class="supplyDemandReview">
+		<div class="supplyDemandSearchTitle">
+			<div class="S a">查询</div>
+			<div class="S b">
+				名称：<input id="name" type="text">
+			</div>
+			<div class="S c">
+				<form class="sui-form form-horizontal">
+					<div data-toggle="datepicker" class="control-group input-daterange">
+						<label class="control-label">成交时间:</label>
+						<div class="controls">
+							<input type="text" id="startTime" class="input-medium input-date"><span>-</span>
+							<input type="text" id="endTime" class="input-medium input-date">
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="S d">
+				<button id="search">查询</button>
+			</div>
+		</div>
+		<div class="supplyDemandReviewData">
+			<table class="sui-table table-zebra" id="supplyDemandtableData">
+				<thead>
+					<tr>
+						<td>类型</td>
+						<td>名称</td>
+						<td>供方</td>
+						<td>需方</td>
+						<td>成交量</td>
+						<td>成交时间</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody>
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<script id="supply_demandinfo_template" type="text/x-jquery-tmpl"> 
+					<tr>
+						<td>${sign}</td>
+						<td>${name}</td>
+						<td>${supply}</td>
+						<td>${demand}</td>
+						<td>${number}</td>
+						<td>${time}</td>
+						<td data-status="${signId}" data-id="${id}">
+							<button class="reviewSup">查看</button>
+						</td>
+					</tr>
+</script>
+<script type="text/javascript" src="../../js/background/supplyDemandInfo.js"></script>

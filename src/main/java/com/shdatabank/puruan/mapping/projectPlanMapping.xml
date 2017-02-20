@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IProjectPlanDao">
+    <!-- 新增计划 -->
+    <insert id="insertProjectPlan" parameterType="com.shdatabank.puruan.model.ProjectPlan">
+        INSERT INTO project_plan 
+        (
+        proj_id,
+        parent_id,
+        proj_plan_name,
+        plan_executant,
+        parent_plan_id,
+        plan_work_range,
+        plan_start_date,
+        plan_finish_date,
+        plan_status,
+        plan_content
+        ) VALUES 
+        (
+        #{projId},
+        #{parentId},
+        #{projPlanName},
+        #{planExecutant},
+        #{parentPlanId},
+        #{planWorkRange},
+        #{planStartDate},
+        #{planFinishDate},
+        400301,
+        #{planContent}
+        )
+    </insert>
+    
+    <!-- 查询项目的计划 -->
+    <select id="selectProjectPlans" resultMap="selectProjectPlansMap" 
+        parameterType="com.shdatabank.puruan.model.ProjectPlan">
+        SELECT 
+        pp.proj_plan_id,
+        pp.proj_id,
+        pp.parent_id,
+        pp.proj_plan_name,
+        pp.plan_executant,
+        pp.plan_work_range,
+        pp.parent_plan_id,
+        (SELECT pp3.proj_plan_name FROM project_plan pp3 WHERE pp3.proj_plan_id = pp.parent_plan_id) parent_proj_plan_name,
+        pp.plan_start_date,
+        pp.plan_finish_date,
+        pp.plan_real_start_date,
+        pp.plan_real_finish_date,
+        pp.plan_status,
+        IF(ppt.proj_task_id is null,0,1) is_change,
+        pp2.proj_plan_id proj_plan_id2,
+        pp2.proj_id proj_id2,
+        pp2.parent_id parent_id2,
+        pp2.proj_plan_name proj_plan_name2,
+        pp2.plan_executant plan_executant2,
+        pp2.plan_work_range plan_work_range2,
+        pp2.parent_plan_id parent_plan_id2,
+        (SELECT pp4.proj_plan_name FROM project_plan pp4 WHERE pp4.proj_plan_id = pp2.parent_plan_id) parent_proj_plan_name2,
+        pp2.plan_start_date plan_start_date2,
+        pp2.plan_finish_date plan_finish_date2,
+        pp2.plan_real_start_date plan_real_start_date2,
+        pp2.plan_real_finish_date plan_real_finish_date2,
+        pp2.plan_status plan_status2,
+        IF(ppt.proj_task_id is null,0,1) is_change2
+        FROM project_plan pp
+        LEFT JOIN project_plan pp2 
+        ON pp2.parent_id = pp.proj_plan_id
+        LEFT JOIN project_plan_task ppt
+        ON ppt.proj_plan_id = pp.proj_plan_id
+        LEFT JOIN project_plan_task ppt2
+        ON ppt2.proj_plan_id = pp2.proj_plan_id
+        WHERE
+        IF(pp2.active is null,1=1, pp2.active = 0) 
+        AND pp.proj_id = #{projId}
+        AND pp.parent_id is null 
+        AND pp.active = 0
+        ORDER BY pp.plan_finish_date,pp2.plan_finish_date asc
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectPlan" id="selectProjectPlansMap">
+        <id property="projPlanId" column="proj_plan_id" />
+        <result property="projId" column="proj_id" />
+        <result property="parentId" column="parent_id" />
+        <result property="projPlanName" column="proj_plan_name" />
+        <result property="planWorkRange" column="plan_work_range" />
+        <result property="parentPlanId" column="parent_plan_id" />
+        <result property="parentProjPlanName" column="parent_proj_plan_name" />
+        <result property="planStartDate" column="plan_start_date" />
+        <result property="planFinishDate" column="plan_finish_date" />
+        <result property="planRealStartDate" column="plan_real_start_date" />
+        <result property="planRealFinishDate" column="plan_real_finish_date" />
+        <result property="planStatus" column="plan_status" />
+        <result property="planStatusValue" column="plan_status_value" />
+        <result property="isChange" column="is_change"/>
+        <collection property="projectPlans" ofType="com.shdatabank.puruan.model.ProjectPlan">
+            <id property="projPlanId" column="proj_plan_id2" />
+            <result property="projId" column="proj_id2" />
+            <result property="parentId" column="parent_id2" />
+            <result property="projPlanName" column="proj_plan_name2" />
+            <result property="planWorkRange" column="plan_work_range2" />
+            <result property="parentPlanId" column="parent_plan_id2" />
+            <result property="parentProjPlanName" column="parent_proj_plan_name2" />
+            <result property="planStartDate" column="plan_start_date2" />
+            <result property="planFinishDate" column="plan_finish_date2" />
+            <result property="planRealStartDate" column="plan_real_start_date2" />
+            <result property="planRealFinishDate" column="plan_real_finish_date2" />
+            <result property="planStatus" column="plan_status2" />
+            <result property="planStatusValue" column="plan_status_value2" />
+            <result property="isChange" column="is_change2"/>
+        </collection>
+    </resultMap>
+    
+    <!-- 查询项目分包的计划 -->
+    <select id="selectPackageProjectPlans" resultMap="selectPackageProjectPlansMap"
+        parameterType="com.shdatabank.puruan.model.PackageProjectPlan">
+        SELECT
+        pr.proj_id,
+        pr.proj_name,
+        pp.proj_plan_id,
+        pp.proj_id,
+        pp.parent_id,
+        pp.proj_plan_name,
+        pp.plan_executant,
+        pp.plan_work_range,
+        pp.parent_plan_id,
+        (SELECT pp3.proj_plan_name FROM project_plan pp3 WHERE pp3.proj_plan_id = pp.parent_plan_id) parent_proj_plan_name,
+        pp.plan_start_date,
+        pp.plan_finish_date,
+        pp.plan_real_start_date,
+        pp.plan_real_finish_date,
+        pp.plan_status,
+        (SELECT dd.data_value FROM dictionarydata dd 
+        WHERE dd.data_id = pp.plan_status) plan_status_value,
+        pp2.proj_plan_id proj_plan_id2,
+        pp2.proj_id proj_id2,
+        pp2.parent_id parent_id2,
+        pp2.proj_plan_name proj_plan_name2,
+        pp2.plan_executant plan_executant2,
+        pp2.plan_work_range plan_work_range2,
+        pp2.parent_plan_id parent_plan_id2,
+        (SELECT pp4.proj_plan_name FROM project_plan pp4 WHERE pp4.proj_plan_id = pp2.parent_plan_id) parent_proj_plan_name2,
+        pp2.plan_start_date plan_start_date2,
+        pp2.plan_finish_date plan_finish_date2,
+        pp2.plan_real_start_date plan_real_start_date2,
+        pp2.plan_real_finish_date plan_real_finish_date2,
+        pp2.plan_status plan_status2,
+        (SELECT dd.data_value FROM dictionarydata dd 
+        WHERE dd.data_id = pp2.plan_status) plan_status_value2
+        FROM project_requirement pr
+        JOIN project_requirement pr2
+        ON pr.parent_proj_id = pr2.proj_id
+        JOIN project p 
+        ON p.project_requirement_id = pr2.proj_id
+        JOIN project p2 
+        ON p2.project_requirement_id = pr.proj_id
+        JOIN project_plan pp
+        ON pp.proj_id = p2.project_id
+        LEFT JOIN project_plan pp2
+        ON pp2.parent_id = pp.proj_plan_id 
+        WHERE p.project_id = #{projId}
+        AND pp.parent_id IS NULL
+        AND IF(pp2.active IS null,1=1,pp2.active = 0)
+        ORDER BY pr.proj_id,pp.plan_finish_date,pp2.plan_finish_date asc
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.PackageProjectPlan" id="selectPackageProjectPlansMap">
+        <id property="projId" column="proj_id" />
+        <result property="projName" column="proj_name" />
+        <collection property="ProjectPlans" ofType="com.shdatabank.puruan.model.ProjectPlan">
+            <id property="projPlanId" column="proj_plan_id" />
+            <result property="projId" column="proj_id" />
+            <result property="parentId" column="parent_id" />
+            <result property="projPlanName" column="proj_plan_name" />
+            <result property="planWorkRange" column="plan_work_range" />
+            <result property="parentPlanId" column="parent_plan_id" />
+            <result property="parentProjPlanName" column="parent_proj_plan_name" />
+            <result property="planStartDate" column="plan_start_date" />
+            <result property="planFinishDate" column="plan_finish_date" />
+            <result property="planRealStartDate" column="plan_real_start_date" />
+            <result property="planRealFinishDate" column="plan_real_finish_date" />
+            <result property="planStatus" column="plan_status" />
+            <result property="planStatusValue" column="plan_status_value" />
+            <collection property="projectPlans" ofType="com.shdatabank.puruan.model.ProjectPlan">
+                <id property="projPlanId" column="proj_plan_id2" />
+                <result property="projId" column="proj_id2" />
+                <result property="parentId" column="parent_id2" />
+                <result property="projPlanName" column="proj_plan_name2" />
+                <result property="planWorkRange" column="plan_work_range2" />
+                <result property="parentPlanId" column="parent_plan_id2" />
+                <result property="parentProjPlanName" column="parent_proj_plan_name2" />
+                <result property="planStartDate" column="plan_start_date2" />
+                <result property="planFinishDate" column="plan_finish_date2" />
+                <result property="planRealStartDate" column="plan_real_start_date2" />
+                <result property="planRealFinishDate" column="plan_real_finish_date2" />
+                <result property="planStatus" column="plan_status2" />
+                <result property="planStatusValue" column="plan_status_value2" />
+            </collection>
+        </collection>
+    </resultMap>
+    
+    <!-- 删除计划 -->
+    <update id="deleteProjectPlan" parameterType="com.shdatabank.puruan.model.ProjectPlan">
+        UPDATE project_plan SET active = 1 
+        WHERE proj_plan_id = #{projPlanId}
+        OR parent_id = #{projPlanId}
+    </update>
+    
+    <!-- 更新前置计划为删除计划的计划 -->
+    <update id="updateProjectPlan" parameterType="com.shdatabank.puruan.model.ProjectPlan">
+        UPDATE project_plan SET parent_plan_id = NULL 
+        WHERE parent_plan_id = #{projPlanId}
+    </update>
+    
+    <!-- 查询所有父计划 -->
+    <select id="selectAllParentPlan" resultMap="selectAllParentPlanMap"
+        parameterType="com.shdatabank.puruan.model.ProjectPlan">
+        SELECT 
+        pp.*,
+        (SELECT dd.data_value FROM dictionarydata dd 
+        WHERE dd.data_id = pp.plan_status) plan_status_value
+        FROM 
+        project_plan pp
+        WHERE pp.proj_id = #{projId}
+        AND pp.parent_id IS NULL
+        AND pp.active = 0
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectPlan" id="selectAllParentPlanMap">
+        <id property="projPlanId" column="proj_plan_id" />
+        <result property="projId" column="proj_id" />
+        <result property="parentId" column="parent_id" />
+        <result property="projPlanName" column="proj_plan_name" />
+        <result property="planExecutant" column="plan_executant" />
+        <result property="parentPlanId" column="parent_plan_id" />
+        <result property="planWorkRange" column="plan_work_range" />
+        <result property="planStartDate" column="plan_start_date" />
+        <result property="planFinishDate" column="plan_finish_date" />
+        <result property="planRealStartDate" column="plan_real_start_date" />
+        <result property="planRealFinishDate" column="plan_real_finish_date" />
+        <result property="planStatus" column="plan_status" />
+        <result property="active" column="active" />
+        <result property="planStatusValue" column="plan_status_value" />
+    </resultMap>
+    
+    <!-- 查询父计划中的子计划 -->
+    <select id="selectChildPlan" resultMap="selectAllParentPlanMap"
+        parameterType="com.shdatabank.puruan.model.ProjectPlan">
+        SELECT 
+        pp.*,
+        (SELECT dd.data_value FROM dictionarydata dd 
+        WHERE dd.data_id = pp.plan_status) plan_status_value
+        FROM 
+        project_plan pp
+        WHERE pp.proj_id = #{projId}
+        AND pp.parent_id = #{projPlanId}
+    </select>
+
+    <!-- 查询团队成员 -->
+    <select id="selectClassMember" resultMap="selectClassMemberMap" 
+        parameterType="com.shdatabank.puruan.model.ProjectPlan">
+        SELECT
+        pur.user_id,
+        (SELECT u.user_name FROM user u WHERE pur.user_id = u.user_id) user_name
+        FROM
+        project_user_releation AS pur
+        WHERE pur.project_requirement_id = #{projId}
+        AND pur.releation_status = 400801
+        AND pur.active = 0
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.User" id="selectClassMemberMap">
+        <id property="userId" column="user_id" />
+        <result property="userName" column="user_name" />
+    </resultMap>
+
+    <!-- 生成任务 -->
+    <insert id="insertProjectPlanTask" useGeneratedKeys="true" parameterType="java.util.List">
+        INSERT INTO project_plan_task (
+        proj_plan_id,
+        undertake_user_id,
+        proj_task_work_range,
+        proj_task_name,
+        proj_task_start_date,
+        proj_task_finish_date,
+        proj_task_status,
+        proj_task_content,
+        create_time
+        ) VALUES 
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+        #{item.projPlanId},
+        #{item.undertakeUserId},
+        #{projTaskWorkRange},
+        #{item.projTaskName},
+        #{item.projTaskStartDatetime},
+        #{item.projTaskFinishDatetime},
+        400301,
+        #{item.projTaskContent},
+        NOW()
+        )
+        </foreach>
+    </insert>
+    
+    <!-- 查询项目计划的详细信息 -->
+    <select id="selectProjectPlan" parameterType="com.shdatabank.puruan.model.ProjectPlan"
+        resultMap="selectProjectPlanMap">
+        SELECT
+        pp.proj_plan_id,
+        pp.proj_plan_name,
+        pp.proj_id,
+        pp.plan_executant,
+        pp.plan_start_date,
+        pp.plan_finish_date,
+        pp.parent_plan_id,
+        pp.plan_content
+        FROM project_plan pp
+        WHERE pp.active = 0
+        AND pp.proj_plan_id = #{projPlanId}
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectPlan" id="selectProjectPlanMap">
+        <id property="projPlanId" column="proj_plan_id" />
+        <result property="projPlanName" column="proj_plan_name" />
+        <result property="projId" column="proj_id" />
+        <result property="planExecutant" column="plan_executant" />
+        <result property="planStartDate" column="plan_start_date" />
+        <result property="planFinishDate" column="plan_finish_date" />
+        <result property="parentPlanId" column="parent_plan_id" />
+        <result property="planContent" column="plan_content" />
+    </resultMap>
+    
+    <!-- 修改项目计划 -->
+    <update id="updateProjectPlan2" parameterType="com.shdatabank.puruan.model.ProjectPlan">
+        UPDATE project_plan
+        <set>
+            <trim suffix=" " suffixOverrides=",">
+                <if test="null != projPlanName and '' != projPlanName">
+                    proj_plan_name = #{projPlanName},
+                </if>
+                <if test="null != planExecutant and '' != planExecutant">
+                    plan_executant = #{planExecutant},
+                </if>
+                <if test="null != planStartDate and '' != planStartDate">
+                    plan_start_date = #{planStartDate},
+                </if>
+                <if test="null != planFinishDate and '' != planFinishDate">
+                    plan_finish_date = #{planFinishDate},
+                </if>
+                <if test="null != parentPlanId and '' != parentPlanId">
+                    parent_plan_id = #{parentPlanId},
+                </if>
+                <if test="null != planContent and '' != planContent">
+                    plan_content = #{planContent},
+                </if>
+            </trim>
+        </set>
+        WHERE proj_plan_id = #{projPlanId}
+    </update>
+</mapper>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.ProfessionalEvaluationDao">
+
+	<resultMap id="selectProfessionalEvaluationMap"
+		type="com.shdatabank.puruan.model.ProfessionalEvaluation">
+		<id property="assessmentId" column="assessment_id" />
+		<result property="projectId" column="project_id" />
+		<result property="professionalId" column="professional_id" />
+		<result property="professionalName" column="professionalName" />
+		<result property="assessmentDate" column="assessment_date" />
+		<result property="userId" column="user_id" />
+		<result property="mobile" column="mobile" />
+		<result property="projectDescribe" column="project_describe" />
+		<result property="assessmentView" column="assessment_view" />
+		<result property="assessmentStatus" column="assessment_status" />
+		<result property="evaluationDate" column="evaluation_date" />
+		<result property="assessmentFile" column="assessment_file" />
+		<result property="createDatetime" column="create_datetime" />
+		<result property="active" column="active" />
+		<result property="dataValue" column="data_value" />
+		<result property="projectName" column="project_name" />
+		<result property="applyPerson" column="applyPerson" />
+		<result property="projectType" column="projectType" />
+	</resultMap>
+
+	<sql id="sql_couml">
+		pe.assessment_id,
+		pe.project_id,
+		p.project_name,
+		pe.assessment_date,
+		pe.user_id,
+		pe.mobile,
+		pe.project_describe,
+		pe.assessment_view,
+		pe.assessment_status,
+		pe.evaluation_date,
+		pe.assessment_file,
+		pe.create_datetime,
+		pe.active,
+		d.data_value
+	</sql>
+
+	<!-- 申请项目list -->
+	<select id="findProjectList" parameterType="java.lang.Long"
+		resultType="com.shdatabank.puruan.model.ListModel">
+		SELECT p.project_id
+		id ,p.project_name value from project p
+		JOIN
+		project_requirement pr on
+		p.project_requirement_id= pr.proj_id
+		where
+		pr.publish_user_id=#{userId} and p.project_id not in (SELECT
+		DISTINCT pe.project_id from professional_evaluation pe)
+	</select>
+
+	<!-- 申请人 -->
+	<select id="findApplyPerson" parameterType="java.lang.Long"
+		resultType="String">
+		SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名'))
+		applyPerson
+		FROM user
+		u
+		LEFT JOIN company c ON u.company_id =
+		c.company_id where
+		u.user_id=#{userId}
+	</select>
+
+	<!-- 增加项目评估 -->
+	<insert id="insertApplyMessage" parameterType="com.shdatabank.puruan.model.ProfessionalEvaluation">
+		<![CDATA[
+			INSERT INTO professional_evaluation(project_id,assessment_date,user_id,mobile,project_describe,assessment_status,create_datetime,active) 
+			VALUES(
+				   #{projectId},
+				   #{assessmentDate},
+				   #{userId},
+				   #{mobile},
+				   #{projectDescribe},
+				   900001,
+				   now(),
+				  0
+				  )
+		]]>
+	</insert>
+
+	<!-- 修改项目评估 -->
+	<insert id="updateApplyMessage" parameterType="com.shdatabank.puruan.model.ProfessionalEvaluation">
+		UPDATE professional_evaluation
+		<set>
+			<trim suffix=" " suffixOverrides=",">
+				<if test="assessmentDate!='' and assessmentDate!=null">
+					assessment_date = #{assessmentDate},
+				</if>
+				<if test="mobile!='' and mobile!=null">
+					mobile = #{mobile},
+				</if>
+				<if test="projectDescribe!='' and projectDescribe!=null">
+					project_describe = #{projectDescribe},
+				</if>
+			</trim>
+		</set>
+		WHERE assessment_id = #{assessmentId}
+	</insert>
+
+	<!--前台软件评估列表 -->
+	<select id="findProfessionalEvaluation" resultMap="selectProfessionalEvaluationMap"
+		parameterType="com.shdatabank.puruan.model.ProfessionalEvaluation">
+		SELECT
+		<include refid="sql_couml" />
+		from professional_evaluation pe
+		LEFT JOIN project p on
+		p.project_id=pe.project_id
+		LEFT JOIN dictionarydata d on
+		d.data_id=pe.assessment_status
+		where pe.user_id=#{userId}
+	</select>
+
+	<!--前台详情查看 -->
+	<select id="findProfessionalEvaluationById" resultMap="selectProfessionalEvaluationMap"
+		parameterType="com.shdatabank.puruan.model.ProfessionalEvaluation">
+		SELECT
+		<include refid="sql_couml" />
+		,(SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名'))
+		applyPerson
+		FROM user
+		u
+		LEFT JOIN company c ON u.company_id =
+		c.company_id where
+		u.user_id=pe.user_id) applyPerson,
+		(SELECT u.user_alias FROM user u
+		where u.user_id=pe.professional_id)
+		professionalName
+		from
+		professional_evaluation pe
+		LEFT
+		JOIN project p
+		on
+		p.project_id=pe.project_id
+		LEFT JOIN dictionarydata d
+		on
+		d.data_id=pe.assessment_status
+		where pe.assessment_id=#{assessmentId}
+	</select>
+
+
+</mapper>

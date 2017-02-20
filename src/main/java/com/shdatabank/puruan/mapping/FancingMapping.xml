@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.FancingDao">
+
+	<!--融资实体类类映射 -->
+	<resultMap id="findAllFancingByMap" type="com.shdatabank.puruan.model.Fancing">
+		<id property="fancingId" column="fancing_id"></id>
+		<result property="projectName" column="project_name"></result>
+		<result property="userId" column="user_id"></result>
+		<result property="fancingUse" column="fancing_use"></result>
+		<result property="fancingMoney" column="fancing_money"></result>
+		<result property="fancingDescription" column="fancing_description"></result>
+		<result property="fancingAttachFile" column="fancing_attach_file"></result>
+		<result property="fancingStatus" column="fancing_status"></result>
+		<result property="active" column="active"></result>
+		<result property="createDatetime" column="create_datetime"></result>
+		<result property="publishName" column="publishName"></result>
+	</resultMap>
+
+	<!-- 融资信息字段 -->
+	<sql id="sql_column">
+		fancing_id,project_name,user_id,fancing_use,
+		fancing_money,fancing_description,fancing_attach_file,
+		fancing_status,active,create_datetime
+	</sql>
+
+	<!-- 融资信息查询 -->
+	<select id="findAllFancingBy" resultMap="findAllFancingByMap"
+		parameterType="com.shdatabank.puruan.model.Fancing">
+		SELECT * from
+		(
+		SELECT f.fancing_id, f.project_name,(SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user u
+		LEFT JOIN
+		company c
+		ON u.company_id = c.company_id
+		WHERE u.user_id =
+		f.user_id)
+		publishName, f.fancing_money ,f.create_datetime from fancing f where f.active=0
+		) t
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="projectName != null and projectName !=''">
+				AND t.project_name LIKE '%${projectName}%'
+			</if>
+			<if test="publishName != null and publishName !=''">
+				AND t.publishName LIKE '%${publishName}%'
+			</if>
+		</trim>
+		ORDER BY t.project_name,t.create_datetime
+	</select>
+	
+	<!-- 查询所有融资分类 -->
+	<select id="findAllFacningClass" resultType="com.shdatabank.puruan.model.Dictionarydata">
+		select data_id dataId,data_value dataValue from dictionarydata where dict_id = 140100
+	</select>
+	
+	<!-- 查询所有融资方式 -->
+	<select id="findAllFacningWay" resultType="com.shdatabank.puruan.model.Dictionarydata">
+		select data_id dataId,data_value dataValue from dictionarydata where dict_id = 140200
+	</select>
+	
+	<!-- 插入融资信息 -->
+	<insert id="insertFancing" parameterType="com.shdatabank.puruan.model.Fancing" useGeneratedKeys="true" keyProperty="fancingId">
+		INSERT INTO fancing (
+			project_name,user_id,fancing_money,fancing_description,
+			fancing_use,publish_way,fancing_file_name,fancing_body,
+			fancing_attachment,fancing_file_see_path,fancing_way,fancing_status,is_open,create_datetime
+		)
+		VALUES(
+			#{projectName},#{userId},#{fancingMoney},#{fancingDescription},
+			#{fancingUse},#{publishWay},#{fancingFileName},#{fancingBody},
+			#{fancingAttachment},#{fancingFileSeePath},#{fancingWay},#{fancingStatus},#{isOpen},
+			NOW()
+			)
+	</insert>
+	
+	<!-- 修改融资信息 -->
+	<update id="updateFancing" parameterType="com.shdatabank.puruan.model.Fancing">
+		update fancing
+		<set>
+			<if test="projectName != null and projectName != ''">
+				project_name = #{projectName},
+			</if>
+			<if test="fancingMoney != null and fancingMoney != ''">
+				fancing_money = #{fancingMoney},
+			</if>
+			<if test="fancingDescription != null and fancingDescription != ''">
+				fancing_description = #{fancingDescription},
+			</if>
+			<if test="fancingUse != null and fancingUse != ''">
+				fancing_use = #{fancingUse},
+			</if>
+			<if test="publishWay != null and publishWay != ''">
+				publish_way = #{publishWay},
+			</if>
+			<if test="fancingFileName != null and fancingFileName != ''">
+				fancing_file_name = #{fancingFileName},
+			</if>
+			<if test="fancingBody != null and fancingBody != ''">
+				fancing_body = #{fancingBody},
+			</if>
+			<if test="fancingAttachment != null and fancingAttachment != ''">
+				fancing_attachment = #{fancingAttachment},
+			</if>
+			<if test="fancingFileSeePath != null and fancingFileSeePath != ''">
+				fancing_file_see_path = #{fancingFileSeePath},
+			</if>
+			<if test="fancingWay != null and fancingWay != ''">
+				fancing_way = #{fancingWay},
+			</if>
+			<if test="fancingStatus != null and fancingStatus != ''">
+				fancing_status = #{fancingStatus},
+			</if>
+			<if test="isOpen != null and isOpen != ''">
+				is_open = #{isOpen},
+			</if>
+				create_datetime = now()
+		</set>
+		where fancing_id = #{fancingId}
+	</update>
+	
+	<!-- 插入融资的分类信息 -->
+	<insert id="insertFancingClassifier" parameterType="java.util.List" useGeneratedKeys="true">
+		INSERT INTO fancing_classifier (fancing_id,fancing_classifier_value)VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.fancingId}, #{item.fancingClassifierValue})
+		</foreach>
+	</insert>
+	
+	<!-- 批量删除某个融资的分类信息 -->
+	<delete id="deleteFancingClassifier" parameterType="java.lang.Long">
+		delete from fancing_classifier where fancing_id = #{fancingId}
+	</delete>
+	
+	<sql id="fancing_colunms">
+		f.project_name projectName,f.fancing_money fancingMoney,f.fancing_description fancingDescription,
+		f.fancing_use fancingUse,f.publish_way publishWay,f.fancing_file_name fancingFileName,f.fancing_body fancingBody,
+		f.fancing_attachment fancingAttachment,f.fancing_way fancingWay,f.fancing_status fancingStatus,f.is_open isOpen,
+		f.create_datetime createDatetime,GROUP_CONCAT(fc.fancing_classifier_value) classStr
+	</sql>
+	<!-- 查询融资详细信息 -->
+	<select id="selectFancingDetail" resultType="com.shdatabank.puruan.model.Fancing">
+		SELECT <include refid="fancing_colunms"/> from fancing f
+		 LEFT JOIN fancing_classifier fc on f.fancing_id=fc.fancing_id
+		 where f.fancing_id = #{fancingId};
+	</select>
+	
+	<!-- 草稿箱列表查询 -->
+	<select id="selectAllFancingDrafts" resultType="com.shdatabank.puruan.model.Fancing">
+		select fancing_id fancingId,project_name projectName,create_datetime createDatetime,
+		IFNULL(fancing_description,'无简介') fancingDescription
+		from fancing where fancing_status = 140401 and active = 0
+		and user_id = #{userId}		
+	</select>
+	
+	<update id="updateFancingActive" parameterType="java.lang.Long">
+		update fancing set active = 1 where fancing_id = #{fancingId}
+	</update>
+	
+	<update id="updateFancingStatus" parameterType="com.shdatabank.puruan.model.Fancing">
+		update fancing set fancing_status = #{fancingStatus} where fancing_id = #{fancingId}
+	</update>
+	
+	<select id="selectFancingById" resultType="com.shdatabank.puruan.model.Fancing">
+		SELECT f.fancing_id fancingId,f.project_name projectName,
+			f.fancing_money fancingMoney,f.fancing_body fancingBody,
+			f.fancing_use fancingUse,f.fancing_description fancingDescription,
+			f.fancing_attachment fancingAttachment,f.fancing_file_see_path fancingFileSeePath,
+			(
+					SELECT IFNULL(c.company_name,'匿名')
+					FROM USER u
+					LEFT JOIN company c ON u.company_id = c.company_id
+					WHERE u.user_id = f.user_id
+			 ) companyName,
+			(
+					SELECT IFNULL(u.is_authentication,0)
+					FROM USER u
+					WHERE u.user_id = f.user_id
+		     ) isAudit,
+			(
+				  SELECT ISNULL(u.user_mobile)
+					FROM USER u
+					WHERE u.user_id = f.user_id
+			  ) isAuditMobile,
+			(
+					SELECT ISNULL(u.user_email)
+					FROM USER u
+					WHERE u.user_id = f.user_id
+			 ) isAuditEmail,
+				dd.data_value fancingWayValue,
+				fa.audit_datetime auditDatetime
+		FROM fancing f
+		LEFT JOIN dictionarydata dd ON f.fancing_way = dd.data_id
+		LEFT JOIN fancing_audit fa ON f.fancing_id = fa.fancing_id
+		where f.fancing_id = #{fancingId}
+	</select>
+	
+</mapper>

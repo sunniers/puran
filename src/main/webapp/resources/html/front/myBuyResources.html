@@ -1,0 +1,247 @@
+ <!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>资源管理</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>购买的资源</span>
+            </div>
+
+            <!--内容详情-->
+            <div class="contentInfo">
+                <div class="investment_f myResources" style="height:auto;">
+                <div class="borderInves"><!-- 边框 -->
+                    <div class="investment_title">
+                        <div data-attr="S_total" class="on">全部</div>
+                        <div data-attr="obligation" class="">待支付</div>
+                        <div data-attr="shppind" class="">待确认</div>
+                        <div data-attr="confirm" class="">待评价</div>
+                        <div data-attr="finish" class="">已关闭</div>
+                    </div>
+                    <!--全部  -->
+                    <div class="investment_con">
+                        <div class="investment_con_list S_total" style="display: block;">
+                            <table >
+                                <thead>
+                                <tr>
+                                    <th width="380">资源名称</th>
+                                    <th width="90">价格（元）</th>
+                                    <th width="90">数量</th>
+                                    <th width="90">实付款</th>
+                                    <th width="90">交易状态</th>
+                                    <th width="90">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--待支付 -->
+                        <div class="investment_con_list obligation" style="display: none;">
+                            <table >
+                                <thead>
+                                <tr>
+                                    <th width="380">资源名称</th>
+                                    <th width="90">价格（元）</th>
+                                    <th width="90">数量</th>
+                                    <th width="90">实付款</th>
+                                    <th width="90">交易状态</th>
+                                    <th width="90">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--待确认 -->
+                        <div class="investment_con_list shppind" style="display: none;">
+                            <table >
+                                <thead>
+                                <tr>
+                                    <th width="380">资源名称</th>
+                                    <th width="90">价格（元）</th>
+                                    <th width="90">数量</th>
+                                    <th width="90">实付款</th>
+                                    <th width="90">交易状态</th>
+                                    <th width="90">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 待评价 -->
+                        <div class="investment_con_list confirm" style="display: none;">
+                            <table >
+                                <thead>
+                                <tr>
+                                    <th width="380">资源名称</th>
+                                    <th width="90">价格（元）</th>
+                                    <th width="90">数量</th>
+                                    <th width="90">实付款</th>
+                                    <th width="90">交易状态</th>
+                                    <th width="90">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                               
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--已关闭 -->
+                        <div class="investment_con_list finish" style="display: none;">
+                            <table >
+                                <thead>
+                                <tr>
+                                    <th width="380">资源名称</th>
+                                    <th width="90">价格（元）</th>
+                                    <th width="90">数量</th>
+                                    <th width="90">实付款</th>
+                                    <th width="90">交易状态</th>
+                                    <th width="90">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+  			</div><!--边框-->
+                    
+                    <div class="page">
+                        <div id="paginator" style="margin: auto;"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- 全部 -->
+            <script id="resources_S_total_tmplate" type="text/x-jquery-tmpl">
+								<tr>
+                                    <td >
+                                        <div class="ziYuan">
+                                            <a href="#"><img src="resources/images/front/QRcode.JPG" alt=""/></a>
+                                            <p><a href="#">${resourceName}</a> </p>
+                                            <sub>商家：<a href="#">${publishName}</a> </sub>
+                                        </div>
+                                    </td>
+                                    <td><p>${transactionPrice}</p></td>
+                                    <td><p>${transactionNumber}</p></td>
+                                    <td><p>${transactionMoney}</p></td>
+                                    <td>
+										{{if $data.transactionStatus==400501}}
+											<p class="blueOk">待支付</p>
+										{{/if}}
+										{{if $data.transactionStatus==400502}}
+											<p class="blueOk">待发货</p>
+										{{/if}}
+										{{if $data.transactionStatus==400503}}
+											<p class="blueOk">待确认</p>
+										{{/if}}
+										{{if $data.transactionStatus==400504}}
+											<p class="blueOk">交易完成</p>
+											<p class="blueOk">评论</p>
+										{{/if}}
+										{{if $data.transactionStatus==400506}}
+											<p class="blueOk">交易关闭</p>
+										{{/if}}
+									</td>
+                                    <td>
+										{{if $data.transactionStatus==400503}}
+											<p><a class="goodsReceipt" data-id="${resourceTransactionId}" href="javascript:void(0)">确认收货</a></p>
+										{{/if}}
+										{{if $data.transactionStatus==400504}}
+											<p><a class="confirm" data-id="${resourceTransactionId}" href="javascript:void(0)">评论</a></p>
+											<p><a class="confirm" data-id="${resourceTransactionId}" href="javascript:void(0)">添加采购</a></p>
+										{{/if}}
+										{{if $data.transactionStatus==400501}}
+											<p><a href="#" >支付</a></p>
+											<p><a class="cancel" data-id="${resourceTransactionId}" href="javascript:void(0)">取消交易</a></p>
+										{{/if}}
+                                        <p><a class="details" data-id="${creativeResourceId}" href="javascript:void(0)">查看详情</a></p>
+                                    </td>
+                                </tr>
+			</script>
+			<!-- 待支付 -->
+            <script id="resources_obligation_tmplate" type="text/x-jquery-tmpl">
+								<tr>
+                                    <td >
+                                        <div class="ziYuan">
+                                            <a href="#"><img src="resources/images/front/QRcode.JPG" alt=""/></a>
+                                            <p><a href="#">${resourceName}</a> </p>
+                                            <sub>商家：<a href="#">${publishName}</a> </sub>
+                                        </div>
+                                    </td>
+                                    <td><p>${transactionPrice}</p></td>
+                                    <td><p>${transactionNumber}</p></td>
+                                    <td><p>${transactionMoney}</p></td>
+                                    <td ><p class="blueOk">待支付</p></td>
+                                    <td>
+                                        <p><a href="#">支付</a></p>
+                                        <p><a class="cancel" data-id="${resourceTransactionId}" href="javascript:void(0)">取消交易</a></p>
+                                        <p><a class="details" data-id="${creativeResourceId}" href="javascript:void(0)">查看详情</a></p>
+                                    </td>
+                                </tr>
+			</script>
+			<!-- 待确认 -->
+            <script id="resources_shppind_tmplate" type="text/x-jquery-tmpl">
+								<tr>
+                                    <td >
+                                        <div class="ziYuan">
+                                            <a href="#"><img src="resources/images/front/QRcode.JPG" alt=""/></a>
+                                            <p><a class="cancel" data-id="${creativeResourceId}" href="javascript:void(0)>取消交易</a> </p>
+                                            <sub>商家：<a href="#">${publishName}</a> </sub>
+                                        </div>
+                                    </td>
+                                    <td><p>${transactionPrice}</p></td>
+                                    <td><p>${transactionNumber}</p></td>
+                                    <td><p>${transactionMoney}</p></td>
+                                    <td ><p class="blueOk">待确认</p></td>
+                                    <td>
+                                        <p><a class="goodsReceipt" data-id="${resourceTransactionId}" href="javascript:void(0)>确认收货</a></p>
+                                        <p><a class="details" data-id="${creativeResourceId}" href="javascript:void(0)">查看详情</a></p>
+                                    </td>
+                                </tr>
+			</script>
+			<!-- 待评价 -->
+            <script id="resources_confirm_tmplate" type="text/x-jquery-tmpl">
+								<tr>
+                                    <td >
+                                        <div class="ziYuan">
+                                            <a href="#"><img src="resources/images/front/QRcode.JPG" alt=""/></a>
+                                            <p><a href="#">${resourceName}</a> </p>
+                                            <sub>商家：<a href="#">${publishName}</a> </sub>
+                                        </div>
+                                    </td>
+                                    <td><p>${transactionPrice}</p></td>
+                                    <td><p>${transactionNumber}</p></td>
+                                    <td><p>${transactionMoney}</p></td>
+                                    <td ><p class="blueOk">交易完成</p></td>
+                                    <td>
+                                        <p><a class="confirm" data-id="${resourceTransactionId}" href="javascript:void(0)">评论</a></p>
+                                        <p><a class="details" data-id="${creativeResourceId}" href="javascript:void(0)">查看详情</a></p>
+                                    </td>
+                                </tr>
+			</script>
+			<!-- 已关闭 -->
+            <script id="resources_finish_tmplate" type="text/x-jquery-tmpl">
+								<tr>
+                                    <td >
+                                        <div class="ziYuan">
+                                            <a href="#"><img src="resources/images/front/QRcode.JPG" alt=""/></a>
+                                            <p><a href="#">${resourceName}</a> </p>
+                                            <sub>商家：<a href="#">${publishName}</a> </sub>
+                                        </div>
+                                    </td>
+                                    <td><p>${transactionPrice}</p></td>
+                                    <td><p>${transactionNumber}</p></td>
+                                    <td><p>${transactionMoney}</p></td>
+                                    <td ><p class="blueOk">交易关闭</p></td>
+                                    <td>
+                                        <p><a href="#">已完成</a></p>
+                                        <p><a class="details" data-id="${creativeResourceId}" href="javascript:void(0)">查看详情</a></p>
+                                    </td>
+                                </tr>
+			</script>
+			
+            <script type="text/javascript" src="resources/js/front/myBuyResources.js"></script>

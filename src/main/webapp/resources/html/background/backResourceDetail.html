@@ -1,0 +1,82 @@
+<!--路径-->
+<div class="nav">
+	<span>首页</span>
+	<span><img src="../../images/background/rightCusp.png" alt=""></span>
+	<span>展示大厅</span>
+	<span><img src="../../images/background/rightCusp.png" alt=""></span>
+	<span>供需信息</span>
+	<span><img src="../../images/background/rightCusp.png" alt=""></span>
+	<span>资源详情</span>
+</div>
+
+<!--内容详情-->
+<div class="contentInfo backResourceDetail">
+	<div class="header">
+		<div data-id="detail" class="detail active">
+			<span>资源详情</span>
+		</div>
+		<div data-id="evaluation" class="evaluation">
+			<span>资源评价</span>
+		</div>
+	</div>
+	<div class="contents">
+		<div class="resource_con detail">
+			<div class="showAddress"></div>
+			<div class="selRes"></div>
+		</div>
+		<div class="resource_con evaluation">
+			<!-- <div class="evaluate">
+				<div class="eval">
+					<img src="../../images/front/starFocus.png">
+					<img src="../../images/front/starFocus.png">
+					<img src="../../images/front/starFocus.png">
+					<img src="../../images/front/starFocus.png">
+					<img src="../../images/front/starBlur.png">
+					<span class="fr">李四</span>
+				</div>
+				<div class="eval">
+					<div class="eval1">09-02 | 初评</div>
+					<div class="eval2">很好！很不错，棒棒哒!很好！很不错，棒棒哒!很好！很不错，棒棒哒!很好！很不错，棒棒哒!很好！很不错，棒棒哒!很好！很不错，棒棒哒!很好！很不错，棒棒哒!很好！很不错，棒棒哒!</div>
+				</div>
+				<div class="eval">
+					<div class="eval1">09-02 | 追加</div>
+					<div class="eval2">不好！差评</div>
+				</div>
+				<div class="eval">
+					<div class="eval1">商家</div>
+					<div class="eval2">感谢您光临本店，您的满意是我们永恒的追求，售后如有任何问题建议请联系我们，
+						我们将积极妥善地为您解决。祝您生活愉快，越来越美丽！</div>
+				</div>
+			</div> -->
+		</div>
+	</div>
+</div>
+<script id="resource_detail_tmplate" type="text/x-jquery-tmpl">
+			<div class="evaluate">
+				<div class="eval">
+					<img src="../../images/front/starFocus.png">
+					<img src="../../images/front/starFocus.png">
+					<img src="../../images/front/starFocus.png">
+					<img src="../../images/front/starFocus.png">
+					<img src="../../images/front/starBlur.png">
+					<span class="fr">${userAlias}</span>
+				</div>
+				<div class="eval">
+					<div class="eval1">${evaluateTime} | 初评</div>
+					<div class="eval2">${evaluateValue}</div>
+				</div>
+			{{if $data.evaluateAppend!=null}}
+				<div class="eval">
+					<div class="eval1">${appendTime} | 追加</div>
+					<div class="eval2">${evaluateAppend}</div>
+				</div>
+			{{/if}}
+			{{if $data.explain!=null}}
+				<div class="eval">
+					<div class="eval1">商家</div>
+					<div class="eval2">${explain}</div>
+				</div>
+			{{/if}}
+			</div>
+</script>
+<script type="text/javascript" src="../../js/background/backResourceDetail.js"></script>

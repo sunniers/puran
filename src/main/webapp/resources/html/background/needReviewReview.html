@@ -1,0 +1,223 @@
+ 			<!--路径-->
+                <div class="nav">
+                    <span>首页</span><span><img src="../../images/background/rightCusp.png" alt=""></span>
+                    <span>发布信息审核</span><span><img src="../../images/background/rightCusp.png" alt=""></span>
+                    <span>需求审核</span><span><img src="../../images/background/rightCusp.png" alt=""></span>
+                    <span>审核</span>
+                </div>
+
+                <!--内容详情-->
+                <div class="contentInfo">
+					 <div class="needReRe">
+					 
+					</div>
+                </div>
+       <!-- 创意需求 -->
+       <script id="resources_reviewIng_tmplate" type="text/x-jquery-tmpl">
+                <div class="tTable">
+					 	<div class="tTitle">
+					 		<h1>大客户管理系统建设.（创）</h1>
+							<!--拒绝通过-->
+							{{if $data.auditStatus=="未通过"}}
+							<img src="../../images/background/refusePass.png" alt="拒绝通过" />
+							{{/if}}
+							<!--已通过-->
+							{{if $data.auditStatus=="已通过"}}
+							<img src="../../images/background/auditPass.png" alt="已通过" />
+							{{/if}}
+					 	</div>
+					 	<div class="tHead">
+					 		<div class="tTr">
+					 			<div class="tName">发布方</div>
+					 			<div class="tValue" style="width:160px;">${publishName}</div>
+					 			<div class="tName">需求类型</div>
+					 			<div class="tValue" style="width:125px;">${requirementTypeValue}</div>
+					 			<div class="tName">预算</div>
+					 			<div class="tValue" style="width:242px;">${serviceFee}</div>
+					 		</div>
+					 		<div class="tTr">
+					 			<div class="tName">报名开始</div>
+					 			<div class="tValue" style="width:160px;">'${projStartDate}</div>
+					 			<div class="tName">报名截止</div>
+					 			<div class="tValue" style="width:125px;">'${projCloseDate}</div>
+					 			<div class="tName">评估周期</div>
+					 			<div class="tValue" style="width:70px;">'${projEstimate}</div>
+					 			<div class="tName">提交时间</div>
+					 			<div class="tValue" style="width:77px;">'${createDatetime}</div>
+					 		</div>
+					 		<div class="tTr">
+					 			<div class="tName">发布方</div>
+					 			<div class="tValue" style="width:717px;">'${publishName}</div>
+					 		</div>
+					 	</div>
+					 	<div class="tBody">
+					 		<div class="item">
+					 			<div class="itemName"><div class="itemStyle"></div>需求描述</div>
+					 			<div class="itemContent">
+						 			<span>
+										${requirementDescription}
+						 			</span>
+					 			</div>
+					 		</div>
+					 		<div class="item">
+					 			<div class="itemName"><div class="itemStyle"></div>附件</div>
+					 			<div class="itemContent">
+						 			<div class="loadPreview">
+						 				<div><img src="${attachFile}"/></div>
+						 				<div>
+						 					<span>下载</span><span>|</span><span>预览</span>
+						 				</div>
+						 			</div>
+					 			</div>
+					 		</div>
+					 	</div>
+					 </div>
+					
+					 <div class="tHandle">
+					 	{{if $data.auditStatusId==0}}
+					 	<div class="refuse"><div class="neeRefuse">不予通过</div></div>
+					 	<div class="pass"><div class="neePass">审核通过</div></div>
+						{{/if}}
+					 </div>	
+
+		</script>
+		<!-- 人才需求 -->
+       <script id="resources_personnel_tmplate" type="text/x-jquery-tmpl">
+                <div class="tTable">
+					 	<div class="tTitle">
+					 		<h1>大客户管理系统建设.（人）</h1>
+							<!--拒绝通过-->
+							{{if $data.auditStatus=="未通过"}}
+							<img src="../../images/background/refusePass.png" alt="拒绝通过" />
+							{{/if}}
+							<!--已通过-->
+							{{if $data.auditStatus=="已通过"}}
+							<img src="../../images/background/auditPass.png" alt="已通过" />
+							{{/if}}
+					 	</div>
+					 	<div class="tHead">
+					 		<div class="tTr">
+					 			<div class="tName">发布方</div>
+					 			<div class="tValue" style="width:160px;">'${publishName}</div>
+					 			<div class="tName">需求类型</div>
+					 			<div class="tValue" style="width:125px;">'${requirementTypeValue}</div>
+					 			<div class="tName">预算</div>
+					 			<div class="tValue" style="width:242px;">'${serviceFee}</div>
+					 		</div>
+					 		<div class="tTr">
+					 			<div class="tName">报名开始</div>
+					 			<div class="tValue" style="width:160px;">'${projStartDate}</div>
+					 			<div class="tName">报名截止</div>
+					 			<div class="tValue" style="width:125px;">'${projCloseDate}</div>
+					 			<div class="tName">评估周期</div>
+					 			<div class="tValue" style="width:70px;">'${projEstimate}</div>
+					 			<div class="tName">提交时间</div>
+					 			<div class="tValue" style="width:77px;">'${createDatetime}</div>
+					 		</div>
+					 		<div class="tTr">
+					 			<div class="tName">发布方</div>
+					 			<div class="tValue" style="width:717px;">'${publishName}</div>
+					 		</div>
+					 	</div>
+					 	<div class="tBody">
+					 		<div class="item">
+					 			<div class="itemName"><div class="itemStyle"></div>需求描述</div>
+					 			<div class="itemContent">
+						 			<span>
+										${requirementDescription}
+						 			</span>
+					 			</div>
+					 		</div>
+					 		<div class="item">
+					 			<div class="itemName"><div class="itemStyle"></div>附件</div>
+					 			<div class="itemContent">
+						 			<div class="loadPreview">
+						 				<div><img src="${attachFile}"/></div>
+						 				<div>
+						 					<span>下载</span><span>|</span><span>预览</span>
+						 				</div>
+						 			</div>
+					 			</div>
+					 		</div>
+					 	</div>
+					 </div>
+					
+					 <div class="tHandle">
+					 	{{if $data.auditStatusId==0}}
+					 	<div class="refuse"><div class="neeRefuse">不予通过</div></div>
+					 	<div class="pass"><div class="neePass">审核通过</div></div>
+						{{/if}}
+					 </div>	
+
+		</script>
+		<!-- 融资需求 -->
+       <script id="resources_financing_tmplate" type="text/x-jquery-tmpl">
+                <div class="tTable">
+					 	<div class="tTitle">
+					 		<h1>大客户管理系统建设.（融）</h1>
+							<!--拒绝通过-->
+							{{if $data.auditStatus=="未通过"}}
+							<img src="../../images/background/refusePass.png" alt="拒绝通过" />
+							{{/if}}
+							<!--已通过-->
+							{{if $data.auditStatus=="已通过"}}
+							<img src="../../images/background/auditPass.png" alt="已通过" />
+							{{/if}}
+					 	</div>
+					 	<div class="tHead">
+					 		<div class="tTr">
+					 			<div class="tName">项目名称</div>
+					 			<div class="tValue" style="width:160px;">${publishName}</div>
+					 			<div class="tName">融资分类</div>
+					 			<div class="tValue" style="width:125px;">${requirementTypeValue}</div>
+					 			<div class="tName">预算</div>
+					 			<div class="tValue" style="width:242px;">'${serviceFee}</div>
+					 		</div>
+					 		<div class="tTr">
+					 			<div class="tName">报名开始</div>
+					 			<div class="tValue" style="width:160px;">'${projStartDate}</div>
+					 			<div class="tName">报名截止</div>
+					 			<div class="tValue" style="width:125px;">'${projCloseDate}</div>
+					 			<div class="tName">评估周期</div>
+					 			<div class="tValue" style="width:70px;">'${projEstimate}</div>
+					 			<div class="tName">提交时间</div>
+					 			<div class="tValue" style="width:77px;">'${createDatetime}</div>
+					 		</div>
+					 		<div class="tTr">
+					 			<div class="tName">发布方</div>
+					 			<div class="tValue" style="width:717px;">'${publishName}</div>
+					 		</div>
+					 	</div>
+					 	<div class="tBody">
+					 		<div class="item">
+					 			<div class="itemName"><div class="itemStyle"></div>需求描述</div>
+					 			<div class="itemContent">
+						 			<span>
+										${requirementDescription}
+						 			</span>
+					 			</div>
+					 		</div>
+					 		<div class="item">
+					 			<div class="itemName"><div class="itemStyle"></div>附件</div>
+					 			<div class="itemContent">
+						 			<div class="loadPreview">
+						 				<div><img src="${attachFile}"/></div>
+						 				<div>
+						 					<span>下载</span><span>|</span><span>预览</span>
+						 				</div>
+						 			</div>
+					 			</div>
+					 		</div>
+					 	</div>
+					 </div>
+					
+					 <div class="tHandle">
+						{{if $data.auditStatusId==0}}
+					 	<div class="refuse"><div class="neeRefuse">不予通过</div></div>
+					 	<div class="pass"><div class="neePass">审核通过</div></div>
+						{{/if}}
+					 </div>	
+
+		</script>
+		
+                <script type="text/javascript" src="../../js/background/needReviewReview.js"></script>

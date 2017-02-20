@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.CeativeResourceTransactionDao">
+	<!-- 资源交易resultMap -->
+	<resultMap type="com.shdatabank.puruan.model.CeativeResourceTransaction" id="CeativeResourceTransaction_Map">
+		<id property="resourceTransactionId" column="resource_transaction_id"/>
+		<result property="creativeResourceId" column="creative_resource_id"/>
+		<result property="buyUserId" column="buy_user_id"/>
+		<result property="transactionNumber" column="transaction_number"/>
+		<result property="transactionPrice" column="transaction_price"/>
+		<result property="transactionMoney" column="transaction_money"/>
+		<result property="transactionDatetime" column="transaction_datetime"/>
+		<result property="transactionStatus" column="transaction_status"/>
+		<result property="active" column="active"/>
+		<result property="dataValue" column="data_value"/>
+		<result property="resourceName" column="resource_name"/>
+		<result property="userName" column="user_name"/>
+	</resultMap>
+	
+	<resultMap type="com.shdatabank.puruan.model.CeativeResourceTransaction" id="CeativeResourceTransaction_Map1">
+		<id property="resourceTransactionId" column="resource_transaction_id"/>
+		<result property="buyUserId" column="buy_user_id"/>
+		<result property="transactionNumber" column="transaction_number"/>
+		<result property="transactionPrice" column="transaction_price"/>
+		<result property="transactionMoney" column="transaction_money"/>
+		<result property="transactionDatetime" column="transaction_datetime"/>
+		<association property="creativeResource" javaType="com.shdatabank.puruan.model.CreativeResource">
+			<id property="creativeResourceId" column="creative_resource_id"/>
+			<result property="resourceName" column="resource_name"/>
+			<result property="resourceImage" column="resource_image"/>
+		</association>
+	</resultMap>
+
+	<!-- 资源交易columns -->
+	<sql id="CeativeResourceTransaction_columns">
+		crt.resource_transaction_id,
+		crt.transaction_price,
+		crt.buy_user_id,
+		crt.transaction_number,
+		crt.transaction_money,
+		crt.transaction_datetime,
+		cr.creative_resource_id,
+		cr.resource_name,
+		cr.resource_image
+	</sql>
+	
+	<!-- 根据参数查询单条资源交易信息 -->
+	<select id="selectCeativeResourceTransaction" resultMap="CeativeResourceTransaction_Map1">
+		SELECT <include refid="CeativeResourceTransaction_columns"/> FROM ceative_resource_transaction crt
+		LEFT JOIN  creative_resource cr ON crt.creative_resource_id = cr.creative_resource_id
+		WHERE
+			crt.resource_transaction_id = #{resourceTransactionId}		
+	</select>
+	
+	<!-- 资源交易修改 -->
+	<update id="updateCeativeResourceTransaction" parameterType="com.shdatabank.puruan.model.CeativeResourceTransaction">
+		update ceative_resource_transaction
+		<set>
+			<trim suffixOverrides=",">
+				<if test="transactionStatus != null and transactionStatus != ''">
+					transaction_status = #{transactionStatus}
+				</if>
+				<if test="transactionNumber != null and transactionNumber != ''">
+					transaction_number = #{transactionNumber}
+				</if>
+				<if test="transactionPrice != null and transactionPrice != ''">
+					transaction_price = #{transactionPrice}
+				</if>
+				<if test="transactionMoney != null and transactionMoney != ''">
+					transaction_money = #{transactionMoney}
+				</if>
+				<if test="active != null and active != ''">
+					active = #{active}
+				</if>
+			</trim>
+		</set>
+		where resource_transaction_id = #{resourceTransactionId}
+	</update>
+	
+	<!-- ====================================== 购买的资源 ===========================   -->
+	<!-- 根据资源交易状态查询相应购买的资源状态集合 -->
+	<select id="selectAllCeativeResourceTransactionGm" resultMap="CeativeResourceTransaction_Map">
+		SELECT
+			if (ISNULL(cre.evaluate_append),1,2) flag,
+			crt.resource_transaction_id,
+			crt.creative_resource_id,
+			crt.buy_user_id,
+			crt.transaction_price,
+			crt.transaction_number,
+			crt.transaction_money,
+			crt.transaction_status,
+			dd.data_value,
+			r.resource_name,
+			u.user_name,
+			(
+				SELECT
+					IFNULL(
+						c.company_name,
+						IFNULL(u.user_alias, '匿名')
+					)
+				FROM
+					USER u
+				LEFT JOIN company c ON u.company_id = c.company_id
+				WHERE
+					u.user_id = r.user_id
+			) publishName
+		FROM
+			ceative_resource_transaction crt
+		LEFT JOIN creative_resource r ON crt.creative_resource_id = r.creative_resource_id
+		LEFT JOIN dictionarydata dd ON crt.transaction_status = dd.data_id
+		LEFT JOIN user u on crt.buy_user_id = u.user_id
+		LEFT JOIN creative_resource_evaluate cre on cre.transaction_id=crt.resource_transaction_id
+		<where>
+			crt.buy_user_id = #{buyUserId}
+			<if test="transactionStatus != null and transactionStatus != ''">
+				and crt.transaction_status = #{transactionStatus}
+			</if>
+		</where>
+	</select>
+	
+	
+	<!-- ====================================== 出售的资源 ===========================   -->
+	<!-- 根据资源交易状态查询相应出售的资源状态集合 -->
+	<select id="selectAllCeativeResourceTransactionCs" resultMap="CeativeResourceTransaction_Map">
+		SELECT
+			if (ISNULL(cre.explain_value),1,2) flag,
+			crt.resource_transaction_id,
+			crt.creative_resource_id,
+			crt.buy_user_id,
+			crt.transaction_price,
+			crt.transaction_number,
+			crt.transaction_money,
+			crt.transaction_status,
+			dd.data_value,
+			r.resource_name,
+			u.user_name,
+			(
+				SELECT
+					IFNULL(
+						c.company_name,
+						IFNULL(u.user_alias, '匿名')
+					)
+				FROM
+					USER u
+				LEFT JOIN company c ON u.company_id = c.company_id
+				WHERE
+					u.user_id = r.user_id
+			) publishName
+		FROM
+			ceative_resource_transaction crt
+		LEFT JOIN creative_resource r ON crt.creative_resource_id = r.creative_resource_id
+		LEFT JOIN dictionarydata dd ON crt.transaction_status = dd.data_id
+		LEFT JOIN user u on crt.buy_user_id = u.user_id
+		LEFT JOIN creative_resource_evaluate cre on cre.transaction_id=crt.resource_transaction_id
+		<where>
+			r.user_id = #{creativeResource.userId}
+			<if test="transactionStatus != null and transactionStatus != ''"> 
+				and crt.transaction_status = #{transactionStatus}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 拿走了多少资源就要在购买的资源表里把相应的交易数量减掉 -->
+	<update id="updateCeativeResourceTransactionReduce" parameterType="com.shdatabank.puruan.model.ProjectAndPurchase">
+		update ceative_resource_transaction set transaction_number = (transaction_number - #{number}) 
+		where resource_transaction_id = #{resourceTransactionId}
+	</update>	        
+    <!-- 先根据项目id、任务id、资源id在采购表里判断是否已经为该项目添加过该资源 --> 
+    <select id="selectProjectPurchaseTask" parameterType="com.shdatabank.puruan.model.ProjectAndPurchase"
+    resultType="com.shdatabank.puruan.model.ProjectPurchaseTask">
+    	select ppt.project_purchase_id projectPurchaseId FROM project_purchase_task ppt
+		where ppt.create_resource_id = #{creativeResourceId} 
+			and ppt.project_id = #{projectId} 
+			and ppt.project_task_id = #{projectTaskId}
+    </select>
+    
+    <!-- 如果已经添加过该资源，就要在采购表里把资源的数量加上相应的数量，只做更新数量操作 -->
+    <update id="updateProjectPurchaseTaskCount" parameterType="com.shdatabank.puruan.model.ProjectAndPurchase">
+    	update project_purchase_task set purchase_count = (purchase_count + #{number})
+    	where project_purchase_id = #{projectPurchaseId} 
+    </update>
+</mapper>

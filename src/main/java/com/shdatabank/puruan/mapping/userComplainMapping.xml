@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.UserComplainDao">
+
+	<!-- 投诉举报的信息 -->
+	<resultMap type="com.shdatabank.puruan.model.UserComplain" id="UserComplainMap">
+		<id property="complainId" column="complain_id" />
+		<result property="userId" column="user_id" />
+		<result property="userAlias" column="user_alias" />
+		<result property="complainObject" column="complain_object" />
+		<result property="complainUpdateTime" column="complain_update_time" />
+		<result property="complainAdvice" column="complain_advice" />
+		<result property="complainContent" column="complain_content" />
+		<result property="complainDatetime" column="complain_datetime" />
+		<result property="complainStatus" column="complain_status" />
+		<result property="active" column="active" />
+	</resultMap>
+	<!-- 用户投诉信息列 -->
+	<sql id="userComplain_columns">
+		uc.complain_id,
+		uc.user_id,
+		IFNULL(u.user_alias,'匿名')as user_alias,
+		uc.complain_object,
+		uc.complain_update_time,
+		uc.complain_advice,
+		uc.complain_content,
+		uc.complain_datetime		
+	</sql>
+	
+	<!-- 插入用户投诉信息 -->
+	<insert id="insertUserComplain" parameterType="com.shdatabank.puruan.model.UserComplain">
+		<![CDATA[
+			INSERT INTO user_complain(user_id,complain_object,complain_content,complain_datetime,complain_status) 
+			VALUES(
+				   #{userId},
+				   #{complainObject},
+				   #{complainContent},
+				   now(),
+				   110001
+				  )
+		]]>
+	</insert>
+	<!-- 后台查询未处理用户投诉列表 -->
+	<select id="selectAllUserComplain" resultMap="UserComplainMap">
+		select <include refid="userComplain_columns"/>from user_complain uc
+		left join `user` u on uc.user_id = u.user_id
+		<where>
+			uc.active = 0 and uc.complain_status = 110001
+			<if test="complainContent != null and complainContent != ''">
+				complain_object = #{complainContent},
+			</if>
+		</where>
+	</select>
+	<!-- 后台查询已处理用户投诉列表 -->
+	<select id="selectAllUserComplainSuc" resultMap="UserComplainMap">
+		select <include refid="userComplain_columns"/>from user_complain uc
+		left join `user` u on uc.user_id = u.user_id
+		<where>
+			uc.active = 0 and uc.complain_status in(110002,110003)
+			<if test="complainContent != null and complainContent != ''">
+				complain_object = #{complainContent},
+			</if>
+		</where>
+	</select>
+	<!-- 查询用户投诉的详细信息 -->
+	<select id="selectUserComplainDetail" resultMap="UserComplainMap">
+		select <include refid="userComplain_columns"/> from user_complain uc
+		left join `user` u on uc.user_id = u.user_id
+		where uc.complain_id = #{complainId}
+	</select>
+	<!-- 用户投诉信息的处理 -->
+	<update id="updatecomplainId" parameterType="com.shdatabank.puruan.model.UserComplain">
+		update user_complain
+		<set>
+			<if test="complainStatus != null and complainStatus != ''">
+				complain_status = #{complainStatus},
+			</if>
+			<if test="complainAdvice != null and complainAdvice != ''">
+				complain_advice = #{complainAdvice},
+			</if>
+				complain_update_time = now()
+		</set>
+		where complain_id = #{complainId}
+	</update>
+	
+</mapper>

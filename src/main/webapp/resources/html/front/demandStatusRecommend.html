@@ -1,0 +1,120 @@
+<!--路径-->
+<div class="nav">
+	<span>首页</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+	<span>需求管理</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span> 
+	<span>需求状态</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span> 
+	<span>推荐</span>
+</div>
+<div class="contentInfo">
+	<div class="demandStatusRecommend">
+		 <div  class="sui-row-fluid tabs">
+		    <div data-id="company" class="span3 active">企业用户</div>
+		    <div data-id="person" class="span3">个人用户</div>
+  		</div>
+  		<div  class="sui-row-fluid company">
+		    <table class="sui-table table-bordered">
+				  <thead>
+				    <tr>
+				      <th>名称</th>
+				      <th>邮箱</th>
+				      <th>评价</th>
+				      <th>操作</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+
+				  </tbody>
+			</table>
+  		</div>
+  		
+  		<div class="sui-row-fluid person" style="display:none;">
+		    <table class="sui-table table-bordered">
+				  <thead>
+				    <tr>
+				      <th>名称</th>
+				      <th>邮箱</th>
+				      <th>手机</th>
+				      <th>评价</th>
+				      <th>操作</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				    
+				  </tbody>
+			</table>
+  		</div>
+	</div>
+</div>
+
+<div id="recommendChoose" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" data-dismiss="modal" aria-hidden="true" class="sui-close">×</button>
+        <h4 id="myModalLabel" class="modal-title">选择供方</h4>
+      </div>
+      <div class="modal-body">
+      	<form class="sui-form form-horizontal sui-validate">
+			<div class="control-group">
+			    <label style="width:120px;" for="passDay" class="control-label">*等待对方确认期限：</label>
+			    <div class="controls">
+			      <input style="width:120px;" type="text" id="passDay" placeholder="digits" data-rules="required|digits" name="age">
+			      <div class="sui-msg msg-error" style="display:none;">
+					  <div class="msg-con">请填写正确的期限</div>
+					  <s class="msg-icon"></s>
+				  </div>
+			    </div>
+  			</div>
+  		</form>
+	  </div>
+      <div class="modal-footer">
+        <button type="button" data-ok="modal" class="sui-btn btn-primary btn-large makeSure">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/x-jquery-tmpl" id="status_recommendCompany_tmplate">
+				<tr>
+				      <td>${userAlias}</td>
+				      <td>${emails}</td>
+				      <td>
+						{{each $data.focus}}
+							<img src="${$data.focus[$index]}"/>
+				     	{{/each}}
+						{{each $data.blur}}
+							<img src="${$data.blur[$index]}"/>
+				     	{{/each}}
+				      </td>
+				      <td>
+						{{if $data.isChoose=='0'}}
+							<button class="choice" data-id="${userId}">选择供方</button>
+						{{else}}
+							<button>已选择</button>
+						{{/if}}
+					</td>
+				    </tr>
+</script>
+<script type="text/x-jquery-tmpl" id="status_recommendPerson_tmplate">
+			<tr>
+			<td>${userAlias}</td>
+			<td>${emails}</td>
+			<td>${mobile}</td>
+			<td>
+						{{each $data.focus}}
+							<img src="${$data.focus[$index]}"/>
+				     	{{/each}}
+						{{each $data.blur}}
+							<img src="${$data.blur[$index]}"/>
+				     	{{/each}}
+			</td>
+			<td>
+				{{if $data.isChoose=='0'}}
+					<button class="choice" data-id="${userId}">选择供方</button>
+				{{else}}
+					<button>已选择</button>
+				{{/if}}
+			</td>
+			</tr>
+</script>
+<script type="text/javascript" src="resources/js/front/demandStatusRecommend.js"></script>

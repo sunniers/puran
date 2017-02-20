@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.MyFavoriteDao">
+
+	<!-- 项目承接 -->
+	<resultMap id="selectResoursebyNameMap" type="com.shdatabank.puruan.model.MyFavorite">
+		<result property="id" column="id" />
+		<result property="sign" column="sign" />
+		<result property="name" column="name" />
+		<result property="description" column="description" />
+		<result property="price" column="price" />
+		<result property="userId" column="userId" />
+	</resultMap>
+		<!-- 创意人才需求map -->
+	<resultMap type="com.shdatabank.puruan.model.TalentRequirement" id="TalentRequirementMap">
+		<id property="talentRequirementId" column="talent_requirement_id"/>
+		<result property="userId" column="user_id"/>
+		<result property="talentRequirementName" column="talent_requirement_name"/>
+		<result property="workMode" column="work_mode"/>
+		<result property="professionalSkills" column="professional_skills"/>
+		<result property="talentBuget" column="talent_buget"/>
+		<result property="requirementDescription" column="requirement_description"/>
+		<result property="workSpace" column="work_space"/>
+		<result property="effectiveDatetime" column="effective_datetime"/>
+		<result property="requirementClassifier" column="requirement_classifier"/>
+		<result property="cooperateType" column="cooperate_type"/>
+		<result property="active" column="active"/>
+		<result property="requirementStatus" column="requirement_status"/>
+		<result property="talentAttachment" column="talent_attachment"/>
+		<result property="workDuty" column="work_duty"/>
+		<result property="talentRequire" column="talent_require"/>
+		<result property="publishWay" column="publish_way"/>
+		<result property="createTime" column="create_time"/>
+	</resultMap>
+	<!-- 创意人才Map -->
+	 <resultMap type="com.shdatabank.puruan.model.UserCreativeTalent" id="selectUserCreativeTalentMap">
+        <id property="creativeTalentId" column="creative_talent_id" />
+        <result property="userId" column="user_id" />
+        <result property="talentName" column="talent_name" />
+        <result property="talentDescription" column="talent_description" />
+        <result property="nowAddress" column="now_address" />
+        <result property="publishDatetime" column="publish_datetime" />
+        <result property="hopeSalary" column="hope_salary" />
+        <result property="technologys" column="technologys" />
+        <result property="evaluate" column="evaluate" />
+        <result property="undertakeTimes" column="undertakeTimes" />
+        <result property="houseTimes" column="houseTimes" />
+        <association property="user" javaType="com.shdatabank.puruan.model.User">
+            <id property="userId" column="user_id" />
+            <result property="userAlias" column="user_alias" />
+            <result property="userMobile" column="user_mobile" />
+            <result property="userEmail" column="user_email" />
+            <result property="userHeaderImg" column="user_header_img" />
+            <result property="isAuthentication" column="is_authentication" />
+            <result property="companyName" column="company_name" />
+        </association>
+    </resultMap>
+    <!-- 创意资源resultMap -->
+	<resultMap type="com.shdatabank.puruan.model.CreativeResource" id="CreativeResourceMap">
+		<id property="creativeResourceId" column="creative_resource_id"/>
+		<result property="userId" column="user_id"/>
+		<result property="resourceName" column="resource_name"/>
+		<result property="resourceImage" column="resource_image"/>
+		<result property="resourceNumber" column="resource_number"/>
+		<result property="resourceDescription" column="resource_description"/>
+		<result property="showAddress" column="show_address"/>
+		<result property="resourceAttach" column="resource_attach"/>
+		<result property="resourceAttachName" column="resource_attach_name"/>
+		<result property="resourceCurrency" column="resource_currency"/>
+		<result property="resourcePrice" column="resource_price"/>
+		<result property="resourceStatus" column="resource_status"/>
+		<result property="active" column="ACTIVE"/>
+		<result property="publishDatetime" column="publish_datetime"/>
+	</resultMap>
+	
+	<resultMap type="com.shdatabank.puruan.model.UserCreativeTalent" id="selectCreativeTalentMap">
+        <id property="creativeTalentId" column="creative_talent_id" />
+        <result property="userId" column="user_id" />
+        <result property="talentName" column="talent_name" />
+        <result property="talentDescription" column="talent_description" />
+        <result property="workMode" column="work_mode" />
+        <result property="conditionMobile" column="user_mobile" />
+        <result property="conditionEmail" column="user_email" />
+        <result property="conditionIsAuthentication" column="is_authentication" />
+        <result property="conditionTechnology" column="data_value" />
+    </resultMap>
+    
+    <resultMap type="com.shdatabank.puruan.model.MyFavorite" id="selectRequirementMap">
+        <result property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="description" column="description" />
+        <result property="price" column="price" />
+        <result property="status" column="status" />
+        <result property="type" column="type" />
+    </resultMap>
+    
+	<!-- 我的收藏 -->
+	<select id="selectMyFavorite" resultMap="selectResoursebyNameMap" >
+		SELECT * from 
+		(SELECT  u.user_id id, '人才需求' sign, tr.talent_requirement_name name,tr.requirement_description description,tr.talent_buget price from talent_requirement tr,user u 
+		union 
+		SELECT  u.user_id id ,'创意人才' sign,u.user_name name,uct.talent_description description,uct.hope_salary price from  user_creative_talent uct,user u 
+		union 
+		SELECT  u.user_id id  ,'创意资源' sign,cr.resource_name name,cr.resource_description description,cr.resource_price price from creative_resource cr,user u )a
+		where id =#{userId}
+	</select>
+	
+	<!-- 根据条件查询人才需求信息 -->
+	<select id="selectTalentbyName" resultMap="selectResoursebyNameMap">
+		SELECT DISTINCT tr.talent_requirement_id id, '人才需求' sign, tr.talent_requirement_name name,tr.requirement_description description,tr.talent_buget price from talent_requirement tr,user u 
+		<where>
+			tr.user_id = #{userId}
+			<if test="name != null and name != ''">
+			   and  tr.talent_requirement_name like '%${name}%' 
+			</if>
+		</where>
+	</select>
+	<!-- 查看需求 -->
+	<select id="viewTalentbyName" resultMap="TalentRequirementMap">
+		SELECT * from talent_requirement  where talent_requirement_id = #{talentRequirementId} and user_id = #{userId}
+	</select>
+	
+	<!-- 根据条件查询创意人才信息 -->
+	<select id="selectCreativebyName" resultMap="selectResoursebyNameMap">
+		SELECT DISTINCT uct.creative_talent_id id ,'创意人才' sign,u.user_name name,uct.talent_description description,uct.hope_salary from  user_creative_talent uct,user u 
+		<where>
+			uct.user_id = #{userId}
+			<if test="name != null and name != ''">
+			   and  u.user_name like '%${name}%' 
+			</if>
+		</where>
+	</select>
+	<!-- 查看人才信息 -->
+	<select id="viewCreativebyName" resultMap="selectUserCreativeTalentMap">
+		SELECT * from  user_creative_talent where creative_talent_id = #{creativeTalentId} and user_id = #{userId}
+	</select>
+	
+	<select id="selectCreativeTalentFavorite" parameterType="com.shdatabank.puruan.model.UserHouse" resultMap="selectCreativeTalentMap">
+		select tuc.creative_talent_id,talent_name,work_mode,talent_description,user_mobile,user_email,is_authentication,tuc.user_id,
+		group_concat(td.data_value) as data_value from user_house tuh LEFT JOIN user_creative_talent tuc ON tuh.house_resource_id = tuc.creative_talent_id 
+		JOIN user tu ON tuc.user_id = tu.user_id LEFT JOIN talent_technology t ON tuc.creative_talent_id = t.creative_talent_id 
+		LEFT JOIN dictionarydata td ON t.technology_id = td.data_id
+		<where>
+			tuh.user_id=#{userId,jdbcType=INTEGER} and tuh.house_type=#{houseType,jdbcType=INTEGER}
+			<if test="houseResourceName != null and houseResourceName != ''">
+			   and tuc.talent_name like '%${houseResourceName}%' 
+			</if>
+		</where>
+		GROUP BY tuc.creative_talent_id
+	</select>
+	
+	<select id="selectRequirement" parameterType="com.shdatabank.puruan.model.UserHouse" resultMap="selectRequirementMap">
+		select tpr.proj_id as id,tpr.proj_name as name,tprd.proj_require_description_content as description,td.data_value as status,
+		tpr.proj_service_fee as price,'700001' as type FROM user_house tuh LEFT JOIN project_requirement tpr ON tuh.house_resource_id = tpr.proj_id 
+		LEFT JOIN project_requirement_description tprd ON tpr.proj_id = tprd.proj_require_id LEFT JOIN dictionarydata td ON tpr.proj_enroll_status = td.data_id
+		<where>
+			tuh.user_id=#{userId,jdbcType=INTEGER} and tuh.house_type=#{houseType,jdbcType=INTEGER}
+			<if test="houseResourceName != null and houseResourceName != ''">
+			   and tpr.proj_name LIKE '%${houseResourceName}%' 
+			</if>
+		</where>
+		UNION ALL
+		select ttr.talent_requirement_id,ttr.talent_requirement_name,ttr.requirement_description,null,ttr.talent_buget,'700002' as type FROM user_house tuh 
+		LEFT JOIN talent_requirement ttr ON tuh.house_resource_id = ttr.talent_requirement_id
+		<where>
+			tuh.user_id=#{userId,jdbcType=INTEGER} and tuh.house_type=#{houseTypeOfTalent,jdbcType=INTEGER}
+			<if test="houseResourceName != null and houseResourceName != ''">
+			   and ttr.talent_requirement_name LIKE '%${houseResourceName}%' 
+			</if>
+		</where>
+		UNION ALL
+		SELECT tf.fancing_id,tf.project_name,tf.fancing_description,null,tf.fancing_money,'700003' as type 
+		FROM user_house tuh LEFT JOIN fancing tf ON tuh.house_resource_id = tf.fancing_id 
+		<where>
+			tuh.user_id=#{userId,jdbcType=INTEGER} and tuh.house_type=#{houseTypeOfFancing,jdbcType=INTEGER}
+			<if test="houseResourceName != null and houseResourceName != ''">
+			   and tf.project_name LIKE '%${houseResourceName}%' 
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectCreativeResource" parameterType="com.shdatabank.puruan.model.UserHouse" resultType="com.shdatabank.puruan.model.CreativeResource">
+		select tcr.creative_resource_id as creativeResourceId,tcr.resource_name as resourceName,
+		tcr.resource_image as resourceImage,tcr.resource_price as resourcePrice
+		from user_house tuh LEFT JOIN creative_resource tcr ON tuh.house_resource_id = tcr.creative_resource_id
+		<where>
+			tuh.user_id=#{userId,jdbcType=INTEGER} and tuh.house_type=#{houseType,jdbcType=INTEGER}
+			<if test="houseResourceName != null and houseResourceName != ''">
+			   and tcr.resource_name like '%${houseResourceName}%' 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据条件查询创意资源信息 -->
+	<select id="selectResourcebyName" resultMap="selectResoursebyNameMap">
+		SELECT DISTINCT cr.creative_resource_id id  ,'创意资源' sign,cr.resource_name name,cr.resource_description description,cr.resource_price price from creative_resource cr,user u  
+		<where>
+			cr.user_id = #{userId}
+			<if test="name != null and name != ''">
+			   and  cr.resource_name like '%${name}%' 
+			</if>
+		</where>
+	</select>
+	<!-- 查看创意资源信息 -->
+	<select id="viewResourcebyName" resultMap="CreativeResourceMap">
+		SELECT * from creative_resource  where creative_resource_id = #{creativeResourceId} and user_id = #{userId} 
+	</select>
+	<!-- 查询收藏的ID是否已存在 -->
+	<select id="selectUserHouse" resultType="com.shdatabank.puruan.model.UserHouse">
+		SELECT house_resource_id houseResourceId from user_house where house_type = #{houseType} and house_resource_id =#{houseResourceId}
+	</select>
+	<!-- 插入我的收藏信息 -->
+	<insert id="insertUserHouse" parameterType="com.shdatabank.puruan.model.UserHouse" useGeneratedKeys="true" keyProperty="house_id" >
+		<![CDATA[
+			INSERT INTO user_house (user_id,house_type,house_resource_id) 
+			VALUES(
+				   #{userId},
+				   #{houseType},
+				   #{houseResourceId}
+				  )
+		]]>
+	</insert>
+	<!-- 新增后再收藏 -->
+	<update id="updateUserHouse">
+		update  user_house set active = 0 where house_type = #{houseType} and house_resource_id =#{houseResourceId} 
+	</update>
+	<!-- 删除收藏 -->
+	<update id="deleteUserHouse">
+		update  user_house set active = 1 where house_type = #{houseType} and house_resource_id =#{houseResourceId} 
+	</update>
+</mapper>

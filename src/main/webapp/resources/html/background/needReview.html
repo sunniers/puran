@@ -1,0 +1,101 @@
+ <!--路径-->
+                <div class="nav">
+                    <span>首页</span><span><img src="../../images/background/rightCusp.png" alt=""></span>
+                    <span>发布信息审核</span><span><img src="../../images/background/rightCusp.png" alt=""></span>
+                    <span>需求审核</span>
+                </div>
+
+                <!--内容详情-->
+                <div class="contentInfo">
+					 <div class="needReview">
+					 	<div class="needSearchTitle">
+					 		<div class="t active" data-attr="Audit">待审核</div>
+					 		<div class="t" data-attr="Checked">已审核</div>
+					 		<div class="s">
+					 		<div>
+					 			<input id="searchVal" type="text">
+					 		</div>
+					 		<div>
+					 			<button id="search"><img src="../../images/background/search.png" alt=""></button>
+					 		</div>
+					 		</div>
+					 	</div>
+					 	<!-- 待审核 -->
+					 	<div class="needReviewData">
+					 		<table  class="sui-table table-zebra Audit">
+					 			<thead>
+					 				<tr>
+					 				<td>需求名称</td>
+					 				<td>发布方</td>
+					 				<td>需求类型</td>
+					 				<td>提交时间</td>
+					 				<td>操作</td>
+					 				</tr>
+					 			</thead>
+					 			<tbody>
+					 				<tr>
+					 					<td>大数据管理平台建设</td>
+					 					<td>上海星空科技有限公司</td>
+					 					<td>合作</td>
+					 					<td>09-01</td>
+					 					<td><button class="review">审核</button></td>
+					 				</tr>
+					 			</tbody>
+					 		</table>
+					 	<!-- 已审核 -->
+					 		<table  class="sui-table table-zebra Checked" style="display: none;">
+					 			<thead>
+					 				<tr>
+					 				<td>需求名称</td>
+					 				<td>发布方</td>
+					 				<td>需求类型</td>
+					 				<td>提交时间</td>
+					 				<td>结果</td>
+					 				<td>操作</td>
+					 				</tr>
+					 			</thead>
+					 			<tbody>
+					 				<tr>
+					 					<td>大数据管理平台建设</td>
+					 					<td>上海星空科技有限公司</td>
+					 					<td>合作</td>
+					 					<td>09-01</td>
+					 					<td><button class="review">审核</button></td>
+					 				</tr>
+					 			</tbody>
+					 		</table>
+					 	</div>
+						<!-- 分页 -->
+						<div class="page">
+		                      <div id="paginator" style="margin: auto;"></div>
+		                </div>
+					</div>
+                </div>
+                <script id="auditing_Audit_tmplate" type="text/x-jquery-tmpl">
+			 			<tbody>
+			 				<tr>
+			 					<td>${projName}</td>
+			 					<td>${publishName}</td>
+			 					<td>${requirementTypeValue}</td>
+			 					<td>${createDatetime}</td>
+			 					<td><button class="review" data-id="${projId}" data-type="${requirementType}">审核</button></td>
+			 				</tr>
+			 			</tbody>
+				</script>
+				 <script id="auditing_Checked_tmplate" type="text/x-jquery-tmpl">
+			 			<tbody>
+			 				<tr>
+			 					<td>${projName}</td>
+			 					<td>${publishName}</td>
+			 					<td>${requirementTypeValue}</td>
+			 					<td>${auditDateTime}</td>
+								{{if $data.auditStatus=="未通过"}}
+								<td style="color:red">${auditStatus}</td>
+								{{else}}
+								<td style="color:#2d7ee2">${auditStatus}</td>
+								{{/if}}
+			 					<td><button class="review" data-id="${projId}" data-type="${requirementType}">查看</button></td>
+			 				</tr>
+			 			</tbody>
+				</script>
+                <script type="text/javascript" src="../../js/background/needReview.js"></script>

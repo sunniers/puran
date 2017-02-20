@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.UserAuditDao">
+	<!-- 企业审核map -->
+	<resultMap type="com.shdatabank.puruan.model.Company" id="selectBaseCompanyMap">
+		<id property="companyId" column="company_id" />
+		<result property="userId" column="user_id" />
+		<result property="userName" column="user_name" />
+		<result property="companyName" column="company_name" />
+		<result property="companyCorporation" column="company_corporation" />
+		<result property="organizationalInstitutionCode" column="organizational_institution_code" />
+		<result property="createTime" column="create_datetime" />
+		<collection property="companyCredits"
+			ofType="com.shdatabank.puruan.model.CompanyCredit">
+			<id property="creditId" column="credit_id" />
+			<result property="creditName" column="credit_name" />
+			<result property="creditType" column="credit_type" />
+			<result property="creditFilename" column="credit_filename" />
+			<result property="creditFrontPath" column="credit_front_path" />
+			<result property="creditBackPath" column="credit_back_path" />
+		</collection>
+	</resultMap>
+
+	<!-- 用户表 -->
+	<sql id="sql_form">
+		from user u
+	</sql>
+	<!-- 公司信息字段 -->
+	<sql id="sql_couml1">
+		u.user_id,
+		c.company_id,
+		u.user_name,
+		c.company_name,
+		c.organizational_institution_code,
+		c.company_corporation,
+		u.create_datetime
+	</sql>
+	<!-- 公司证件表字段 -->
+	<sql id="sql_couml3">
+		cc.credit_id,
+		cc.credit_name,
+		cc.credit_type,
+		cc.credit_filename,
+		cc.credit_front_path,
+		cc.credit_back_path
+	</sql>
+	<!-- 企业审核列表 -->
+	<select id="selectCompanyCreditAudit" parameterType="com.shdatabank.puruan.model.UserAudit"
+		resultMap="selectBaseCompanyMap">
+		SELECT
+		<include refid="sql_couml1" />
+		<include refid="sql_form" />
+		RIGHT JOIN company c on
+		u.company_id=c.company_id
+		where u.active=0 and
+		c.active=0 and
+		u.user_type=100501 and
+		u.user_id not in (SELECT
+		user_id
+		from user_audit where active=0)
+		<if test="companyName !=null and companyName !=''">
+			and c.company_name LIKE '%${companyName}%'
+		</if>
+		<if test="userName !=null and userName !=''">
+			and u.user_name LIKE '%${userName}%'
+		</if>
+	</select>
+	<!-- 查看企业审核信息 -->
+	<select id="findCompanyCreditAuditById" resultMap="selectBaseCompanyMap">
+		SELECT
+		<include refid="sql_couml1" />
+		,
+		<include refid="sql_couml3" />
+		<include refid="sql_form" />
+		LEFT JOIN
+		company c on c.company_id=u.company_id
+		LEFT JOIN
+		company_credit cc on c.company_id=cc.company_id
+		where
+		u.user_id=#{userId}
+	</select>
+
+	<!-- 用户个人拓展表字段 -->
+	<sql id="sql_couml2">
+		u.user_id userId,
+		u.user_name userName,
+		uxi.user_real_name
+		userRealName,
+		u.create_datetime createTime
+	</sql>
+	<!-- 个人审核列表 -->
+	<select id="selectUserExtensionInfoAudit" resultType="com.shdatabank.puruan.model.UserExtensionInfo">
+		SELECT
+		<include refid="sql_couml2" />
+		,
+		<include refid="sql_couml4" />
+		<include refid="sql_form" />
+		LEFT JOIN user_extension_info uxi on uxi.user_id=u.user_id
+		where
+		u.user_type=100502 and u.active=0 and
+		u.user_id not in(SELECT
+		user_id
+		from user_audit where active=0)
+		<if test="userName !=null and userName !=''">
+			and u.user_name LIKE '%${userName}%'
+		</if>
+		<if test="userRealName !=null and userRealName !=''">
+			and uxi.user_real_name LIKE '%${userRealName}%'
+		</if>
+	</select>
+	<!-- 用户扩展信息表字段 -->
+	<sql id="sql_couml4">
+		uxi.extension_id extensionId,
+		uxi.credit_type creditType,
+		uxi.credit_number creditNumber,
+		uxi.credit_file_name creditFileName,
+		uxi.credit_front_path creditFrontPath,
+		uxi.credit_back_path
+		creditBackPath
+	</sql>
+	<!-- 查看个人审核信息 -->
+	<select id="findUserExtensionInfoAuditById" resultType="com.shdatabank.puruan.model.UserExtensionInfo">
+		SELECT * from (SELECT
+		<include refid="sql_couml2" />
+		,
+		<include refid="sql_couml4" />
+		<include refid="sql_form" />
+		LEFT JOIN user_extension_info uxi on uxi.user_id=u.user_id
+		where
+		u.user_id=#{userId}
+		ORDER BY uxi.create_time DESC) t
+		GROUP BY t.userId
+	</select>
+	<!-- 添加审核信息 -->
+	<insert id="insertUserAudit" parameterType="com.shdatabank.puruan.model.UserAudit">
+		INSERT INTO
+		user_audit(user_id,user_type,back_user_id,audit_datetime,audit_content,audit_status,active)
+		VALUES(
+		#{userId},
+		#{userType},
+		#{backUserId},
+		now(),
+		#{auditContent},
+		#{auditStatusId},
+		0
+		)
+	</insert>
+	<update id="updateUserIsAudit" parameterType="com.shdatabank.puruan.model.UserAudit">
+		update user u set
+		u.is_audit=0 where u.user_id= #{userId}
+	</update>
+</mapper>

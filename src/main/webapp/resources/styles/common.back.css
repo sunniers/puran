@@ -1,0 +1,2571 @@
+/* CreateTime:2016/10/10
+*  Author    :   Tangj
+*/
+/******************************************  base *********************************************/
+* {margin:0; padding:0;}
+* html body {overflow:visible;}
+* html iframe, * html frame {overflow:auto;}
+* html frameset {overflow:hidden;}
+body, ul, ol, li, p, h1, h2, h3, h4, h5, h6, form, fieldset, table, td, img, div, tr {margin:0; padding:0;}
+body{font-family: "微软雅黑";}
+.topPrompt{
+    width: 100%;
+    height: 23px;
+    border: 1px solid transparent;
+    background-color: rgba(32,55,90,.1);
+}
+.topPrompt .helloManager{
+    width: 1024px;
+    margin: 0 auto;
+    font-size: 14px;
+    font-family: 微软雅黑;
+    text-align: right;
+}
+.helloManager>span , .helloManager>i{
+    display: inline-block;
+    margin-top: 5px;
+}
+.topPrompt .helloManager span:nth-child(1){
+    color:#2d7ee2;
+}
+.topPrompt .helloManager span:nth-child(2),.topPrompt .helloManager span:nth-child(3){
+    color: #333333;
+    margin-right: 8px;
+    margin-left:5px;
+}
+.topPrompt .helloManager span:nth-child(2):hover,span:nth-child(3):hover{
+    cursor: pointer;
+}
+.logoField{
+    width: 100%;
+    height: 82px;
+    background-color: white;
+}
+.logoMediate{
+    width: 1024px;
+    margin: 0 auto;
+}
+.logoMediate img{
+    margin-top: 12px;
+}
+.container{
+    width: 100%;
+    background-color: rgba(32,55,90,.1);
+    overflow:auto;
+}
+.content{
+    width: 1024px;
+    height: auto;
+    margin: 0 auto;
+    background-color: rgba(32,55,90,0);
+}
+.content>div{
+    float: left;
+}
+.leftMenuField{
+    width: 200px;
+    background-color: #2d7ee2;
+}
+.leftMenuField img{
+    vertical-align: baseline;
+}
+.leftMenuField .menuTitle{
+    height: 39px;
+    font-size: 16px;
+    color: white;
+    font-family: 微软雅黑;
+    border-bottom: 1px solid white;
+}
+.leftMenuField .menuTitle>div{
+    float: left;
+}
+.leftMenuField .menuTitle>div:nth-child(1) img{
+    height: 20px;
+    margin-left: 10px;
+    margin-top: 10px;
+    padding-right: 4px;
+}
+.leftMenuField .menuTitle>div:nth-child(2){
+    line-height: 20px;
+    margin-top: 10px;
+}
+.leftMenuField .menuContent{
+    height: auto;
+    font-size: 14px;
+    color: white;
+    font-family: 微软雅黑;
+    border-bottom: 1px solid white;
+}
+.leftMenuField .menuTree{
+    overflow: auto;
+}
+.leftMenuField .menuTree>div{
+    float: left;
+}
+.leftMenuField .menuTree:hover{
+    background-color: #2871cb;
+    cursor: pointer;
+}
+.leftMenuField .menuTree>div:nth-child(1) img{
+    height: 18px;
+    margin-top: 3px;
+    margin-left: 34px;
+    padding-right: 4px;
+}
+.leftMenuField .menuTree>div:nth-child(2){
+    line-height: 20px;
+    margin-top: 3px;
+}
+.content .rightContentField{
+    height: auto;
+    overflow: auto;
+    width: 814px;
+    margin-left: 10px;
+    margin-top: 9px;
+    margin-bottom:20px;
+}
+.rightContentField .nav {
+    width: 100%;
+    height: 31px;
+}
+.rightContentField .nav span:nth-child(1) {
+    margin-left: 10px;
+}
+.rightContentField .nav span {
+    line-height: 25px;
+}
+.rightContentField .nav span img {
+    height: 10px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+.rightContentField .contentInfo{
+    width:100%;
+    background-color: #e9ebef;
+    overflow: hidden;
+}
+/***************************************** login *********************************************/
+.loginLogo{
+    height: 100px;
+}
+.loginContainer{
+    background-color: #2d7ee2;
+    height: 500px;
+}
+.loginContainer .loginContent{
+    width: 1024px;
+    overflow: auto;
+    margin: 0 auto;
+}
+.loginContainer .loginField{
+    width: 350px;
+    height: 280px;
+    margin-top:50px;
+    background-color: white;
+    float: right;
+}
+.loginField .loginTitle{
+    width: 340px;
+    color: #333333;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+    font-family:微软雅黑;
+    float: right;
+}
+.loginField .userNamePrompt{
+    margin: 15px 0px 5px 35px;
+}
+.loginField .forgetPassword:hover{
+    color: #2d7ee2;
+}
+.loginField .admin input{
+    width: 239px;
+    height: 35px;
+    border: 1px solid #999999;
+    border-left:none;
+    position:absolute;
+    padding-left:2px;
+}
+.loginField .admin img{
+	width:37px;
+	height:37px;
+	margin-left: 35px;
+}
+.loginField .passWord input{
+    width: 239px;
+    height: 35px;
+    margin-top: 10px;
+    border: 1px solid #999999;
+    border-left:none;
+    position:absolute;
+    padding-left:2px;
+}
+.loginField .passWord img{
+	width:37px;
+	height:37px;
+	margin-left: 35px;
+	margin-top:10px;
+}
+.loginField .submit button{
+    width: 280px;
+    font-size: 18px;
+    font-family: 微软雅黑;
+    color: white;
+    background-color: #2d7ee2;
+    height: 35px;
+    border: none;
+    margin-top: 20px;
+    margin-left: 35px;
+}
+.loginField .submit button:hover{
+    background-color: #428be5;
+}
+/**************************************** userManage ********************************************/
+
+.contentInfo.umHeight{
+	height: 580px;
+    position:relative;
+}
+.userManage button{
+    width: 60px;
+    height: 20px;
+    font-size: 14px;
+    font-family: 微软雅黑;
+    border:1px solid #999999;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    color: #666666;
+    background-color: white;
+    outline:none;
+}
+.userManage button:hover{
+    border:1px solid #0e7bdd;
+    color: #0e7bdd;
+}
+.userManage .fastQuery{
+    width:814px;
+    height: 30px;
+    line-height: 30px;
+    font-family:微软雅黑;
+    font-size: 14px;
+    color: #333333;
+}
+.userManage .fastQuery1{
+    width: 95px;
+    height: 30px;
+    float: left;
+    background-color: white;
+    -webkit-box-shadow:0px 1px  2px rgba(0,0,0,.1);
+    -moz-box-shadow: 0px 1px  2px rgba(0,0,0,.1);
+    box-shadow:0px 1px  2px rgba(0,0,0,.1);
+}
+.userManage .fastQuery1 .fastQueryName{
+    float: right;
+    padding-right: 20px;
+}
+.userManage .fastQuery2{
+    width: 717px;
+    height: 30px;
+    float: left;
+    margin-left: 2px;
+    background-color: white;
+    -webkit-box-shadow:0px 0px  2px rgba(0,0,0,.1);
+    -moz-box-shadow: 0px 0px  2px rgba(0,0,0,.1);
+    box-shadow:0px 0px  2px rgba(0,0,0,.1);
+}
+.userManage .fastQuery2 .userName{
+    float: left;
+    padding-left: 25px;
+}
+.userManage .fastQuery2 .userName input{
+    width: 200px;
+}
+.userManage .fastQuery2 .department{
+    float: left;
+    padding-left: 25px;
+}
+.userManage .fastQuery2 .department select{
+    width: 110px;
+    height: 20px;;
+}
+.userManage .fastQuery2 .query{
+    float: right;
+    margin-top:5px;
+    margin-right: 10px;
+}
+.userManage .addNewUser{
+    width: 814px;
+    height: 40px;
+    font-family:微软雅黑;
+    font-size: 14px;
+    color: #333333;
+}
+.userManage .addNewUser .addNewUserLeft{
+    float: left;
+    display: inline-block;
+    cursor: pointer;
+}
+.userManage .addNewUser img{
+    width: 15px;
+    height: 15px;
+    float: left;
+    padding-top: 18px;
+}
+.userManage .addNewUser .addNewUserWord{
+    float: left;
+    padding-top: 16px;
+    padding-left: 5px;
+}
+.userManage .addNewUser .addNewUserWord:hover{
+    color: #0e7bdd;
+}
+.userManage .addNewUser .addNewUserRight{
+    float: right;
+    padding-top: 17px;
+    padding-right: 26px;
+    cursor: pointer;
+}
+.userManage .addNewUser .addNewUserRight:hover{
+    color: #0e7bdd;
+}
+.userManage .userManageForm{
+    width: 812px;
+    height:auto;
+}
+.userManage .userManageForm table{
+    border: 1px solid lightgrey;
+    -webkit-box-shadow:0px 0px  1px rgba(0,0,0,.1);
+    -moz-box-shadow: 0px 0px  1px rgba(0,0,0,.1);
+    box-shadow:0px 0px  1px rgba(0,0,0,.1);
+}
+.userManage .userManageForm th{
+    text-align: center;
+    font-family:微软雅黑;
+    font-size: 14px;
+    color: #333333;
+}
+.userManage .userManageForm td{
+    font-family:微软雅黑;
+    font-size: 14px;
+    color: #666666;
+    line-height: 24px;
+}
+.userManage .userManageForm td input{
+    margin-right: 5px;
+}
+.userManage .userManageForm td button{
+    margin-right: 15px;
+    font-size: 12px;
+}
+.userManage .userManageForm td:nth-child(1){
+    width: 180px;
+}
+.userManage .userManageForm td:nth-child(2){
+    width: 130px;
+    text-align: center;
+}
+.userManage .userManageForm td:nth-child(3){
+    width: 234px;
+    text-align: center;
+}
+.userManage .userManageForm td:nth-child(4){
+    width: 250px;
+    text-align: center;
+}
+.userManage+#paginator{
+	position:absolute;
+	bottom:0px;
+	margin-left: 200px!important;
+}
+/**************************************** userManageAddUser ********************************************/
+.rightContentField .contentInfo.white{
+    background-color: white;
+}
+.fr{
+    float: right;
+}
+.userManageAddUser .addUserPrompt{
+    width: 814px;
+    height: 40px;
+}
+.userManageAddUser .addUserPrompt img{
+    width: 20px;
+    height: 20px;
+    float: left;
+    padding: 10px 4px 10px 5px;
+}
+.userManageAddUser .addUserPrompt .addUserPromptWord{
+    font-family:微软雅黑;
+    font-size: 12px;
+    color: #666666;
+    line-height: 40px;
+    float: left;
+}
+.userManageAddUser .addUserContent{
+    width: 330px;
+    height:auto;
+    margin:0 auto;
+    font-family:微软雅黑;
+    font-size: 14px;
+    color: #333333;
+}
+.userManageAddUser .addUserContent .userNamePrompt{
+    margin-left: 70px;
+    display:none;
+}
+.userManageAddUser .addUserContent input{
+    width: 254px;
+    height: 21px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+.userManageAddUser .addUserContent select{
+    font-family:微软雅黑;
+    font-size: 14px;
+    color: #333333;
+    width: 258px;
+    height: 25px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+.userManageAddUser .addUserContent .roles{
+    font-family:微软雅黑;
+    font-size: 12px;
+    color: #666666;
+    width: 268px;
+}
+.userManageAddUser .addUserContent .roles .administrators{
+    float: left;
+    padding:0;
+    margin-left: 10px;
+}
+.userManageAddUser .addUserContent .roles input{
+    width: 13px;
+    height: 13px;
+    margin-right: 2px;
+}
+.userManageAddUser .addUserContent .save{
+    font-family:微软雅黑;
+    font-size: 14px;
+    color: #666666;
+    width: 258px;
+    margin-top: 18px;
+    margin-bottom: 191px;
+    text-align: center;
+}
+.userManageAddUser .addUserContent .save button{
+    width: 80px;
+    height: 26px;
+    border:1px solid #999999;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    color: #666666;
+    background-color: white;
+    margin-left: 15px;
+    outline:none;
+}
+.userManageAddUser .addUserContent .save button:hover{
+    border:1px solid #0e7bdd;
+    color: #0e7bdd;
+}
+/**************************************** userManageModify **********************************************/
+.rightContentField .contentInfo.white{
+    background-color: white;
+}
+.fr{
+    float: right;
+}
+.userManageModify .addUserPrompt{
+    width: 814px;
+    height: 40px;
+}
+.userManageModify .addUserPrompt img{
+    width: 20px;
+    height: 20px;
+    float: left;
+    padding: 10px 4px 10px 5px;
+}
+.userManageModify .addUserPrompt .addUserPromptWord{
+    font-family:微软雅黑;
+    font-size: 12px;
+    color: #666666;
+    line-height: 40px;
+    float: left;
+}
+.userManageModify .addUserContent{
+    width: 330px;
+    height:auto;
+    margin:0 auto;
+    font-family:微软雅黑;
+    font-size: 14px;
+    color: #333333;
+}
+.userManageModify .addUserContent .userNamePrompt{
+    margin-left: 70px;
+}
+.userManageModify .addUserContent input{
+    width: 254px;
+    height: 21px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+.userManageModify .addUserContent select{
+    font-family:微软雅黑;
+    font-size: 14px;
+    color: #333333;
+    width: 258px;
+    height: 25px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+.userManageModify .addUserContent .roles{
+    font-family:微软雅黑;
+    font-size: 12px;
+    color: #666666;
+    width: 268px;
+}
+.userManageModify .addUserContent .roles .administrators{
+    float: left;
+    padding:0;
+    margin-left: 10px;
+}
+.userManageModify .addUserContent .roles input{
+    width: 13px;
+    height: 13px;
+    margin-right: 2px;
+}
+.userManageModify .addUserContent .save{
+    font-family:微软雅黑;
+    font-size: 14px;
+    color: #666666;
+    width: 258px;
+    margin-top: 18px;
+    margin-bottom: 239px;
+    text-align: center;
+}
+.userManageModify .addUserContent .save button{
+    width: 80px;
+    height: 26px;
+    border:1px solid #999999;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    color: #666666;
+    background-color: white;
+    margin-left: 15px;
+    outline:none;
+}
+.userManageModify .addUserContent .save button:hover{
+    border:1px solid #0e7bdd;
+    color: #0e7bdd;
+}
+/**************************************** characterManage **********************************************/
+.chcHeight.chcHeight{
+	height: 500px;
+    position:relative;
+}
+.characterSearch {
+    width: 814px;
+    height: 30px;
+    background-color: white;
+    font-family: 微软雅黑;
+    font-size: 14px;
+}
+.characterSearch>div{
+    height: 25px;
+    float: left;
+    border-right: 1px solid #cccccc;
+    padding-top: 5px;
+}
+.characterSearch>div:nth-child(1){
+    padding-left: 5px;
+    padding-right: 25px;
+}
+.characterSearch>div:nth-child(2){
+    padding-left: 25px;
+    padding-right: 25px;
+    border: none;
+}
+.characterSearch>div:nth-child(2) select{
+    width: 171px;
+}
+.characterSearch>div:nth-child(3){
+    float: right;
+    margin-right: 10px;
+    border: none;
+}
+.characterSearch>div:nth-child(3) button{
+    background-color: white;
+    width: 60px;
+    border: 1px solid #333333;
+    border-radius: 13px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    outline: none;
+}
+.characterSearch>div:nth-child(3) button:hover{
+    border: 1px solid #0e7bdd;
+    color: #0e7bdd;
+}
+.characterOperation{
+    height: 30px;
+    margin-top: 10px;
+}
+.characterOperation>div:nth-child(1) img{
+    height: 15px;
+}
+.characterOperation .addNewRoleLeft span:hover{
+	cursor:pointer; 
+}
+.characterOperation>div:nth-child(1) span{
+    margin-left: 5px;
+    display: inline-block;
+}
+.characterOperation>div:nth-child(1) span:nth-child(2){
+    margin-top: 1px;
+}
+.characterOperation>div span{
+    font-size: 14px;
+    font-family: 微软雅黑;
+    color: #333333;
+    float: left;
+}
+.characterOperation>div:nth-child(2){
+    float: right;
+    margin-right: 25px;
+    color: #333333;
+}
+.characterOperation>div:nth-child(2) span:hover{
+    cursor: pointer;
+    color: #0e7bdd;
+}
+.contentInfo .tableData{
+    background-color: white;
+    box-shadow: 0 1px 10px 0 rgba(0,0,0,.1),0 1px 1px 0 rgba(0,0,0,.1),1px 0px 1px -1px rgba(0,0,0,.1);
+}
+.contentInfo .tableData table tr td:not(:first-child),
+.contentInfo .tableData table tr th{
+    text-align: center;
+}
+.contentInfo .tableData table tr th{
+    font-family: 微软雅黑;
+    font-size: 14px;
+    color: #333333;
+}
+.contentInfo .tableData table tbody{
+    font-size: 14px;
+    color: #666666;
+}
+.contentInfo .tableData table tbody>tr:nth-child(odd)>td{
+    background-color: #f2f2f2;
+}
+.contentInfo .tableData table tbody>tr td:nth-child(1),
+.contentInfo .tableData table tbody>tr td:nth-child(2){
+    border-right: 1px solid #cccccc;
+}
+.contentInfo .tableData table tbody button{
+    width: 60px;
+    height: 20px;
+    border: 1px solid #999999;
+    background-color: transparent;
+    border-radius: 10px;
+    margin-left: 15px;
+    color: #666666;
+    font-size: 12px;
+    font-family: 微软雅黑;
+}
+.contentInfo .tableData table tbody button:hover{
+    color: #0e7bdd;
+    border-color: #0e7bdd;
+}
+.contentInfo .tableData table tbody>tr td:nth-child(1){
+    width: 160px;
+}
+.contentInfo .tableData table tbody>tr td:nth-child(2){
+    width: 384px;
+}
+.contentInfo .tableData table tbody>tr td:nth-child(3){
+    width: 260px;
+}
+.contentInfo #paginator{
+    position:absolute;
+    bottom:0px;
+    margin-left: 200px!important;
+}
+/**************************************** characterManageAddUser ********************************************/
+.rightContentField .contentInfo.white{
+    background-color: white;
+    -webkit-box-shadow:0px 0px  1px rgba(0,0,0,.1);
+    -moz-box-shadow: 0px 0px  1px rgba(0,0,0,.1);
+    box-shadow:0px 0px  1px rgba(0,0,0,.1);
+}
+.characterManageAdd .addPrompt{
+    width: 814px;
+    height: 40px;
+}
+.characterManageAdd .addPrompt img{
+    width: 20px;
+    height: 20px;
+    float: left;
+    padding: 10px 4px 10px 5px;
+}
+.characterManageAdd .addPrompt .addPromptWord{
+    font-family:微软雅黑;
+    font-size: 12px;
+    color: #666666;
+    line-height: 40px;
+    float: left;
+}
+.characterManageAdd .addContent{
+    width: 483px;
+    height:auto;
+    margin:0 auto;
+    font-family:微软雅黑;
+    font-size: 14px;
+    color: #333333;
+}
+.characterManageAdd .addContent .characterAddNamePrompt{
+    margin-left: 100px;
+}
+.characterManageAdd .addContent  input{
+    width: 254px;
+    height: 23px;
+    padding-left: 5px;
+    font-size: 12px;
+    font-family: 微软雅黑;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border:1px solid #cccccc;
+}
+.characterManageAdd .addContent table{
+    font-size: 12px;
+    font-family: 微软雅黑;
+    color: #666666;
+    float: right;
+    width: 403px;
+    margin-top: 5px;
+}
+.characterManageAdd .addContent table thead td{
+	border-bottom:1px solid #E2DEDE;
+}
+.characterManageAdd .addContent table tr td div{
+    display: inline-block;
+    margin-right: 10px;
+}
+.characterManageAdd .addContent table input{
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+    margin-top: 7px;
+}
+.characterManageAdd .addContent tbody>tr:nth-child(1) td{
+    text-align: left;
+    line-height:13px;
+}
+.characterManageAdd .addContent tbody>tr td:nth-child(1){
+    width: 120px;
+}
+.characterManageAdd .addContent tbody>tr td:nth-child(2){
+    width: 270px;
+}
+.characterManageAdd .addContent .save{
+    font-family:微软雅黑;
+    font-size: 14px;
+    color: #666666;
+    width: 400px;
+    margin-top: 7px;
+    margin-bottom: 106px;
+    text-align: center;
+}
+.characterManageAdd .addContent .save button{
+    width: 80px;
+    height: 26px;
+    border:1px solid #999999;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    color: #666666;
+    background-color: white;
+    margin-left: 15px;
+    outline:none;
+}
+.characterManageAdd .addContent .save button:hover{
+    border:1px solid #0e7bdd;
+    color: #0e7bdd;
+}
+.characterManageAdd .addErrorTip{
+	margin-left:81px;
+}
+/**************************************** characterManageUpdate ********************************************/
+.rightContentField .contentInfo.white{
+    background-color: white;
+    -webkit-box-shadow:0px 0px  1px rgba(0,0,0,.1);
+    -moz-box-shadow: 0px 0px  1px rgba(0,0,0,.1);
+    box-shadow:0px 0px  1px rgba(0,0,0,.1);
+}
+.characterManageUpdate .addPrompt{
+    width: 814px;
+    height: 40px;
+}
+.characterManageUpdate .addPrompt img{
+    width: 20px;
+    height: 20px;
+    float: left;
+    padding: 10px 4px 10px 5px;
+}
+.characterManageUpdate .addPrompt .addPromptWord{
+    font-family:微软雅黑;
+    font-size: 12px;
+    color: #666666;
+    line-height: 40px;
+    float: left;
+}
+.characterManageUpdate .addContent{
+    width: 483px;
+    height:auto;
+    margin:0 auto;
+    font-family:微软雅黑;
+    font-size: 14px;
+    color: #333333;
+}
+.characterManageUpdate .addContent .characterNamePrompt{
+    margin-left: 74px;
+}
+.characterManageUpdate .addContent  input{
+    width: 254px;
+    height: 23px;
+    padding-left: 5px;
+    font-size: 12px;
+    font-family: 微软雅黑;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border:1px solid #cccccc;
+}
+.characterManageUpdate .addContent table{
+    font-size: 12px;
+    font-family: 微软雅黑;
+    color: #666666;
+    float: right;
+    width: 403px;
+    margin-top: 5px;
+}
+.characterManageUpdate .addContent table thead td{
+	border: 1px solid #E2DEDE;
+}
+.characterManageUpdate .addContent table tr td div{
+    display: inline-block;
+    margin-right: 10px;
+}
+.characterManageUpdate .addContent table input{
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+    margin-top: 7px;
+}
+.characterManageUpdate .addContent tbody>tr:nth-child(1) td{
+    text-align: left;
+    line-height:13px;
+}
+.characterManageUpdate .addContent tbody>tr td:nth-child(1){
+    width: 120px;
+}
+.characterManageUpdate .addContent tbody>tr td:nth-child(2){
+    width: 270px;
+}
+.characterManageUpdate .addContent .save{
+    font-family:微软雅黑;
+    font-size: 14px;
+    color: #666666;
+    width: 400px;
+    margin-top: 7px;
+    margin-bottom: 106px;
+    text-align: center;
+}
+.characterManageUpdate .addContent .save button{
+    width: 80px;
+    height: 26px;
+    border:1px solid #999999;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    color: #666666;
+    background-color: white;
+    margin-left: 15px;
+    outline:none;
+}
+.characterManageUpdate .addContent .save button:hover{
+    border:1px solid #0e7bdd;
+    color: #0e7bdd;
+}
+/**************************************** setResourceDirectory ********************************************/
+.setResourceDirectory{
+    width: 814px;
+    height: 550px;
+    position: relative;
+}
+.setResourceDirectory #paginator{
+	margin-left:100px !important;
+}
+.setResourceDirectory button{
+    width: 60px;
+    height: 20px;
+    font-size: 14px;
+    font-family: 微软雅黑;
+    border:1px solid #999999;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    color: #666666;
+    background-color: transparent;
+    outline:none;
+    margin-left: 10px;
+}
+.setResourceDirectory button:hover{
+    border:1px solid #0e7bdd;
+    color: #0e7bdd;
+}
+.setResourceDirectory .header{
+    width:814px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    font-family: 微软雅黑;
+    color: #333333;
+}
+.setResourceDirectory .headerLeft{
+    width: 50px;
+    height: 30px;
+    float: left;
+    background-color: white;
+    -webkit-box-shadow:0px 1px  2px rgba(0,0,0,.1);
+    -moz-box-shadow: 0px 1px  2px rgba(0,0,0,.1);
+    box-shadow:0px 1px  2px rgba(0,0,0,.1);
+}
+.setResourceDirectory .headerLeft .queryName{
+    float: right;
+}
+.setResourceDirectory .headerRight{
+    width: 762px;
+    height: 30px;
+    float: left;
+    margin-left: 2px;
+    background-color: white;
+    -webkit-box-shadow:0px 0px  2px rgba(0,0,0,.1);
+    -moz-box-shadow: 0px 0px  2px rgba(0,0,0,.1);
+    box-shadow:0px 0px  2px rgba(0,0,0,.1);
+}
+.setResourceDirectory .headerRight .frontBackTable{
+    float: left;
+    padding-left:15px;
+}
+.setResourceDirectory .headerRight .frontBackTable select{
+    width: 70px;
+    height: 20px;;
+}
+.setResourceDirectory .headerRight .resourceDirectory1{
+    float: left;
+    padding-left: 15px;
+}
+.setResourceDirectory .headerRight .resourceDirectory1 input{
+    width:141px;
+}
+.setResourceDirectory .headerRight .resourceDirectory2{
+    float: left;
+    padding-left: 15px;
+}
+.setResourceDirectory .headerRight .resourceDirectory2 input{
+    width:146px;
+}
+.setResourceDirectory .headerRight .query{
+    float: right;
+    margin-top:5px;
+    margin-right: 10px;
+}
+.setResourceDirectory .addResourceDirectory{
+    width: 814px;
+    height: 40px;
+    font-size: 14px;
+    font-family: 微软雅黑;
+    color: #333333;
+}
+.setResourceDirectory .addResourceDirectory .addResourceDirectoryLeft{
+    float: left;
+    display: inline-block;
+    cursor: pointer;
+}
+.setResourceDirectory .addResourceDirectory img{
+    width: 15px;
+    height: 15px;
+    float: left;
+    padding-top: 18px;
+}
+.setResourceDirectory .addResourceDirectory .addResourceDirectoryWord{
+    float: left;
+    padding-top: 16px;
+    padding-left: 5px;
+}
+.setResourceDirectory .addResourceDirectory .addResourceDirectoryWord:hover{
+    color: #0e7bdd;
+}
+.setResourceDirectory table tr th{
+    font-size: 14px;
+    font-family: 微软雅黑;
+    color: #333333;
+    text-align: center;
+    height: 18px;
+    background-color: #f9f9f9;
+}
+.setResourceDirectory table tbody tr:nth-child(odd)>td{
+    background-color: rgba(32,55,90,.0) !important;
+}
+.setResourceDirectory table tbody tr:nth-child(even)>td{
+    background-color: #f9f9f9;
+}
+.setResourceDirectory table tr td{
+    font-size: 14px;
+    font-family: 微软雅黑;
+    color: #666666;
+    text-align: center;
+    height: 22px;
+}
+.setResourceDirectory table tr td:nth-child(1){
+    width: 60px;
+    border-right:1px solid #cccccc;
+}
+.setResourceDirectory table tr td:nth-child(2){
+    width: 90px;
+    border-right:1px solid #cccccc;
+}
+.setResourceDirectory table tr td:nth-child(3){
+    width: 230px;
+    border-right:1px solid #cccccc;
+}
+.setResourceDirectory table tr td:nth-child(4){
+    width: 230px;
+    border-right:1px solid #cccccc;
+}
+.setResourceDirectory table tr td:nth-child(5){
+    width: 184px;
+}
+.setResourceDirectory .page{
+    width: 814px;
+    padding-left: 150px;
+    position: absolute;
+    bottom: 0px;
+
+}
+/**************************************** addResourceDirectory ********************************************/
+.newAddResourceDirectory{
+    width: 794px;
+    overflow: hidden;
+    padding-bottom: 10px;
+    background: white;
+    font-family:微软雅黑;
+}
+.newAddResourceDirectory .addUserPrompt{
+    width: 794px;
+    height: 40px;
+}
+.newAddResourceDirectory .addUserPrompt img{
+    width: 20px;
+    height: 20px;
+    float: left;
+    padding: 10px 4px 10px 5px;
+}
+.newAddResourceDirectory .addUserPrompt .addUserPromptWord{
+    font-size: 12px;
+    font-family: 微软雅黑;
+    color: #666666;
+    line-height: 40px;
+    float: left;
+}
+.newAddResourceDirectory .fieldContent{
+    width: 415px;
+    height:auto;
+    margin:23px auto;
+    font-size: 14px;
+    font-family: 微软雅黑;
+    color: #333333;
+}
+.newAddResourceDirectory .fieldContent .type select{
+    width: 280px;
+    height: 30px;
+    font-size: 12px;
+    font-family: 微软雅黑;
+    color: #333333;
+    margin-top: 7px;
+    margin-bottom: 8px;
+}
+.newAddResourceDirectory .fieldContent .route select{
+    width: 90px;
+    height: 30px;
+    font-size: 12px;
+    font-family: 微软雅黑;
+    color: #333333;
+    margin-top: 7px;
+    margin-bottom: 8px;
+    margin-right: 190px;
+}
+.newAddResourceDirectory .fieldContent input{
+    width: 276px;
+    height: 26px;
+    font-size: 12px;
+    font-family: 微软雅黑;
+    color: #333333;
+    margin-top: 7px;
+    margin-bottom: 8px;
+}
+.newAddResourceDirectory .fieldContent .sort input{
+    width: 46px;
+    margin-right: 230px;
+}
+.newAddResourceDirectory .fieldContent .upload{
+    margin-right: 285px;
+    position: relative;
+    margin-bottom: 50px;
+}
+.newAddResourceDirectory .fieldContent .uploadPhoto{
+    width: 60px;
+    height: 60px;
+    border:1px solid #999999;
+    text-align: center;
+    font-size: 12px;
+    font-family: 微软雅黑;
+    color: #2d7ee2;
+    position: absolute;
+    top: 5px;
+    right: -66px;
+}
+.newAddResourceDirectory .fieldContent .uploadPhoto img{
+    width: 40px;
+    height: 30px;
+    margin-top: 5px;
+}
+.newAddResourceDirectory .fieldContent .uploadWord{
+    width: 110px;
+    height: 20px;
+    font-size: 12px;
+    font-family: 微软雅黑;
+    color: #666666;
+    margin-top: 25px;
+    position: absolute;
+    left: 170px;
+}
+.newAddResourceDirectory .fieldContent .addSecond{
+    margin:7px 180px 5px 0px;
+    color: #2d7ee2;
+}
+.newAddResourceDirectory .fieldContent .addSecond img{
+    float: right;
+    width: 15px;
+    height: 15px;
+    padding-top: 3px;
+    padding-right: 3px;
+}
+.newAddResourceDirectory .fieldContent .subPro button{
+    float: right;
+    margin-right: 45px;
+    margin-bottom: 50px;
+    width: 60px;
+    height: 20px;
+    background-color: transparent;
+    color: rgb(102, 102, 102);
+    font-size: 12px;
+    font-family: 微软雅黑;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(153, 153, 153);
+    border-image: initial;
+    border-radius: 10px;
+}
+.newAddResourceDirectory .fieldContent .subPro button:hover{
+	background:none;
+}
+.newAddResourceDirectory .fieldContent button{
+    width: 80px;
+    height: 26px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    color: white;
+    background-color: #2d7ee2;
+    border:none;
+    outline:none;
+    margin-top: 30px;
+    margin-right: 170px;
+}
+.newAddResourceDirectory .fieldContent button:hover{
+    background-color: #0e7bdd;
+}
+.newAddResourceDirectory .fieldContent .fr{
+	position:relative;
+}
+.newAddResourceDirectory .fieldContent .fr .sui-msg{
+	position:absolute;
+	top:10px;
+	right:-120px;
+	display:none;
+}
+.newAddResourceDirectory .upload.fr  .sui-msg{
+	right:-179px;
+}
+.newAddResourceDirectory .fieldContent .secondRes .select+.sui-msg{
+	right:-144px;
+	top:0px;
+}
+
+/**************************************** modifyResourceDirectory ********************************************/
+.modifyResourceDirectory{
+    width: 794px;
+    height: 580px;
+    background: white;
+    font-family:微软雅黑;
+}
+.modifyResourceDirectory .addUserPrompt{
+    width: 794px;
+    height: 40px;
+}
+.modifyResourceDirectory .addUserPrompt img{
+    width: 20px;
+    height: 20px;
+    float: left;
+    padding: 10px 4px 10px 5px;
+}
+.modifyResourceDirectory .addUserPrompt .addUserPromptWord{
+    font-size: 12px;
+    color: #666666;
+    line-height: 40px;
+    float: left;
+}
+.modifyResourceDirectory .fieldContent{
+    width: 415px;
+    height:auto;
+    margin:23px auto;
+    font-size: 14px;
+    font-family: 微软雅黑;
+    color: #333333;
+}
+.modifyResourceDirectory .fieldContent input{
+    width: 276px;
+    height: 26px;
+    font-size: 12px;
+    font-family: 微软雅黑;
+    color: #333333;
+    margin-top: 7px;
+    margin-bottom: 8px;
+}
+.modifyResourceDirectory .fieldContent .upload{
+    margin-right: 285px;
+    position: relative;
+    margin-bottom: 50px;
+}
+.modifyResourceDirectory .fieldContent .uploadPhoto{
+    width: 60px;
+    height: 60px;
+    border:1px solid #999999;
+    text-align: center;
+    font-size: 12px;
+    font-family: 微软雅黑;
+    color: #2d7ee2;
+    position: absolute;
+    top: 5px;
+    right: -66px;
+}
+.modifyResourceDirectory .fieldContent .uploadPhoto img{
+    width: 40px;
+    height: 30px;
+    margin-top: 10px;
+}
+.modifyResourceDirectory .fieldContent .uploadWord{
+    width: 110px;
+    height: 20px;
+    font-size: 12px;
+    font-family: 微软雅黑;
+    color: #666666;
+    margin-top: 25px;
+    position: absolute;
+    left: 170px;
+}
+.modifyResourceDirectory .fieldContent button{
+    width: 80px;
+    height: 26px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    color: white;
+    background-color: #2d7ee2;
+    border:none;
+    outline:none;
+    margin-top: 30px;
+    margin-right: 10px;
+}
+.modifyResourceDirectory .fieldContent .button1{
+    margin-right: 100px;
+}
+.modifyResourceDirectory .fieldContent button:hover{
+    background-color: #0e7bdd;
+}.modifyResourceDirectory .fieldContent .fr{
+	position:relative;
+}
+.modifyResourceDirectory .fieldContent .fr .sui-msg{
+	position:absolute;
+	top:10px;
+	right:-120px;
+	display:none;
+}
+.modifyResourceDirectory .upload.fr  .sui-msg{
+	right:-179px;
+}
+.modifyResourceDirectory .fieldContent .secondRes .select+.sui-msg{
+	right:-144px;
+	top:0px;
+}
+/**************************************** modifyPassword ********************************************/
+.modifyPassword{
+    width: 794px;
+    height: 450px;
+    background: white;
+    padding-top: 80px;
+}
+.modifyPassword .content{
+    width: 365px;
+    height:auto;
+    margin: 0px auto;
+    overflow: hidden;
+}
+.modifyPassword .content .userNamePrompt{
+	margin-left:74px;
+}
+.modifyPassword .content label{
+    font-family:微软雅黑;
+    font-size: 14px;
+    color: #333333;
+    display: block;
+    overflow: hidden;
+    margin-bottom: 15px;
+    float: right;
+}
+.modifyPassword .content input{
+    width: 286px;
+    height: 31px;
+    color: #666666;
+}
+.modifyPassword .content button{
+    width: 80px;
+    height: 26px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    color: white;
+    background-color: #2d7ee2;
+    border:none;
+    outline:none;
+    margin-top: 15px;
+    margin-left: 180px;
+}
+.modifyPassword .content button:hover{
+    background-color: #0e7bdd;
+}
+/*******************************************needReview**********************************/
+.needReview .needSearchTitle{
+    background-color: white;
+    overflow:hidden;
+}
+.needReview .needSearchTitle .t{
+	float: left;
+    width: 130px;
+    line-height: 40px;
+    padding-left: 27px;
+}.needReview .needSearchTitle .t.active{
+	border-bottom: 3px solid #2D7EE2;
+}
+.needReview .needSearchTitle .s{
+	float:right;
+}
+.needReview .needSearchTitle .s>div{
+	float: left;
+    line-height: 40px;
+}
+.needReview .needSearchTitle .s>div input{
+	height:22px;
+}
+.needReview .needSearchTitle .s>div button{
+	width: 30px;
+    background-color: #2D7EE2;
+    border: none;
+    margin-left: 1px;
+    height: 26px;
+    margin-right: 10px;
+}.needReview .needSearchTitle .s>div img{
+	height:20px;
+}
+.needReviewData .sui-table td{
+	text-align:center;
+	border:none;
+}
+.needReviewData{
+	margin-top:10px;
+}
+.needReviewData .sui-table thead{
+	background-color:#f5f5f5;
+	height:35px;
+}
+.needReviewData .sui-table thead>tr{
+	height:35px;
+}
+.needReviewData .sui-table.table-zebra tbody tr td{
+	line-height:35px;
+	background-color:white;
+	border-left:1px solid #E5E8EC;
+	border-bottom:1px solid #E5E8EC;
+}
+.needReviewData .sui-table.table-zebra tbody tr button{
+	width: 60px;
+    text-align: center;
+    border-radius: 15px;
+    border: 1px solid #CCC9C9;
+    background-color: white;
+    font-size: 12px;
+    line-height: 18px;
+    outline: none;
+}
+/*******************************************resourceReview**********************************/
+.resourceReview .resourceSearchTitle{
+    background-color: white;
+    overflow:hidden;
+}
+.resourceReview .resourceSearchTitle .t{
+	float: left;
+    width: 130px;
+    line-height: 40px;
+    padding-left: 27px;
+}.resourceReview .resourceSearchTitle .t.active{
+	border-bottom: 3px solid #2D7EE2;
+}
+.resourceReview .resourceSearchTitle .s{
+	float:right;
+}
+.resourceReview .resourceSearchTitle .s>div{
+	float: left;
+    line-height: 40px;
+}
+.resourceReview .resourceSearchTitle .s>div input{
+	height:22px;
+}
+.resourceReview .resourceSearchTitle .s>div button{
+	width: 30px;
+    background-color: #2D7EE2;
+    border: none;
+    margin-left: 1px;
+    height: 26px;
+    margin-right: 10px;
+}.resourceReview .resourceSearchTitle .s>div img{
+	height:20px;
+}
+.resourceReviewData .sui-table td{
+	text-align:center;
+	border:none;
+}
+.resourceReviewData{
+	margin-top:10px;
+}
+.resourceReviewData .sui-table thead{
+	background-color:#f5f5f5;
+	height:35px;
+}
+.resourceReviewData .sui-table thead>tr{
+	height:35px;
+}
+.resourceReviewData .sui-table.table-zebra tbody tr td{
+	line-height:35px;
+	background-color:white;
+	border-left:1px solid #E5E8EC;
+	border-bottom:1px solid #E5E8EC;
+}
+.resourceReviewData .sui-table.table-zebra tbody tr button{
+	width: 60px;
+    text-align: center;
+    border-radius: 15px;
+    border: 1px solid #CCC9C9;
+    background-color: white;
+    font-size: 12px;
+    line-height: 18px;
+    outline: none;
+}
+/*******************************************talentsReview**********************************/
+.talentsReview .talentsSearchTitle{
+    background-color: white;
+    overflow:hidden;
+}
+.talentsReview .talentsSearchTitle .t{
+	float: left;
+    width: 130px;
+    line-height: 40px;
+    padding-left: 27px;
+}.talentsReview .talentsSearchTitle .t.active{
+	border-bottom: 3px solid #2D7EE2;
+}
+.talentsReview .talentsSearchTitle .s{
+	float:right;
+}
+.talentsReview .talentsSearchTitle .s>div{
+	float: left;
+    line-height: 40px;
+}
+.talentsReview .talentsSearchTitle .s>div input{
+	height:22px;
+}
+.talentsReview .talentsSearchTitle .s>div button{
+	width: 30px;
+    background-color: #2D7EE2;
+    border: none;
+    margin-left: 1px;
+    height: 26px;
+    margin-right: 10px;
+}.talentsReview .talentsSearchTitle .s>div img{
+	height:20px;
+}
+.talentsReviewData .sui-table td{
+	text-align:center;
+	border:none;
+}
+.talentsReviewData{
+	margin-top:10px;
+}
+.talentsReviewData .sui-table thead{
+	background-color:#f5f5f5;
+	height:35px;
+}
+.talentsReviewData .sui-table thead>tr{
+	height:35px;
+}
+.talentsReviewData .sui-table.table-zebra tbody tr td{
+	line-height:35px;
+	background-color:white;
+	border-left:1px solid #E5E8EC;
+	border-bottom:1px solid #E5E8EC;
+}
+.talentsReviewData .sui-table.table-zebra tbody tr button{
+	width: 60px;
+    text-align: center;
+    border-radius: 15px;
+    border: 1px solid #CCC9C9;
+    background-color: white;
+    font-size: 12px;
+    line-height: 18px;
+    outline: none;
+}
+/*******************************************identity*********************************/
+.identityReview .identitySearchTitle{
+    background-color: white;
+    overflow:hidden;
+}
+.identityReview .identitySearchTitle .t{
+	float: left;
+    width: 130px;
+    line-height: 40px;
+    padding-left: 27px;
+}.identityReview .identitySearchTitle .t.active{
+	border-bottom: 3px solid #2D7EE2;
+}
+.identityReview .identitySearchTitle .s{
+	float:right;
+}
+.identityReview .identitySearchTitle .s>div{
+	float: left;
+    line-height: 40px;
+}
+.identityReview .identitySearchTitle .s>div input{
+	height:22px;
+}
+.identityReview .identitySearchTitle .s>div button{
+	width: 30px;
+    background-color: #2D7EE2;
+    border: none;
+    margin-left: 1px;
+    height: 26px;
+    margin-right: 10px;
+}.identityReview .identitySearchTitle .s>div img{
+	height:20px;
+}
+.identityReviewData .sui-table td{
+	text-align:center;
+	border:none;
+}
+.identityReviewData{
+	margin-top:10px;
+}
+.identityReviewData .sui-table thead{
+	background-color:#f5f5f5;
+	height:35px;
+}
+.identityReviewData .sui-table thead>tr{
+	height:35px;
+}
+.identityReviewData .sui-table.table-zebra tbody tr td{
+	line-height:35px;
+	background-color:white;
+	border-left:1px solid #E5E8EC;
+	border-bottom:1px solid #E5E8EC;
+}
+.identityReviewData .sui-table.table-zebra tbody tr button{
+	width: 60px;
+    text-align: center;
+    border-radius: 15px;
+    border: 1px solid #CCC9C9;
+    background-color: white;
+    font-size: 12px;
+    line-height: 18px;
+    outline: none;
+}
+/*******************************************softEva*********************************/
+.softEvaReview .softEvaSearchTitle{
+    background-color: white;
+    overflow:hidden;
+}
+.softEvaReview .softEvaSearchTitle .t{
+	float: left;
+    width: 130px;
+    line-height: 40px;
+    padding-left: 27px;
+}.softEvaReview .softEvaSearchTitle .t.active{
+	border-bottom: 3px solid #2D7EE2;
+}
+.softEvaReview .softEvaSearchTitle .s{
+	float:right;
+}
+.softEvaReview .softEvaSearchTitle .s>div{
+	float: left;
+    line-height: 40px;
+}
+.softEvaReview .softEvaSearchTitle .s>div input{
+	height:22px;
+}
+.softEvaReview .softEvaSearchTitle .s>div button{
+	width: 30px;
+    background-color: #2D7EE2;
+    border: none;
+    margin-left: 1px;
+    height: 26px;
+    margin-right: 10px;
+}.softEvaReview .softEvaSearchTitle .s>div img{
+	height:20px;
+}
+.softEvaReviewData .sui-table td{
+	text-align:center;
+	border:none;
+}
+.softEvaReviewData{
+	margin-top:10px;
+}
+.softEvaReviewData .sui-table thead{
+	background-color:#f5f5f5;
+	height:35px;
+}
+.softEvaReviewData .sui-table thead>tr{
+	height:35px;
+}
+.softEvaReviewData .sui-table.table-zebra tbody tr td{
+	line-height:35px;
+	background-color:white;
+	border-left:1px solid #E5E8EC;
+	border-bottom:1px solid #E5E8EC;
+}
+.softEvaReviewData .sui-table.table-zebra tbody tr button{
+	width: 60px;
+    text-align: center;
+    border-radius: 15px;
+    border: 1px solid #CCC9C9;
+    background-color: white;
+    font-size: 12px;
+    line-height: 18px;
+    outline: none;
+}
+/*******************************************supplyDemand*********************************/
+.supplyDemandReview .supplyDemandSearchTitle{
+    background-color: white;
+    overflow:hidden;
+}
+.supplyDemandReview .supplyDemandSearchTitle .S:nth-child(1){
+	border-right: 1px solid #E9EBEF;
+}
+.supplyDemandReview .supplyDemandSearchTitle .S{
+	float:left;
+	line-height:40px;
+	padding-left: 15px;
+    padding-right: 15px;
+}
+.supplyDemandReview .supplyDemandSearchTitle .b input{
+	margin-left: 5px;
+}
+.supplyDemandReview .supplyDemandSearchTitle .sui-form .control-group,
+.supplyDemandReview .supplyDemandSearchTitle .sui-form
+{
+	margin-bottom:0px;
+}
+.supplyDemandReview .supplyDemandSearchTitle .sui-form
+{
+	line-height:40px;
+}
+.supplyDemandReview .supplyDemandSearchTitle .sui-form.form-horizontal .control-label{
+	font-size:16px;
+	width:auto;
+}
+.supplyDemandReview .supplyDemandSearchTitle .d{
+	float:right;
+}
+.supplyDemandReview .supplyDemandSearchTitle .d button{
+	width: 60px;
+    text-align: center;
+    border-radius: 15px;
+    border: 1px solid #CCC9C9;
+    background-color: white;
+    font-size: 12px;
+    line-height: 18px;
+    outline: none;
+}
+.supplyDemandReviewData .sui-table td{
+	text-align:center;
+	border:none;
+}
+.supplyDemandReviewData {
+	margin-top:10px;
+}
+.supplyDemandReviewData .sui-table thead{
+	background-color:#f5f5f5;
+	height:35px;
+}
+.supplyDemandReviewData .sui-table thead>tr{
+	height:35px;
+}
+.supplyDemandReviewData .sui-table.table-zebra tbody tr td{
+	line-height:35px;
+	background-color:white;
+	border-left:1px solid #E5E8EC;
+	border-bottom:1px solid #E5E8EC;
+}
+.supplyDemandReviewData .sui-table.table-zebra tbody tr button{
+	width: 60px;
+    text-align: center;
+    border-radius: 15px;
+    border: 1px solid #CCC9C9;
+    background-color: white;
+    font-size: 12px;
+    line-height: 18px;
+    outline: none;
+}
+/*******************************************invOrg*********************************/
+.invOrgReview .invOrgSearchTitle{
+    background-color: white;
+    overflow:hidden;
+}.invOrgReview .invOrgSearchTitle:nth-child(2){
+	margin-top:10px;
+	border-bottom: 1px solid #CCCED2;
+}
+.invOrgReview .invOrgSearchTitle .S:nth-child(1){
+	border-right: 1px solid #E9EBEF;
+}
+.invOrgReview .invOrgSearchTitle .S{
+	float:left;
+	line-height:40px;
+	padding-left: 15px;
+    padding-right: 15px;
+}
+.invOrgReview .invOrgSearchTitle .b input{
+	margin-left: 5px;
+}
+.invOrgReview .invOrgSearchTitle .d{
+	float:right;
+}
+.invOrgReview .invOrgSearchTitle .d button{
+	width: 60px;
+    text-align: center;
+    border-radius: 15px;
+    border: 1px solid #CCC9C9;
+    background-color: white;
+    font-size: 12px;
+    line-height: 18px;
+    outline: none;
+}
+.invOrgReview .invOrgSearchTitle .c select{
+	width:120px;
+	margin-left:15px;
+}
+.invOrgReview .invOrgSearchTitle .t{
+	float: left;
+    width: 130px;
+    line-height: 40px;
+    padding-left: 27px;
+}.invOrgReview .invOrgSearchTitle .t.active{
+	border-bottom: 3px solid #2D7EE2;
+}
+.invOrgReviewData .sui-table td{
+	text-align:center;
+	border:none;
+}
+.invOrgReviewData .sui-table thead{
+	background-color:#f5f5f5;
+	height:35px;
+}
+.invOrgReviewData .sui-table thead>tr{
+	height:35px;
+}
+.invOrgReviewData .sui-table.table-zebra tbody div{
+	line-height: 25px;
+}
+.invOrgReviewData .sui-table.table-zebra tbody tr td{
+	line-height:35px;
+	background-color:white;
+	border-left:1px solid #E5E8EC;
+	border-bottom:1px solid #E5E8EC;
+}
+.invOrgReviewData .sui-table.table-zebra tbody tr button{
+	width: 60px;
+    text-align: center;
+    border-radius: 15px;
+    border: 1px solid #CCC9C9;
+    background-color: white;
+    font-size: 12px;
+    line-height: 18px;
+    outline: none;
+}
+/*******************************************financingInfo*********************************/
+.finInfoReview .finInfoSearchTitle{
+    background-color: white;
+    overflow:hidden;
+}
+.finInfoReview .finInfoSearchTitle .S:nth-child(1){
+	border-right: 1px solid #E9EBEF;
+}
+.finInfoReview .finInfoSearchTitle .S{
+	float:left;
+	line-height:40px;
+	padding-left: 15px;
+    padding-right: 15px;
+}
+.finInfoReview .finInfoSearchTitle .b input{
+	margin-left: 5px;
+}
+.finInfoReview .finInfoSearchTitle .c input{
+	margin-left: 5px;
+}
+.finInfoReview .finInfoSearchTitle .d{
+	float:right;
+}
+.finInfoReview .finInfoSearchTitle .d button{
+	width: 60px;
+    text-align: center;
+    border-radius: 15px;
+    border: 1px solid #CCC9C9;
+    background-color: white;
+    font-size: 12px;
+    line-height: 18px;
+    outline: none;
+}
+.finInfoReviewData .export{
+	line-height: 35px;
+    padding-left: 10px;
+}
+.finInfoReviewData .sui-table td{
+	text-align:center;
+	border:none;
+}
+.finInfoReviewData{
+	margin-top:10px;
+}
+.finInfoReviewData .sui-table thead{
+	background-color:#f5f5f5;
+	height:35px;
+}
+.finInfoReviewData .sui-table thead>tr{
+	height:35px;
+}
+.finInfoReviewData .sui-table.table-zebra tbody tr td{
+	line-height:35px;
+	background-color:white;
+	border-left:1px solid #E5E8EC;
+	border-bottom:1px solid #E5E8EC;
+}
+.finInfoReviewData .sui-table.table-zebra tbody tr button{
+	width: 60px;
+    text-align: center;
+    border-radius: 15px;
+    border: 1px solid #CCC9C9;
+    background-color: white;
+    font-size: 12px;
+    line-height: 18px;
+    outline: none;
+}
+/*******************************************professorManage*********************************/
+.proManReview .proManSearchTitle{
+    background-color: white;
+    overflow:hidden;
+}
+.proManReview .proManSearchTitle .S:nth-child(1){
+	border-right: 1px solid #E9EBEF;
+}
+.proManReview .proManSearchTitle .S{
+	float:left;
+	line-height:40px;
+	padding-left: 15px;
+    padding-right: 15px;
+}
+.proManReview .proManSearchTitle .b input{
+	margin-left: 5px;
+}
+.proManReview .proManSearchTitle .c input{
+	margin-left: 5px;
+}
+.proManReview .proManSearchTitle .d{
+	float:right;
+}
+.proManReview .proManSearchTitle .d button{
+	width: 60px;
+    text-align: center;
+    border-radius: 15px;
+    border: 1px solid #CCC9C9;
+    background-color: white;
+    font-size: 12px;
+    line-height: 18px;
+    outline: none;
+}
+.proManReviewData .addPro{
+	line-height: 35px;
+	padding-left:10px;
+}
+.proManReviewData .addPro img{
+	height:20px;
+	margin-bottom: 3px;
+    margin-right: 3px;
+}
+.proManReviewData .sui-table td{
+	text-align:center;
+	border:none;
+}
+.proManReviewData{
+	margin-top:10px;
+}
+.proManReviewData .sui-table thead{
+	background-color:#FFFFFF;
+	height:35px;
+}
+.proManReviewData .sui-table thead>tr{
+	height:35px;
+}
+.proManReviewData .sui-table.table-zebra tbody tr td{
+	line-height:25px;
+	background-color:white;
+	border-left:1px solid #E5E8EC;
+	border-bottom:1px solid #E5E8EC;
+}
+.proManReviewData .sui-table.table-zebra tbody tr:nth-child(odd) td{
+	background-color:#f2f2f2;
+}
+.proManReviewData .sui-table.table-zebra tbody tr button{
+	width: 60px;
+    text-align: center;
+    border-radius: 15px;
+    border: 1px solid #CCC9C9;
+    background-color: white;
+    font-size: 12px;
+    line-height: 18px;
+    outline: none;
+    margin-right: 10px;
+}
+/****************************************needReviewReview*********************************/
+.needReRe .tTable{
+	border: 1px solid #DFE2E5;
+}
+.needReRe .tTitle{
+	text-align: center;
+    background-color: #E6F2FC;
+    border-bottom:1px solid #86BDEE;
+    position: relative;
+}
+
+.needReRe .tTitle h1{
+	line-height:75px;
+}
+.needReRe .tTitle img{
+	position: absolute;
+    width: 121px;
+    /* left: 15px; */
+    /* float: right; */
+    right: 5px;
+    top: 5px;
+    filter: alpha(opacity=50);
+    -moz-opacity: 0.5;
+    -khtml-opacity: 0.5;
+    opacity: .5;
+}
+.needReRe .tHead .tTr{
+	line-height:40px;
+	overflow:hidden;
+	border-bottom:1px solid #86BDEE;
+}
+.needReRe .tHead .tTr div{
+	float:left;
+	text-align:center;
+}
+.needReRe .tHead .tTr .tName {
+	width:95px;
+	background-color:#CFE5F8;
+}
+.needReRe .tHead .tTr .tValue {
+	background-color:#fff;
+	font-size:14px;
+}
+.needReRe .tBody{
+	padding-top: 30px;
+    background-color: white;
+}
+.needReRe .tBody .item>div{
+	float:left;
+}
+.needReRe .tBody .item {
+	overflow:hidden;
+	font-size:18px;
+	padding-left:20px;
+}
+.needReRe .tBody .item:nth-child(1){
+	margin-bottom: 30px;
+}
+.needReRe .tBody .item .itemStyle{
+	width: 10px;
+    height: 10px;
+    background-color: #0E7BDD;
+    border-radius: 5px;
+    display: inline-block;
+    margin-right:3px;
+}
+.needReRe .tBody .item .itemName{
+	color: #0E7BDD;
+}
+.needReRe .tBody .item .itemContent{
+	width: 740px;
+    background-color: #F3F8FD;
+    margin-top: 20px;
+    margin-left: 16px;
+    font-size:14px;
+    padding:12px;
+}
+.needReRe .tBody .item .itemContent>span{
+	padding-left: 20px;
+    font-size: 16px;
+    padding-top: 5px;
+    line-height: 30px;
+    display: inline-block;
+}
+.needReRe .tBody .item .itemContent .loadPreview{
+	width:100px;
+	height:100px;
+	margin-right:10px;
+	background-color: #DCEBFA;
+	float:left;
+}
+.needReRe .tBody .item .itemContent .loadPreview>div:nth-child(1){
+	text-align: center;
+    padding-top: 10px;
+}
+.needReRe .tBody .item .itemContent .loadPreview>div:nth-child(1) img{
+	height:50px;
+}
+.needReRe .tBody .item .itemContent .loadPreview>div:nth-child(2){
+	font-size:14px;
+	text-align:center;
+	margin-top:10px;
+}
+.needReRe .tBody .item .itemContent .loadPreview>div:nth-child(2) span{
+	margin-left:2px;
+	margin-right:2px;
+}
+.needReRe .tHandle{
+	border: 1px solid #DFE2E5;
+	overflow:hidden;
+}
+.needReRe .tHandle>div{
+    width: 50%;
+    float: left;
+    margin-top: 10px;
+    background-color: white;
+    line-height: 50px;
+    color:white;
+    text-align:center;
+}
+.needReRe .tHandle .refuse>div{
+	float:right;
+	background-color:red;
+	margin-right:10px;
+	padding-left: 40px;
+    padding-right: 40px;
+}
+.needReRe .tHandle .pass>div{
+
+	float:left;
+	background-color:#2D7EE2;
+	margin-left:10px;
+	padding-left: 40px;
+    padding-right: 40px;
+}
+
+/**************************************** resourceReviewReview ********************************************/
+.needReRe .tBody .item .itemContent .img{
+    width: 210px;
+    height:120px;
+    padding:10px;
+    float:left;
+}
+.needReRe .tBody .item .itemContent .img img{
+    width:210px;
+    height:120px;
+
+}
+.needReRe .tBody .item .itemContent .imgId img{
+    float: left;
+    height: 150px;
+    width: 226px;
+    margin: 0 10px;
+}
+.needReRe .tBody .item .itemContent p{
+    height: 45px;
+    line-height: 45px;
+    clear: both;
+    background: #b3d0f4;
+    width: 719px;
+    margin: 10px auto;
+    margin-top: 160px;
+}
+.needReRe .tBody .item .itemContent p span{
+    display:block;
+    float: left;
+    text-align: center;
+    width: 33.33%;
+}
+/****************************************  needDetails *****************************************/
+.needDetails{
+    width: 794px;
+    background: white;
+    padding-bottom: 10px;
+}
+.needDetails .progress{
+    width: 794px;
+    height: 100px;
+    padding-top: 30px;
+    background: #e6f3fc;
+}
+.needDetails .progress .sui-steps-round{
+    width: 550px;
+    margin: 0 auto;
+}
+.needDetails .progress .times{
+    width:700px;
+    height:30px;
+    font-size:14px;
+    color:#333333;
+    margin-left:90px;
+}
+.needDetails .progress .times .time{
+    width:132px;
+    height:30px;
+    float:left;
+}
+.needDetails .details{
+    height: auto;
+    width: 794px;
+    background-color: white;
+    padding-bottom: 30px;
+}
+.needDetails .details .introduction{
+    padding: 25px 25px 25px 25px;
+    background-color: white;
+    border-bottom:1px solid #e6f3fc;
+}
+.needDetails .details .introduction .ct1{
+    width: 744px;
+    height: 35px;
+}
+.needDetails .details .introduction .ct1 h2{
+     color: #333333;
+     float: left;
+     line-height: 30px;
+ }
+.needDetails .details .introduction .ct1 .fee{
+    color: #e73533;
+    line-height: 45px;
+    font-size: 26px;
+    float: right;
+}
+.needDetails .details .introduction .ct1 .needing{
+    float: left;
+    width: 90px;
+    line-height: 30px;
+    font-size: 18px;
+    color: white;
+    background: #f9b552;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 15px;
+    text-align: center;
+    margin-left: 5px;
+}
+.needDetails .details .introduction .ct2{
+    font-size: 14px;
+    width: 744px;
+    margin-top: 10px;
+    height: 30px;
+}
+.needDetails .details .introduction .ct2 img{
+    float: left;
+    width: 17px;
+    height: 19px;
+    margin-left: 10px;
+}
+.needDetails .details .introduction .ct2>span:nth-child(5){
+    float: right;
+    margin-top: -9px;
+}
+.needDetails .details .introduction .ct2 span:nth-child(1){
+    color: #2D7EE2;
+    float: left;
+}
+.needDetails .details .introduction .ct3{
+    width: 270px;
+    height: auto;
+    font-size: 14px;
+    color: #666666;
+}
+.needDetails .details .title,.needDetails .comments .title{
+    width: 770px;
+    height: 50px;
+    padding-left: 24px;
+    font-size: 18px;
+    color:#2D7EE2;
+    line-height: 50px;
+    position: relative;
+}
+.needDetails .details .title .circle,.needDetails .comments .title .circle{
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    left: 12px;
+    top: 22px;
+    background-color: #2D7EE2;
+    text-align: center;
+    border-radius: 10px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+}
+.needDetails .details .needDetailsInfo{
+    min-height: 300px;
+    width: 744px;
+    background: #f3f8fc;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+.needDetails .details .enclosure{
+    height: 120px;
+    width: 744px;
+    background: #f3f8fc;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+.needDetails .details .enclosure .enclosures{
+    width: 120px;
+    height: 120px;
+    background: #dbebfa;
+}
+.needDetails .details .enclosure .enclosures img{
+    width: 60px;
+    height: 60px;
+    padding: 10px 30px 10px 30px;
+    margin-bottom: 0px;
+}
+.needDetails .details .enclosure .enclosures .download{
+    float: left;
+    cursor: pointer;
+    margin:0px 3px 0px 25px;
+}
+.needDetails .details .enclosure .enclosures .preview{
+    cursor: pointer;
+    margin-right: 20px;
+}
+.needDetails .comments{
+    width: 794px;
+    height: 450px;
+    background: white;
+    margin-top: 10px;
+}
+.needDetails .comments .commentArea{
+    width: 750px;
+    height: 180px;
+    background: #dbebfa;
+    margin:0px auto;
+}
+.needDetails .comments .commentArea .box{
+    width: 710px;
+    height: 59px;
+    margin-left: 20px;
+    border-bottom:1px solid #cccccc;
+}
+.needDetails .comments .commentArea .box .box1{
+    width: 710px;
+    height: 10px;
+    padding-top: 7px;
+    font-size: 14px;
+    color: #2D7EE2;
+}
+.needDetails .comments .commentArea .box .box1 .commentTime{
+    color: #666666;
+}
+.needDetails .comments .commentArea .box .box2{
+    width: 710px;
+    color: #333333;
+    font-size: 14px;
+    margin-top: 15px;
+}
+/***********************************************backResourceDetail***********************************************/
+.backResourceDetail{
+    width:794px;
+    min-height:280px;
+    background:#fff;
+}
+.backResourceDetail .header{
+    width: 794px;
+    height: 39px;
+    background: #dbebfa;
+    border-bottom:1px solid #cccccc;
+}
+.backResourceDetail .header div{
+    list-style-type:none;
+    float: left;
+    font-size: 15px;
+    color: #333333;
+    line-height: 38px;
+    width: 150px;
+    text-align: center;
+}
+.backResourceDetail .header .detail.active{
+    border-bottom:4px solid #2d7ee2;
+    color: #2d7ee2;
+}
+.backResourceDetail .header .evaluation.active{
+    border-bottom:2px solid #2d7ee2;
+    color: #2d7ee2;
+}
+.backResourceDetail .contents{
+    width:794px;
+    height:auto;
+    background:white;
+    font-size: 14px;
+}
+.backResourceDetail .contents .detail{
+    min-height:500px;
+}
+.backResourceDetail .contents .resource_con .showAddress {
+	padding-top: 10px;
+}
+.backResourceDetail .contents .resource_con .Add_style {
+    width: 80%;
+    border: 1px solid #2283e1;
+    height: 32px;
+    line-height:32px;
+    margin-right: auto;
+    margin-bottom: 15px;
+    margin-left: auto;
+    text-align: center;
+}
+.backResourceDetail .contents .resource_con .Add_style a{
+    font-size:14px;
+}
+.backResourceDetail .contents .evaluation img{
+    width: 12px;
+    height: 10px;
+}
+.backResourceDetail .contents .evaluation img:not(:nth-child(1)){
+    margin-left: -4px;
+}
+.backResourceDetail .contents .evaluation .evaluate{
+    width: 734px;
+    height: auto;
+    padding: 20px 30px 20px 30px;
+}
+.backResourceDetail .contents .evaluation .evaluate:not(:nth-child(1)){
+    border-top: 1px solid #cccccc;
+}
+.backResourceDetail .contents .evaluation .evaluate .eval:not(:nth-child(1)){
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+.backResourceDetail .contents .evaluation .evaluate .eval span{
+     color: #2d7ee2;
+ }
+.backResourceDetail .contents .evaluation .evaluate .eval .eval1{
+    width: 70px;
+    text-align: right;
+    font-size: 12px;
+    color: #666666;
+    line-height: 20px;
+    float: left;
+}
+.backResourceDetail .contents .evaluation .evaluate .eval:nth-child(4) .eval1{
+    color: #2d7ee2;
+}
+.backResourceDetail .contents .evaluation .evaluate .eval .eval2{
+    position: relative;
+    font-size: 12px;
+    line-height: 20px;
+    float: left;
+    margin-left: 25px;
+    width: 550px;
+}
+/****************************************  talentDetails *****************************************/
+.talentDetails{
+    width: 794px;
+    background: white;
+    padding-bottom: 10px;
+}
+.talentDetails .details{
+    height: auto;
+    width: 794px;
+    background-color: white;
+    padding-bottom: 30px;
+}
+.talentDetails .details .introduction{
+    padding: 25px 25px 25px 25px;
+    background-color: white;
+    border-bottom:1px solid #e6f3fc;
+}
+.talentDetails .details .introduction .ct1{
+    width: 744px;
+    height: 35px;
+}
+.talentDetails .details .introduction .ct1 h2{
+    color: #333333;
+    float: left;
+    line-height: 30px;
+}
+.talentDetails .details .introduction .ct1 .fee{
+    color: #e73533;
+    line-height: 75px;
+    font-size: 26px;
+    float: right;
+}
+.talentDetails .details .introduction .ct1 .needing{
+    float: left;
+    width: 90px;
+    line-height: 30px;
+    font-size: 18px;
+    color: white;
+    background: #f9b552;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 15px;
+    text-align: center;
+    margin-left: 5px;
+}
+.talentDetails .details .introduction .ct2{
+    font-size: 14px;
+    width: 744px;
+    margin-top: 10px;
+    height: 30px;
+}
+.talentDetails .details .introduction .ct2 img{
+    float: left;
+    width: 17px;
+    height: 19px;
+    margin-left: 10px;
+}
+.talentDetails .details .introduction .ct2 span:nth-child(1){
+    color: #2D7EE2;
+    float: left;
+}
+.talentDetails .details .introduction .ct3{
+    width: 270px;
+    height: auto;
+    font-size: 14px;
+    color: #666666;
+}
+.talentDetails .details .title{
+    width: 770px;
+    height: 50px;
+    padding-left: 24px;
+    font-size: 18px;
+    color:#2D7EE2;
+    line-height: 50px;
+    position: relative;
+}
+.talentDetails .details .title .circle{
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    left: 12px;
+    top: 22px;
+    background-color: #2D7EE2;
+    text-align: center;
+    border-radius: 10px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+}
+.talentDetails .details .workType{
+    min-height: 100px;
+    width: 744px;
+    background: #f3f8fc;
+    margin-left: 25px;
+    margin-right: 25px;
+    padding-top: 5px;
+    padding-left: 10px;
+}
+.talentDetails .details .workType div{
+    margin-top: 7px;
+}
+.talentDetails .details .needDetail{
+    min-height: 300px;
+    width: 744px;
+    background: #f3f8fc;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+.talentDetails .details .workDuty{
+    min-height: 150px;
+    width: 744px;
+    background: #f3f8fc;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+.talentDetails .details .personAsk{
+    min-height: 200px;
+    width: 744px;
+    background: #f3f8fc;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+.talentDetails .details .enclosure{
+    height: 120px;
+    width: 744px;
+    background: #f3f8fc;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+.talentDetails .details .enclosure .enclosures{
+    width: 120px;
+    height: 120px;
+    background: #dbebfa;
+}
+.talentDetails .details .enclosure .enclosures img{
+    width: 60px;
+    height: 60px;
+    padding: 10px 30px 10px 30px;
+    margin-bottom: 0px;
+}
+.talentDetails .details .enclosure .enclosures .download{
+    float: left;
+    cursor: pointer;
+    margin:0px 3px 0px 25px;
+}
+.talentDetails .details .enclosure .enclosures .preview{
+    cursor: pointer;
+    margin-right: 20px;
+}

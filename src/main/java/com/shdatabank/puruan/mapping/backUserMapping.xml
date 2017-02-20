@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.BackUserDao">
+    <!-- 插入后台用户的信息 -->
+    <insert id="insertBackUser" parameterType="com.shdatabank.puruan.model.BackUser"
+    useGeneratedKeys="true" keyProperty="userId">
+        <![CDATA[
+            INSERT INTO back_user(user_alias,user_name,user_pwd,user_mobile,
+            user_email,create_datetime) 
+            VALUES(
+                   #{userAlias,jdbcType=VARCHAR},
+                   #{userName,jdbcType=VARCHAR},
+                   #{userPwd,jdbcType=VARCHAR},
+                   #{userMobile,jdbcType=VARCHAR},
+                   #{userEmail,jdbcType=VARCHAR},
+                   NOW()
+                  )
+        ]]>
+    </insert>
+    <!-- 插入用户权限的映射表 -->
+    <insert id="insertBackUserRole" useGeneratedKeys="true" parameterType="java.util.List">
+        INSERT INTO back_user_role(user_id,role_id) 
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userId},#{item.roleId})
+        </foreach>
+    </insert>
+    
+    <!-- 更新后台用户的信息 -->
+    <update id="updateBackUser" parameterType="com.shdatabank.puruan.model.BackUser">
+		UPDATE back_user SET 
+		<if test="null != userId and '' != userId">
+    		user_id = #{userId},
+		</if>
+		<if test="null != userAlias and '' != userAlias">
+            user_alias = #{userAlias,jdbcType=VARCHAR},
+        </if>
+        <if test="null != userDepartment and '' != userDepartment">
+            user_department = #{userDepartment,jdbcType=VARCHAR},
+        </if>
+        <if test="null != userMobile and '' != userMobile">
+            user_mobile = #{userMobile,jdbcType=VARCHAR},
+        </if>
+        <if test="null != userEmail and '' != userEmail">
+            user_email = #{userEmail,jdbcType=VARCHAR}
+        </if>            
+		WHERE user_id = #{userId,jdbcType=INTEGER}
+    </update>
+    <!-- 更新用户权限映射 -->
+    <update id="updateBackUserRole" parameterType="java.lang.Integer">
+        <![CDATA[
+            DELETE FROM back_user_role  
+            WHERE user_id = #{0,jdbcType=INTEGER}
+        ]]>
+    </update>
+    
+    <!-- 删除后台用户 -->
+    <delete id="deleteBackUser">
+        <![CDATA[
+            UPDATE back_user SET active = #{0,jdbcType=BIT} WHERE 
+            user_id = #{1,jdbcType=INTEGER}
+        ]]>
+    </delete>
+    <!-- 删除用户权限映射 -->
+    <delete id="deleteBackUserRole">
+        <![CDATA[
+            DELETE FROM back_user_role  
+            WHERE user_id = #{0,jdbcType=INTEGER}
+        ]]>
+    </delete>
+    
+    <!-- 判断用户名是否存在 -->
+    <select id="selectBackUserName" resultType="java.lang.Integer" parameterType="java.lang.String">
+        <![CDATA[
+            SELECT count(*) FROM back_user WHERE user_name = #{0,jdbcType=VARCHAR}
+        ]]>
+    </select>
+
+    <!-- 查询后台用户的信息 -->
+    <select id="selectBackUser" resultMap="selectBackUserMap">
+        <![CDATA[
+            SELECT user_id,user_alias,user_name,user_pwd,user_department,
+            user_mobile,user_email,create_datetime,active 
+            FROM back_user WHERE user_id = #{0,jdbcType=VARCHAR} 
+            AND active = #{1,jdbcType=BIT}
+        ]]>
+    </select>
+    <!-- 查询后台用户的结果 -->
+    <resultMap type="com.shdatabank.puruan.model.BackUser" id="selectBackUserMap">
+        <id property="userId" column="user_id" />
+        <result property="userAlias" column="user_alias" />
+        <result property="userName" column="user_name" />
+        <result property="userPwd" column="user_pwd" />
+        <result property="userDepartment" column="user_department" />
+        <result property="userMobile" column="user_mobile" />
+        <result property="userEmail" column="user_email" />
+        <result property="createDatetime" column="create_datetime" />
+        <result property="active" column="active" />
+    </resultMap>
+    
+    <!-- 查询后台用户的结果 -->
+    <resultMap type="com.shdatabank.puruan.model.BackUser" id="selectAllBackUserMap">
+        <id property="userId" column="user_id" />
+        <result property="userAlias" column="user_alias" />
+        <result property="userName" column="user_name" />
+        <result property="userPwd" column="user_pwd" />
+        <result property="userDepartment" column="user_department" />
+        <result property="userMobile" column="user_mobile" />
+        <result property="userEmail" column="user_email" />
+        <result property="createDatetime" column="create_datetime" />
+        <result property="active" column="active" />
+        <result property="backAllUserRoles" column="bname" />
+    </resultMap>
+    
+    <!-- 查询全部后台用户的信息 -->
+    <!-- <select id="selectAllBackUser" resultMap="selectBackUserMap" parameterType="com.shdatabank.puruan.model.BackUser">
+        <![CDATA[
+            SELECT user_id,user_alias,user_name,user_pwd,user_department,
+            user_mobile,user_email,register_datetime,active 
+            FROM back_user WHERE active is null
+        ]]>
+    </select> -->
+    
+    <!-- 查询所有部门信息 -->
+    <select id="selectAllBackUserDepartment" resultType="java.lang.String">
+        <![CDATA[
+            SELECT DISTINCT user_department FROM back_user WHERE active = #{0,jdbcType=BIT}
+        ]]>
+    </select>
+    
+    <!-- 根据条件查询部用户信息 -->
+    <select id="selectAllBackUser" resultMap="selectAllBackUserMap" parameterType="com.shdatabank.puruan.model.BackUser">
+            SELECT bu.user_id,bu.user_alias,bu.user_name,bu.user_pwd,
+            bu.user_department,bu.user_mobile,bu.user_email,bu.create_datetime,
+            bu.active, GROUP_CONCAT(br.role_name) bname 
+            FROM back_user bu LEFT JOIN back_user_role bur 
+            ON bu.user_id = bur.user_id LEFT JOIN back_roles br 
+            ON bur.role_id = br.role_id
+            <where>
+                ((bu.active = 0 AND br.active = 0) OR (bu.active = 0 AND br.active is null))
+                <if test="userAlias!=null and userAlias!=''">
+                    AND bu.user_alias LIKE '%${userAlias}%' 
+                </if>           
+            </where>
+            GROUP BY bu.user_id
+            ORDER BY bu.user_name
+    </select>
+    
+    <!-- 根据userId查询用户权限 -->
+    <select id="selectBackUserRole" resultMap="selectBackUserRoleMap">
+        <![CDATA[
+            SELECT user_role_id,user_id,r1.role_id,role_name  
+            FROM back_user_role r1 INNER JOIN back_roles r2 ON 
+            r1.role_id = r2.role_id 
+            WHERE user_id = #{0,jdbcType=INTEGER}
+        ]]>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.BackUserRole" id="selectBackUserRoleMap">
+        <id property="userRoleId" column="user_role_id" />
+        <result property="userId" column="user_id" />
+        <result property="roleId" column="role_id" />
+        <result property="roleName" column="role_name" />
+        <result property="active" column="active" />
+    </resultMap>
+    
+    <!-- 根据roleId查询权限名称 -->
+    <select id="selectBackUserRoleName" resultType="java.lang.String">
+        <![CDATA[
+            SELECT role_name FROM back_roles WHERE role_id = 
+            #{0,jdbcType=INTEGER} AND active = #{1,jdbcType=BIT}
+        ]]>
+    </select>
+</mapper>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.MyShoppingCardDao">
+
+	<!-- 我的购物车的资源Map -->
+	<resultMap id="selectShoppingCartMap" type="com.shdatabank.puruan.model.ShoppingCart">
+		<id property="shoppingCartId" column="shopping_cart_id" />
+		<result property="userId" column="user_id" />
+		<result property="goodsType" column="goods_type" />
+		<result property="goodsId" column="goods_id" />
+		<result property="goodsNumber" column="goods_number" />
+		<result property="active" column="active" />
+		<collection property="creativeResources" ofType="com.shdatabank.puruan.model.CreativeResource">
+			<id property="creativeResourceId" column="creative_resource_id" />
+			<result property="resourceName" column="resource_name" />
+			<result property="resourcePrice" column="resource_price" />
+			<result property="resourceNumber" column="resource_number" />
+		</collection>
+	</resultMap>
+	<!-- 我的购物车Map -->
+		<resultMap id="selectCartMap" type="com.shdatabank.puruan.model.ShoppingCart">
+		<id property="shoppingCartId" column="shopping_cart_id" />
+		<result property="userId" column="user_id" />
+		<result property="goodsType" column="goods_type" />
+		<result property="goodsId" column="goods_id" />
+		<result property="goodsNumber" column="goods_number" />
+		<result property="active" column="active" />
+	</resultMap>
+	<!-- 创意资源Map -->
+	<resultMap type="com.shdatabank.puruan.model.CreativeResource" id="ctResources">
+			<id property="creativeResourceId" column="creative_resource_id" />
+			<result property="userId" column="user_id" />
+			<result property="resourceName" column="resource_name" />
+			<result property="resourceImage" column="resource_image" />
+			<result property="resourceImageName" column="resource_image_name" />
+			<result property="resourceNumber" column="resource_number" />
+			<result property="resourceDescription" column="resource_description" />
+			<result property="showAddress" column="show_address" />
+			<result property="resourceAttach" column="resource_attach" />
+			<result property="resourceAttachName" column="resource_attach_name" />
+			<result property="resourcePrice" column="resource_price" />
+			<result property="resourceStatus" column="resource_status" />
+			<result property="active" column="active" />
+			<result property="publishDatetime" column="publish_datetime" />
+	</resultMap>
+	
+	<resultMap type="com.shdatabank.puruan.model.CreativeResource" id="selectMyShopCardMap">
+			<id property="creativeResourceId" column="creative_resource_id" />
+			<result property="shoppingCardId" column="shopping_cart_id" />
+			<result property="resourceName" column="resource_name" />
+			<result property="resourceImage" column="resource_image" />
+			<result property="resourceNumber" column="resource_number" />
+			<result property="resourcePrice" column="resource_price" />
+			<result property="shoppingNum" column="goods_number" />
+			<result property="publishName" column="userName" />
+			<result property="resourceType" column="goods_type" />
+			<result property="isHouse" column="is_house" />
+	</resultMap>
+	
+	<sql id="shopCar_columns">
+		sc.shopping_cart_id,
+		cr.creative_resource_id,
+		cr.resource_name,
+		cr.resource_price,
+		sc.goods_number
+	</sql>
+	<!-- 查询我的购物车列表 -->
+	<select id="selectShCard" resultMap="selectMyShopCardMap">
+		SELECT tsc.shopping_cart_id,tcr.creative_resource_id,tcr.resource_name,tcr.resource_image,tcr.resource_number,
+		tcr.resource_price,tsc.goods_number,IFNULL(tc.company_name,IFNULL(tu.user_alias,tu.user_name)) as userName,tsc.goods_type,
+		(
+		SELECT COUNT(*) FROM user_house uh
+		WHERE uh.house_resource_id = tcr.creative_resource_id
+		AND uh.house_type = 700005
+		) is_house
+		FROM shopping_cart tsc LEFT JOIN creative_resource tcr ON tsc.goods_id = tcr.creative_resource_id 
+        JOIN `user` tu ON tsc.user_id=tu.user_id=#{userId} LEFT JOIN company tc ON tu.company_id = tc.company_id 
+        WHERE tsc.active=0
+	</select>
+	<!-- 根据购物车中ID查询出库存数量 -->
+	<select id="selectCrResource" resultType="java.lang.Integer" parameterType="java.lang.Long">
+		SELECT resource_number from creative_resource 
+		<where>
+		 	creative_resource_id = #{goodsId} and user_id = #{userId} and active=0
+		</where>
+	</select>
+	<!-- 查询购物车中ID是否已经存在 -->
+	<select id="selectCardId" resultType="java.lang.Integer">
+		SELECT count(*) from shopping_cart 
+		where goods_id=#{goodsId} and user_id = #{userId} and active=0
+	</select>
+	<!-- 新增我的购物车 -->
+	<insert id="insertShCard" parameterType="com.shdatabank.puruan.model.ShoppingCart">
+		INSERT INTO shopping_cart
+			(user_id,goods_id,goods_number,goods_type)
+		values
+			(#{userId},#{goodsId},#{goodsNumber},#{goodsType})
+	</insert>
+	<!-- 假删除我的购物车 -->
+	<!-- <delete id="deleteShCard" parameterType="java.lang.Long" >
+			delete from shopping_cart where shopping_cart_id = #{shoppingCartId}
+	</delete> -->
+	<update id="deleteShCard" parameterType="java.lang.Long">
+		UPDATE shopping_cart set  active = 1 where shopping_cart_id = #{shoppingCartId}
+	</update>
+	<update id="updateShCardAdd" parameterType="com.shdatabank.puruan.model.ShoppingCart">
+		update shopping_cart set goods_number = (goods_number+#{goodsNumber}) where user_id=#{userId} and goods_id=#{goodsId}
+	</update>
+	
+	<!-- 修改购物车的数量 -->
+	<update id="updateShCard" parameterType="com.shdatabank.puruan.model.ShoppingCart">
+		UPDATE shopping_cart 
+				<set>
+					<trim suffixOverrides=",">
+						 <if test="null != goodsType and '' != goodsType">
+							goods_type = #{goodsType},
+						</if>
+						 <if test="null != goodsNumber and '' != goodsNumber">
+							goods_number = #{goodsNumber}
+						</if>
+					</trim>
+				</set> 
+			where  user_id=#{userId} and goods_id=#{goodsId}
+	</update>
+	<!-- 点击结算按钮 -->
+	<select id="selectAccount" resultMap="selectMyShopCardMap">
+		SELECT tsc.shopping_cart_id,tcr.creative_resource_id,tcr.resource_name,tcr.resource_image,tcr.resource_number,
+		tcr.resource_price,tsc.goods_number,IFNULL(tc.company_name,IFNULL(tu.user_alias,tu.user_name)) as userName,tsc.goods_type,
+		(
+		SELECT COUNT(*) FROM user_house uh
+		WHERE uh.house_resource_id = tcr.creative_resource_id
+		AND uh.house_type = 700005
+		) is_house
+		FROM shopping_cart tsc LEFT JOIN creative_resource tcr ON tsc.goods_id = tcr.creative_resource_id 
+        JOIN `user` tu ON tsc.user_id=tu.user_id=#{userId} LEFT JOIN company tc ON tu.company_id = tc.company_id 
+        WHERE tsc.active=0 and  tcr.creative_resource_id in   
+		<foreach collection="ids" index="index" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+	</select>
+	<!-- 购物车的结算 -->
+	<insert id="insertAccount" parameterType="com.shdatabank.puruan.model.CeativeResourceTransaction">
+		INSERT INTO ceative_resource_transaction 
+								(
+								buy_user_id,
+								creative_resource_id,
+								transaction_number,
+								transaction_price,
+								transaction_money,
+								transaction_datetime
+								) 
+						VALUES(
+								#{buyUserId},
+								#{creativeResourceId},
+								#{transactionNumber},
+								#{transactionPrice},
+								#{transactionMoney},
+								NOW()
+								)
+	</insert>
+	
+</mapper>

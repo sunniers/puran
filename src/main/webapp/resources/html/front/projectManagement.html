@@ -1,0 +1,153 @@
+<!--路径-->
+<div class="nav">
+	<span>首页</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>项目管理</span>
+</div>
+<!--内容详情-->
+<div class="contentInfo">
+	<div class="investment_f">
+		<div class="borderInves">
+			<!-- 边框 -->
+			<div class="investment_title">
+				<div class="on" data-id="entered">已报名</div>
+				<div data-id="noAccept">未接纳</div>
+				<div data-id="conducting">进行中</div>
+				<div data-id="done">已完成</div>
+				<label> <input type="search" name="soso" class="soSo"
+					placeholder="搜索" /> <input type="submit" class="sosoSub" value="" />
+				</label>
+			</div>
+			<!--已报名  -->
+			<div class="investment_con">
+				<div class="investment_con_list entered">
+					<table>
+						<thead>
+							<tr>
+								<th class="paddingLeft">项目名称</th>
+								<th>发布人</th>
+								<th>报名截止时间</th>
+								<th>报名人数</th>
+								<th class="trCenter">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+				</div>
+				<!--未接纳 -->
+				<div class="investment_con_list noAccept">
+					<table>
+						<thead>
+							<tr>
+								<th width="180" class="paddingLeft">项目名称</th>
+								<th width="150">发布人</th>
+								<th width="180">项目截止时间</th>
+								<th width="100">报名人数</th>
+								<th width="114">承接方</th>
+								<th width="100" class="trCenter">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+				</div>
+				<!-- 进行中 -->
+				<div class="investment_con_list conducting">
+					<table class="registrationIn">
+						<thead>
+							<tr>
+								<th width="180" class="paddingLeft">项目名称</th>
+								<th width="180" class="doneTimeSort">预计完成时间 
+									<img class="up" src="resources/images/front/triangleUp.png" /> 
+									<img class="down" src="resources/images/front/triangleDown.png" />
+								</th>
+								<th width="140">项目进度</th>
+								<th width="298" class="trCenter">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+				</div>
+				<!-- 已完成 -->
+				<div class="investment_con_list done">
+					<table>
+						<thead>
+							<tr>
+								<th class="paddingLeft">项目名称</th>
+								<th>发布人</th>
+								<th>项目截止时间</th>
+								<th>负责人</th>
+								<th class="trCenter">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- 边框 -->
+		<!---->
+		<div class="page">
+			<div id="paginator" style="margin: auto;"></div>
+		</div>
+	</div>
+</div>
+<script id="projectManagement_entered_template" type="text/x-jquery-tmpl">
+							<tr>
+								<td class="paddingLeft">${projName}</td>
+								<td>${publishUser}</td>
+								<td>${projCloseDate}</td>
+								<td>${userCount}</td>
+								<td class="trCenter" >
+									<span><a data-id="${projId}" class="checked ">查看</a></span>&nbsp;
+									<span><a data-id="${projId}" class="cancelApply" href="javascript:void(0)">取消报名</a></span>
+								</td>
+							</tr>
+</script>
+<script id="projectManagement_noAccept_template" type="text/x-jquery-tmpl">
+							<tr>
+								<td class="paddingLeft">${projName}</td>
+								<td>${publishUser}</td>
+								<td>${projCloseDate}</td>
+								<td>${userCount}</td>
+								<td>${managerUser}</td>
+								<td class="trCenter">
+									<span><a data-id="${projId}" class="checked">查看</a></span>
+								</td>
+							</tr>
+</script>
+<script id="projectManagement_conducting_template" type="text/x-jquery-tmpl">
+							<tr>
+								<td class="paddingLeft">
+									<p>${projName}</p> <sub>成员${member}加入项目团队</sub>
+								</td>
+								<td>${projDevlierDate}</td>
+								<td>${projPlanTaskName}</td>
+								<td>
+									<p>
+										<span><a class="team">团队</a></span> | <span><a class="demand">需求</a></span>
+										| <span><a class="subcontract">分包</a></span> | <span><a class="plan">计划</a></span>
+										| <span><a class="progress">进度</a></span> | <span><a class="change">变更</a></span>
+										| <span><a class="purchase">采购</a></span>
+									</p>
+								</td>
+							</tr>
+</script>
+<script id="projectManagement_done_template" type="text/x-jquery-tmpl">
+							<tr>
+								<td class="paddingLeft">${projName}</td>
+								<td>${publishUser}</td>
+								<td>${projectRealEndDate}</td>
+								<td>${managerUser}</td>
+								<td class="trCenter">
+									<span><a data-id="${projId}" class="checked">查看</a></span>&nbsp;
+									<span><a class="discuss" href="#">评论</a></span></td>
+							</tr>
+</script>
+<script type="text/javascript" src="resources/js/front/projectManagement.js"></script>

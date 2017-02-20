@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.BackRoleDao">
+
+	<resultMap id="backRoleResultMap" type="com.shdatabank.puruan.model.BackRole">
+  		<id property="roleId" column="role_id"/>
+ 		<result property="roleName" column="role_name"/>
+  		<result property="active" column="active"/>
+  		<result property="date" column="create_datetime"/>
+  		<result property="resName" column="resName"/>
+	</resultMap>
+	
+	<resultMap type="com.shdatabank.puruan.model.BackRole" id="selectBackRoleByIdMap">
+        <id property="roleId" column="role_id" />
+        <result property="roleName" column="role_name" />
+        <collection property="sysResource" ofType="com.shdatabank.puruan.model.SysResource">
+            <result property="resourceId" column="resource_id" />
+            <result property="resourceName" column="resource_name" />
+            <collection property="sysResources" ofType="com.shdatabank.puruan.model.SysResource">
+            <result property="resourceId" column="resource_id_sl" />
+            <result property="resourceName" column="resource_name_sl" />
+            </collection>
+        </collection>
+    </resultMap>
+    <resultMap type="com.shdatabank.puruan.model.SysResource" id="sysResourceMap">
+		<id property="resourceId" column="resource_id" />
+		<result property="resourceName" column="resource_name" />
+	</resultMap>
+	<!-- 新增角色基本信息-->
+	<insert id="insertBackRole" parameterType="com.shdatabank.puruan.model.BackRole" useGeneratedKeys="true" keyProperty="roleId">
+	<![CDATA[
+		INSERT INTO back_roles(role_name,active,create_datetime) VALUES(#{roleName},#{active},now())
+	]]>
+	</insert>
+	<update id="updateBackRole" parameterType="com.shdatabank.puruan.model.BackRole">
+		update back_roles set role_name = #{roleName} where role_id = #{roleId}
+	</update>
+	<!-- 新增角色资源-->
+	<insert id="insertBackRoleRes" parameterType="java.util.List">
+			INSERT INTO back_role_resource(resource_id,role_id) VALUES
+		    <foreach collection="list" item="item" index="index" separator="," >  
+		        (#{item.resId},#{item.roleId})  
+		    </foreach>
+	</insert>
+			
+	<!-- 根据角色id获取角色名称-->
+	<select id="selectBackRoleById" resultMap="selectBackRoleByIdMap" parameterType="int">  
+    SELECT tbr.role_id,tbr.role_name,tsr.resource_id as resource_id_sl,tsr.resource_name as resource_name_sl,tsr.resource_chese,tsr1.resource_id,tsr1.resource_name FROM back_roles tbr JOIN back_role_resource tbrr ON tbr.role_id = tbrr.role_id LEFT JOIN sys_resource tsr ON tbrr.resource_id = tsr.resource_id
+    LEFT JOIN sys_resource tsr1 ON tsr.parent_resource_id = tsr1.resource_id where tbr.role_id=#{roleId} and tsr.parent_resource_id is not null and tsr.resource_type ='back' and tsr.active = 0
+    union (SELECT tbr.role_id,tbr.role_name,null,null,tsr.resource_chese,tsr.resource_id,tsr.resource_name FROM back_roles tbr JOIN back_role_resource tbrr ON tbr.role_id = tbrr.role_id LEFT JOIN sys_resource tsr ON tbrr.resource_id = tsr.resource_id
+    LEFT JOIN sys_resource tsr1 ON tsr.parent_resource_id = tsr1.resource_id where tbr.role_id=#{roleId} and tsr.parent_resource_id is null and tsr.resource_type ='back' and tsr.active = 0) ORDER BY resource_chese
+	</select>
+
+	
+	<select id="selectBackRole" resultMap="backRoleResultMap" parameterType="com.shdatabank.puruan.model.BackRole">  
+        SELECT tr.role_id, tr.role_name,tr.active, create_datetime,group_concat(ts.resource_name) as resName FROM back_roles tr left join back_role_resource trr on tr.role_id = trr.role_id
+        left join sys_resource ts on trr.resource_id = ts.resource_id 
+        <where>
+           tr.active = #{active}
+           <if test="roleName!=null and roleName!=''">
+                 AND tr.role_name LIKE '%${roleName}%' 
+           </if>            
+        </where>
+        GROUP BY tr.role_id
+        order by tr.create_datetime desc
+	</select>
+	
+    <update id="deleteBackRole" parameterType="com.shdatabank.puruan.model.BackRole">  
+        UPDATE back_roles SET ACTIVE = #{active} WHERE role_id = #{roleId} 
+    </update>
+    
+    <delete id="deleteBackResRole" parameterType="int">  
+        DELETE FROM back_role_resource WHERE role_id = #{roleId}  
+    </delete>
+</mapper>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IProjectRunningDao">
+    <!-- 查询项目进度 -->
+    <select id="selectProjectRunning" resultMap="selectProjectRunningMap"
+        parameterType="com.shdatabank.puruan.model.ProjectPlan">
+        SELECT 
+        pp.proj_plan_id,
+        pp.proj_id,
+        pp.parent_id,
+        pp.proj_plan_name,
+        pp.plan_executant,
+        pp.plan_work_range,
+        pp.parent_plan_id,
+        (SELECT pp3.proj_plan_name FROM project_plan pp3 WHERE pp3.proj_plan_id = pp.parent_plan_id) parent_proj_plan_name,
+        pp.plan_start_date,
+        pp.plan_finish_date,
+        pp.plan_real_start_date,
+        pp.plan_real_finish_date,
+        pp.plan_status
+        FROM project_plan pp
+        JOIN project p
+        ON pp.proj_id = p.project_id
+        WHERE p.project_id = #{projId}
+        AND pp.active = 0
+        AND pp.parent_id IS NULL
+        ORDER BY pp.plan_finish_date asc
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectPlan" id="selectProjectRunningMap">
+        <id property="projPlanId" column="proj_plan_id" />
+        <result property="projId" column="proj_id" />
+        <result property="parentId" column="parent_id" />
+        <result property="projPlanName" column="proj_plan_name" />
+        <result property="planExecutant" column="plan_executant" />
+        <result property="planWorkRange" column="plan_work_range" />
+        <result property="parentPlanId" column="parent_plan_id" />
+        <result property="parentProjPlanName" column="parent_proj_plan_name" />
+        <result property="planStartDate" column="plan_start_date" />
+        <result property="planFinishDate" column="plan_finish_date" />
+        <result property="planRealStartDate" column="plan_real_start_date" />
+        <result property="planRealFinishDate" column="plan_real_finish_date" />
+        <result property="planStatus" column="plan_status" />
+    </resultMap>
+    
+    <!-- 查询项目调整进度 -->
+    <select id="selectProjectRunning2" resultMap="selectProjectRunningMap"
+        parameterType="com.shdatabank.puruan.model.ProjectPlan">
+        SELECT 
+        pp.proj_plan_id,
+        pp.proj_id,
+        pp.parent_id,
+        pp.proj_plan_name,
+        pp.plan_executant,
+        pp.plan_work_range,
+        pp.parent_plan_id,
+        (SELECT pp3.proj_plan_name FROM project_plan_update pp3 WHERE pp3.proj_plan_id = pp.parent_plan_id) parent_proj_plan_name,
+        pp.plan_start_date,
+        pp.plan_finish_date,
+        pp.plan_real_start_date,
+        pp.plan_real_finish_date,
+        pp.plan_status
+        FROM project_plan_update pp
+        JOIN project p
+        ON pp.proj_id = p.project_id
+        WHERE p.project_id = #{projId}
+        AND pp.active = 0
+        AND pp.parent_id IS NULL
+        ORDER BY pp.plan_finish_date asc
+    </select>
+    
+    <!-- 查询分包的项目ID -->
+    <select id="selectPackageProjectId" resultType="java.util.List"
+        parameterType="com.shdatabank.puruan.model.ProjectPlan">
+        SELECT
+        p2.project_id
+        FROM project p
+        JOIN project_requirement pr
+        ON pr.proj_id = p.project_requirement_id
+        LEFT JOIN project_requirement pr2
+        ON pr2.parent_proj_id = pr.proj_id
+        JOIN project p2
+        ON pr2.proj_id = p2.project_requirement_id
+        WHERE p.project_id = #{projId}
+    </select>
+    
+    <!-- 查询计划的任务的信息 -->
+    <select id="selectProjectPlanTasks" resultMap="selectProjectPlanTasksMap"
+        parameterType="com.shdatabank.puruan.model.ProjectPlanTask">
+        SELECT
+        ppt.proj_task_id,
+        ppt.proj_plan_id,
+        ppt.undertake_user_id,
+        (
+        SELECT
+        IFNULL(u.user_alias,u.user_name)
+        FROM user u
+        WHERE u.user_id = ppt.undertake_user_id
+        ) undertake_user_name,
+        ppt.proj_task_status,
+        tp.task_product_id,
+        tp.product_value,
+        tp.file_name,
+        tp.file_path,
+        tp.file_see_path,
+        tp.create_time
+        FROM project_plan_task ppt
+        LEFT JOIN task_product tp
+        ON tp.proj_task_id = ppt.proj_plan_id
+        WHERE proj_plan_id IN (
+        SELECT 
+        pp.proj_plan_id
+        FROM project_plan pp
+        WHERE pp.parent_id = #{projPlanId}
+        )
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectPlanTask" id="selectProjectPlanTasksMap">
+        <id property="projTaskId" column="proj_task_id" />
+        <result property="projPlanId" column="proj_plan_id" />
+        <result property="undertakeUserId" column="undertake_user_id" />
+        <result property="undertakeUserName" column="undertake_user_name" />
+        <result property="projTaskStatus" column="proj_task_status" />
+        <collection property="taskProducts" ofType="com.shdatabank.puruan.model.TaskProduct">
+            <id property="taskProductId" column="task_product_id" />
+            <result property="productValue" column="product_value" />
+            <result property="fileName" column="file_name" />
+            <result property="filePath" column="file_path" />
+            <result property="fileSeePath" column="file_see_path" />
+            <result property="createTime" column="create_time" />
+        </collection>
+    </resultMap>
+</mapper>

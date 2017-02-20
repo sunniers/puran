@@ -1,0 +1,52 @@
+
+<!--路径-->
+<div class="nav">
+	<span>首页</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>任务管理</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>采购列表</span>
+</div>
+
+<!--内容详情-->
+<div class="contentInfo">
+	<div class="taskPurchase">
+		<div class="header">
+			<span class="fl addPurchase"><img src="resources/images/front/taskAdd.jpg">添加</span>
+			<span class="fr purchase"><img src="resources/images/front/purchase.jpg">采购</span>
+		</div>
+		<div class="tableData">
+			<table class="sui-table table-nobordered">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>任务名称</th>
+						<th>采购内容</th>
+						<th>供应商</th>
+						<th>采购数量</th>
+						<th>采购时间</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+		</div>
+		<div id="paginator" style="margin: auto;"></div>
+	</div>
+</div>
+<script id="taskPurchase_table_tmplate" type="text/x-jquery-tmpl">
+					<tr>
+						<td>${index}</td>
+						<td>${resourceName}</td>
+						<td>${projTaskName}</td>
+						<td>${purchaseProviderInfo}</td>
+						<td>${purchaseCount}</td>
+						<td>${purchaseDate}</td>
+						<td data-id="${createResourceId}">
+							<span class="lookAt">查 看</span><br>
+							<span class="moveTo" data-count="${purchaseCount}">移到库存</span>
+						</td>
+					</tr>	
+</script>
+
+<script type="text/javascript" src="resources/js/front/taskPurchase.js"></script>

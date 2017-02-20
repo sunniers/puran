@@ -1,0 +1,86 @@
+            <!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>个人中心</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>我的成交</span>
+            </div>
+
+            <!--内容详情-->
+            <div class="contentInfo">
+                <div class="myDeal">
+                	<div class="head">
+                		<div class="part1 fl">查询</div>
+                		<div class="part2 fr">
+                			<div class="types fl">
+                				<label>类型：
+                					<select id="lookType">
+                						
+                					</select>
+                				</label>
+                			</div>
+                			<div class="times fl">
+                				<form class="sui-form form-horizontal">
+  									<div data-toggle="datepicker" class="control-group input-daterange">
+    									<label class="control-label">时间：</label>
+    									<div class="controls">
+      										<input type="text" class="input-medium input-date" id="startTime"><span>-</span>
+      										<input type="text" class="input-medium input-date" id="endTime">
+    									</div>
+  									</div>
+								</form>
+                			</div>
+                			<div class="objectName fl">
+                				<label>名称：
+                					<input type="text" id="dealName">
+                				</label>
+                			</div>
+                			<button class="fr" id="dealBtn">查询</button>
+                		</div>
+                	</div>
+                	<div class="tableContent">
+                		<div class="title">
+                			<div class="fl" style="width:390px;">名称</div>
+                			<div class="fl" style="width:100px;">成交数量</div>
+                			<div class="fl" style="width:150px;">成交时间</div>
+                			<div class="fl" style="width:150px;">操作</div>
+                		</div>
+                		<div class="tableContents">
+                			
+                		</div>
+                	</div>
+                	<div class="page">
+                        <div id="paginator" style="margin: auto;"></div>
+                	</div>
+                </div>
+            </div>
+            
+            <script id="myDeal_table_tmplate" type="text/x-jquery-tmpl">
+						<div class="box">
+                				<div class="box1 fl">
+                					<div class="ct1">${name}</div>
+                					<div class="ct2">${description}</div>
+									{{if $data.sign==800001}}
+                					<img src="resources/images/front/myDeal_needing.png" />
+									{{/if}}
+									{{if $data.sign==800002}}
+									<img src="resources/images/front/myDeal_recruit.png" />
+									{{/if}}
+									{{if $data.sign==800003}}
+									<img src="resources/images/front/myDeal_sell.png" />
+									{{/if}}
+									{{if $data.sign==800004}}
+									<img src="resources/images/front/myDeal_talent.png" />
+									{{/if}}
+									{{if $data.sign==800005}}
+									<img src="resources/images/front/myDeal_bug.png" />
+									{{/if}}
+                				</div>
+                				<div class="box2 fl">${number}</div>
+                				<div class="box3 fl">${time}</div>
+                				<div class="box4 fl">
+                					<button data-sign=${sign} data-id=${id}>查看</button>
+                				</div>
+                			</div>							
+			</script>
+            
+            <script type="text/javascript" src="resources/js/front/myDeal.js"></script>

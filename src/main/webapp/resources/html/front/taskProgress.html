@@ -1,0 +1,136 @@
+
+<!--路径-->
+<div class="nav">
+	<span>首页</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>任务管理</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>进度</span>
+</div>
+
+<!--内容详情-->
+<div class="contentInfo">
+	<div class="taskProgress">
+		<div class="tableData">
+			<table class="sui-table table-nobordered">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>任务名称</th>
+						<th>计划开始时间</th>
+						<th>计划结束时间</th>
+						<th>实际开始时间</th>
+						<th>实际结束时间</th>
+						<th>状态</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+						
+				</tbody>
+			</table>
+		</div>
+		<div id="paginator" style="margin: auto;"></div>
+	</div>
+</div>
+
+<div id="taskProgress_lookAt" tabindex="-1" role="dialog" data-hasfoot="false"
+	class="sui-modal hide fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" data-dismiss="modal" aria-hidden="true"
+					class="sui-close">×</button>
+				<h4 id="myModalLabel" class="modal-title">任务描述</h4>
+			</div>
+			<div class="modal-body">
+				
+			</div>
+			<div class="modal-footer">
+				<button type="button" data-ok="modal"
+					class="sui-btn btn-primary btn-large">确认</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="taskProgress_submit" tabindex="-1" role="dialog" data-hasfoot="false"
+	class="sui-modal hide fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" data-dismiss="modal" aria-hidden="true"
+					class="sui-close">×</button>
+				<h4 id="myModalLabel" class="modal-title">提交产物</h4>
+			</div>
+			<div class="modal-body">
+				<div class="title">产物内容</div>
+				<textarea></textarea>
+				<div class="title">附件上传</div>
+				<div class="upload">
+					<label>
+                        <input class="upLoadImg" type="file" name="file" style="display:none;">
+                        <div class="replace">
+							<img src="resources/images/front/enclosure.png"/><br>
+							<span>点击上传</span>
+						</div>
+                    </label>
+                </div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" data-ok="modal"
+					class="sui-btn btn-primary btn-large" id="submitBtn">确认</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script id="taskProgress_table_tmplate" type="text/x-jquery-tmpl">
+					<tr>
+						<td>${index}</td>
+						<td>${subPlanName}</td>
+						<td>${startDate}</td>
+						<td>${finishDate}</td>
+						<td>${realStartDate}</td>
+						<td>${realFinishDate}</td>
+						{{if $data.completeStatus==400302}}
+						<td style="color:#7ed286;">已完成</td>
+						<td data-id="${subTaskId}">
+							<button class="type1 lookAt" data-toggle="modal" data-target="#taskProgress_lookAt" data-keyboard="false">查看</button><br>
+							<button class="type2 submit" data-toggle="modal" data-target="#taskProgress_submit" data-keyboard="false">提交产物</button>
+						</td>
+						{{else}}
+						{{if $data.completeStatus==400301}}
+						<td>未开始</td>
+						<td data-id="${subTaskId}">
+							<button class="type1 lookAt" data-toggle="modal" data-target="#taskProgress_lookAt" data-keyboard="false">查看</button><br>
+							<button class="type1 begin">开始</button>
+						</td>
+						{{else}}
+						<td style="color:#bed3f3;">进行中</td>
+						<td data-id="${subTaskId}">
+							<button class="type1 lookAt" data-toggle="modal" data-target="#taskProgress_lookAt" data-keyboard="false">查看</button>
+							<button class="type1 over">完成</button><br>
+							<button class="type2 submit" data-toggle="modal" data-target="#taskProgress_submit" data-keyboard="false">提交产物</button>
+						</td>
+						{{/if}}
+						{{/if}}
+					</tr>
+</script>
+<script id="taskProgress_lookAt_tmplate" type="text/x-jquery-tmpl">
+				<div class="title">*任务名称:<br>
+					<div class="type1">${subPlanName}</div>
+				</div>
+				<div class="title">*资源名称:<br>
+					<div class="type1">${resourceName}</div>
+				</div>
+				<div class="title">*开始时间:<br>
+					<div class="type2">${startDate}</div>
+				</div>
+				<div class="title">*结束时间:<br>
+					<div class="type2">${finishDate}</div>
+				</div>
+				<div class="title">*前置任务:<br>
+					<div class="type1">${parentTaskName}</div>
+				</div>
+				<div class="title">*任务描述:<br>
+					<div class="type3">${taskDescription}</div>
+				</div>
+</script>
+<script type="text/javascript" src="resources/js/front/taskProgress.js"></script>

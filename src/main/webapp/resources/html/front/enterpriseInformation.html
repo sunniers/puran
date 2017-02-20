@@ -1,0 +1,105 @@
+<!--路径-->
+<div class="nav">
+	<span>首页</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>个人中心</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>我的账号</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>企业信息</span>
+</div>
+
+<!--内容详情-->
+<div class="contentInfo">
+	<div class="enterpriseInformation">
+		<div class="entInfoTop">基本信息</div>
+		<div class="entInfo">
+			<div class="entInfoLeft fl">用户名：</div>
+			<div class="entInfoRight fl">
+				<span class="userName"></span><span>企业用户</span>
+			</div>
+		</div>
+		<div class="entInfo">
+			<div class="entInfoLeft fl">公司名称：</div>
+			<div class="entInfoRight fl" id="companyName"></div>
+		</div>
+		<div class="entInfo">
+			<div class="entInfoLeft fl">法人：</div>
+			<div class="entInfoRight fl" id="legalPerson"></div>
+		</div>
+		<div class="entInfo">
+			<div class="entInfoLeft fl">组织机构代码：</div>
+			<div class="entInfoRight fl" id="organizatioCode"></div>
+		</div>
+		<div class="entInfo">
+			<div class="entInfoLeft fl">公司类型：</div>
+			<div class="entInfoRight fl">
+				<input type="text" class="type1" id="companyType">
+			</div>
+		</div>
+		<div class="entInfo">
+			<div class="entInfoLeft fl">公司行业：</div>
+			<div class="entInfoRight fl">
+				<input type="text" class="type1" id="companyIndustry">
+			</div>
+		</div>
+		<div class="entInfo">
+			<div class="entInfoLeft fl">公司电话：</div>
+			<div class="entInfoRight fl">
+				<input type="text" class="type1" id="companyTel">
+			</div>
+		</div>
+		<div class="entInfo">
+			<div class="entInfoLeft fl">公司地址：</div>
+			<div class="entInfoRight fl">
+				<input type="text" class="type2" id="companyAddress">
+			</div>
+		</div>
+		<div class="entInfo">
+			<div class="entInfoLeft fl">公司介绍：</div>
+			<div class="entInfoRight fl">
+				<textarea id="companyIntroduce"></textarea>
+			</div>
+		</div>
+		<div>
+			<button id="save">保存</button>
+		</div>
+		<div class="publish">
+		<div class="pubTitle">
+			投资机构
+		</div>
+		<div class="pubBody">
+			<div class="name">
+				<label>机构名称：</label>
+				<input />
+			</div>
+			<div class="creatTime">
+				<label>成立时间：</label>
+				<input />
+			</div>
+			<div class="prefer">
+				<label>投资偏好：</label>
+				<div class="preferContent" style="display: inline-block;">
+					
+				</div>
+			</div>
+			<div class="filed">
+				<label>投资领域：</label>
+				<div class="filedContent" style="display: inline-block;">
+					
+				</div>
+			</div>
+			<div class="synopsis">
+				<label>简介：</label>
+				<textarea rows="10" cols="80"></textarea>
+			</div>
+			<button class="save">发布</button>
+		</div>
+	</div>
+	</div>
+	
+</div>
+	<script id="enterprise_prefer_template" type="text/x-jquery-tmpl">
+	<label><input data-id="${dataId}" type="checkbox"/>${dataValue}</label>
+	</script>
+	<script id="enterprise_filed_template" type="text/x-jquery-tmpl">
+	<label><input data-id="${dataId}"  type="checkbox"/>${dataValue}</label>
+	</script>
+<script type="text/javascript" src="resources/js/front/enterpriseInformation.js"></script>

@@ -1,0 +1,46 @@
+<!--路径-->
+<div class="nav">
+	<span>首页</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>任务管理</span>
+</div>
+
+<!--内容详情-->
+<div class="contentInfo">
+	<div class="taskManagement">
+		<table class="sui-table table-nobordered" id="tableData">
+			<thead>
+				<tr>
+					<th>任务名称</th>
+					<th>预计开始时间</th>
+					<th>预计结束时间</th>
+					<th>任务状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+		</table>
+		<div class="page">
+			<div id="paginator" style="margin: auto;"></div>
+		</div>
+	</div>
+</div>
+
+<script id="task_management_tmplate" type="text/x-jquery-tmpl">
+					<tr>
+						<td>${projTaskName}</td>
+						<td>${projTaskStartDate}</td>
+						<td>${projTaskFinishDate}</td>
+						<td>${projTaskStatus}</td>
+						<td>
+							<span id="points" data-id="${projTaskId}">详情</span> | 
+							<span id="changes" data-id="${projTaskId}">变更</span> | 
+							<span id="plans" data-id="${projTaskId}">计划</span> |
+							<span id="progress" data-id="${projTaskId}">进度</span> | 
+							<span id="purchase" data-id="${projTaskId}">采购</span>
+						</td>
+					</tr>
+</script>
+			
+<script type="text/javascript" src="resources/js/front/taskManagement.js"></script>

@@ -1,0 +1,79 @@
+<!--路径-->
+<div class="nav">
+	<span>首页</span><span><img	src="resources/images/front/rightAngleBrackets.png" alt=""></span> 
+	<span>个人中心</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+	<span>我的购物车</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+	<span>结算</span>
+</div>
+<!--内容详情-->
+<div class="contentInfo">
+	<div class="shoppingCartCount">
+		 <div class="tableList">
+		 	<table class="sui-table">
+				  <thead>
+				    <tr>
+				      <th colspan="5">商品清单 </th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				    <tr>
+				      <td width="25%">
+				        <div class="typographic">
+					        <img src="http://img.f2e.taobao.net/img.png_50x50.jpg">
+				       		<a href="javascript:void(0)" class="block-text">包邮 正品玛姬儿压缩面膜无纺布纸膜100粒 送泡瓶面膜刷喷瓶 新款</a>
+				        	<span><span>商家：</span><span class="company">洛克希德马丁</span></span>
+				        </div>
+				      </td>
+				      <td  width="11%" class="center">X1</td>
+				      <td  width="13%" class="center">9999元</td>
+				    </tr>
+				  </tbody>
+				</table>
+		 </div>
+		 <div class=" count">
+		   	<div class="sui-row-fluid">
+		    	<div data-num="0" class="span12 num">商品数量：0件</div>
+  			</div>
+  			<div class="sui-row-fluid">
+				<div data-totalPrice="0" class="span12 totalPrice">应付金额：0元</div>
+  			</div>
+  		</div>
+ 		 <div class="sui-row-fluid goPay">
+		    <div  class="span6">
+				<div class="cancel">取消</div>
+			</div>
+		    <div  class="span6">
+				<div class="pay">支付</div>
+			</div>
+  		</div>
+	</div>
+</div>
+<script type="text/x-jquery-tmpl" id="shopping_cartCount_tmplate">
+					<tr>
+				      <td width="25%">
+				        <div class="typographic">
+					        <img src="${resourceImage}">
+				       		<a href="javascript:void(0)" class="block-text">${resourceName}</a>
+				        	<span><span>商家：</span><span class="company">${publishName}</span></span>
+				        </div>
+				      </td>
+				      <td  width="11%" class="center num" data-num="${shoppingNum}">X${shoppingNum}</td>
+				      <td  width="13%" class="center price" data-price="${itemTotalPrice}">${price}元</td>
+				    </tr>
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="resources/js/front/shoppingCartCount.js" type="text/javascript"></script>

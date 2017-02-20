@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IUserTalentDao">
+    <!-- 查询创意人才 -->
+    <select id="selectUserCreativeTalent" parameterType="com.shdatabank.puruan.model.UserCreativeTalent" 
+    resultMap="selectUserCreativeTalentMap">
+        SELECT uct.creative_talent_id,uct.user_id,u.user_alias,u.user_mobile,u.user_email,
+		u.user_header_img,u.is_authentication,uct.talent_name,uct.talent_description,uct.now_address,
+		uct.publish_datetime,uct.hope_salary,
+		(SELECT c.company_name FROM company c WHERE c.company_id = u.company_id) company_name,
+		GROUP_CONCAT(tt.technology_value) technologys,
+		(SELECT ROUND(AVG(cte.evaluate_star),1) FROM creative_talent_evaluate cte JOIN project_requirement pr ON 
+		pr.proj_id = cte.proj_id 
+		WHERE pr.manager_user_id = u.user_id) evaluate,
+		(SELECT COUNT(*) FROM talent_transaction tt3 WHERE tt3.creative_talent_id = uct.creative_talent_id) undertakeTimes,
+		(SELECT COUNT(*) FROM user_house uh WHERE uh.house_type = 2 AND uh.house_resource_id = uct.creative_talent_id) houseTimes 
+		FROM user_creative_talent uct 
+		LEFT JOIN user u ON u.user_id = uct.user_id 
+		LEFT JOIN talent_technology tt ON tt.creative_talent_id = uct.creative_talent_id 
+		<where>
+			uct.active = 0
+            <if test="null != conditionTechnology and '' != conditionTechnology">
+                tt.technology_id in(${conditionTechnology})
+            </if>
+            <if test="null != conditionIsAuthentication and '' != conditionIsAuthentication">
+                u.is_authentication = 1
+            </if>
+            <if test="null != conditionMobile and '' != conditionMobile">
+                u.user_mobile IS NOT NULL
+            </if>
+            <if test="null != conditionEmail and '' != conditionEmail">
+                u.user_email IS NOT NULL
+            </if>
+            <if test="null != conditionTalentName and '' != conditionTalentName">
+                uct.talent_name LIKE '%${conditionTalentName}%'
+            </if>
+		</where>
+		GROUP BY uct.creative_talent_id 
+		<if test="null != orderBy and '' != orderBy">
+            ORDER BY ${orderBy} 
+		</if>
+		<if test="null != asc and '' != asc">
+            ${asc}
+		</if>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.UserCreativeTalent" id="selectUserCreativeTalentMap">
+        <id property="creativeTalentId" column="creative_talent_id" />
+        <result property="userId" column="user_id" />
+        <result property="talentName" column="talent_name" />
+        <result property="talentDescription" column="talent_description" />
+        <result property="nowAddress" column="now_address" />
+        <result property="publishDatetime" column="publish_datetime" />
+        <result property="hopeSalary" column="hope_salary" />
+        <result property="technologys" column="technologys" />
+        <result property="evaluate" column="evaluate" />
+        <result property="undertakeTimes" column="undertakeTimes" />
+        <result property="houseTimes" column="houseTimes" />
+        <association property="user" javaType="com.shdatabank.puruan.model.User">
+            <id property="userId" column="user_id" />
+            <result property="userAlias" column="user_alias" />
+            <result property="userMobile" column="user_mobile" />
+            <result property="userEmail" column="user_email" />
+            <result property="userHeaderImg" column="user_header_img" />
+            <result property="isAuthentication" column="is_authentication" />
+            <result property="companyName" column="company_name" />
+        </association>
+    </resultMap>
+</mapper>

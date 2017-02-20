@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.MyCommunityDao">
+
+	<!-- 我的用户的信息 -->
+	<resultMap type="com.shdatabank.puruan.model.User" id="MyUserMap">
+        <id property="userId" column="user_id" />
+        <result property="communityId" column="community_id" />
+		<result property="companyId" column="company_id" />
+		<result property="userAlias" column="user_alias" />
+		<result property="userName" column="user_name" />
+		<result property="userType" column="user_type" />
+		<result property="userHeaderImg" column="user_header_img" />
+		<result property="userPwd" column="user_pwd" />
+		<result property="userMobile" column="user_mobile" />
+		<result property="userEmail" column="user_email" />
+		<result property="createDatetime" column="create_datetime" />
+		<result property="active" column="active" />
+		<result property="projectName" column="proj_name" />
+    </resultMap> 
+    <!-- 我的圈子的信息 -->
+	<resultMap type="com.shdatabank.puruan.model.MyCommunity" id="MyCommunityMap">
+        <id property="communityId" column="community_id" />
+		<result property="userId" column="user_id" />
+		<result property="communityUserId" column="community_user_id" />
+    </resultMap> 
+    <!-- 项目需求resultMap -->
+	<resultMap type="com.shdatabank.puruan.model.ProjectRequirement" id="ProjectRequirementMap">
+			<id property="projId" column="proj_id"/>
+			<result property="projName" column="proj_name"/>
+			<result property="requirementType" column="requirement_type"/>
+			<result property="projCloseDate" column="proj_close_date"/>
+			<result property="projDevlierDate" column="proj_devlier_date"/>
+			<result property="projEstimate" column="proj_estimate"/>
+			<result property="projServiceFee" column="proj_service_fee"/>
+			<result property="projFlowStatus" column="proj_flow_status"/>
+			<result property="projRequireDescriptionContent" column="proj_require_description_content" />
+	</resultMap>
+	<!-- 我的圈子 -->
+	<select id="selectMyCommunity" resultMap="MyUserMap" >
+	SELECT DISTINCT u.user_id,mc.community_id,u.user_alias,u.user_mobile,u.user_email,(
+	    SELECT pr.proj_name FROM project_requirement pr WHERE pur.project_requirement_id=
+	    pr.proj_id AND pur.leave_datetime IS NULL ORDER BY pur.create_datetime DESC LIMIT 1) proj_name 
+	    FROM user u 
+	    LEFT JOIN project_user_releation pur ON u.user_id = pur.user_id 
+	    LEFT JOIN my_community mc ON mc.community_user_id = u.user_id 
+	    WHERE mc.user_id = #{userId} AND mc.is_confirm = 0 and mc.active = 0
+	    UNION
+	    SELECT DISTINCT u.user_id,mc.community_id,u.user_alias,u.user_mobile,u.user_email,(
+	    SELECT pr.proj_name FROM project_requirement pr WHERE pur.project_requirement_id=
+	    pr.proj_id AND pur.leave_datetime IS NULL ORDER BY pur.create_datetime DESC LIMIT 1) proj_name 
+	    FROM user u 
+	    LEFT JOIN project_user_releation pur ON u.user_id = pur.user_id 
+	    LEFT JOIN my_community mc ON mc.user_id = u.user_id 
+	    WHERE mc.community_user_id = #{userId} AND mc.is_confirm = 0 and mc.active = 0
+		<!-- select u.* from my_community m left join user u on m.community_user_id = u.user_id
+		<where>
+				m.user_id=#{userId}
+			<if test="isConfirm != null and isConfirm != '' ">
+				m.is_confirm = #{isConfirm}
+			</if> 
+		</where> -->  
+	</select>
+	<!-- 加入我的圈子 -->
+	<insert id="insertMyCommunity" parameterType="com.shdatabank.puruan.model.MyCommunity">
+			INSERT INTO my_community(user_id,community_user_id,create_time) 
+			VALUES(
+				   #{userId},
+				   #{communityUserId},
+				   NOW()
+				  )
+	</insert>
+<!-- 	<delete id="deleteMyCommunity" parameterType="java.lang.Long" >
+			delete from my_community where community_id = #{communityId}
+	</delete> -->
+	<!-- 删除我的圈子 -->
+	<update id="deleteMyCommunity" parameterType="java.lang.Long">
+	   update my_community set active = 1 where  community_id = #{communityId}
+	</update>
+	<!-- 我的圈子详情 -->
+	<select id="selectCommunity" resultMap="MyCommunityMap"  parameterType="com.shdatabank.puruan.model.MyCommunity" >
+		<!-- select * from my_community where user_id = #{userId} and community_id = #{communityId} and is_confirm = 0 -->
+		select u.* from my_community mc,user u where mc.user_id = u.user_id and mc.community_id = #{communityId} and mc.is_confirm = 0 and mc.active = 0
+	</select>
+		<!-- 加入团队 -->
+	<insert id="insertTeam" parameterType="com.shdatabank.puruan.model.ProjectUserReleation">
+		insert into project_user_releation 
+					(project_requirement_id,user_id,project_duty,leave_datetime,create_datetime,releation_status) 
+			values(#{projectRequirementId},#{userId},#{projectDuty},#{leaveDatetime},#{createDatetime},#{releationStatus})
+	</insert>
+	<!-- 查询项目名 :发布成功的-->
+	<!-- 通过project_user_releation中的项目需求ID关联到项目表得到项目名 -->
+	<select id="selectProjectName" resultMap="ProjectRequirementMap" >
+		SELECT pr.proj_name,pr.proj_id from project_requirement pr  where pr.manager_user_id = #{userId} and pr.proj_flow_status=400103 and pr.active = 0
+	</select>
+	
+</mapper>

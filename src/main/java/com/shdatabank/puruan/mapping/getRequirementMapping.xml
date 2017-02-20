@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IGetRequirementDao">
+    <!-- 查询分类 -->
+    <select id="selectDictionary" resultMap="selectDictionaryMap" parameterType="com.shdatabank.puruan.model.Dictionary">
+        <![CDATA[
+            SELECT d.*,dd.*
+            FROM dictionary d 
+            JOIN dictionarydata dd 
+            ON d.dict_id = dd.dict_id
+            WHERE d.dict_id IN (100100,100200,100300)
+        ]]>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.Dictionary" id="selectDictionaryMap">
+        <id property="dictId" column="dict_id" />
+        <result property="parentId" column="parent_id"/>
+        <result property="dictName" column="dict_name"/>
+        <collection property="dictionarydatas" ofType="com.shdatabank.puruan.model.Dictionarydata">
+            <id property="dataId" column="data_id"/>
+            <result property="dictId" column="dict_id" />
+            <result property="dataValue" column="data_Value" />
+        </collection>
+    </resultMap>
+    
+    <!-- 查询需求 -->
+    <select id="selectRequirement" resultMap="selectRequirementMap" parameterType="com.shdatabank.puruan.model.ProjectRequirement">
+        SELECT * FROM 
+        (
+        SELECT
+        pr.proj_id,
+        pr.proj_name,
+        prd.proj_require_description_content,
+        (
+        SELECT IFNULL(c.company_name,IFNULL(u.user_alias,'匿名'))
+        FROM user u 
+        LEFT JOIN company c 
+        ON u.company_id = c.company_id
+        WHERE u.user_id = pr.publish_user_id
+        ) publishUser,
+        pr.proj_close_date,
+        (
+        SELECT COUNT(*) 
+        FROM project_enroll pe 
+        WHERE pe.project_requirement_id = pr.proj_id
+        ) user_count,
+        (
+        SELECT COUNT(*)
+        FROM user_house uh
+        WHERE uh.house_type = 700001
+        AND uh.house_resource_id = pr.proj_id
+        ) user_house,
+        IF(u.is_authentication = 1,null,IF(u.user_type = '100501',1,2)) authentication,
+        u.user_email,
+        u.user_mobile,
+        pr.proj_service_fee,
+        100202 proj_type1,
+        ra.audit_datetime create_datetime,
+        (
+        SELECT dd.data_value
+        FROM dictionarydata dd 
+        WHERE dd.data_id = pr.proj_enroll_status
+        ) proj_enroll_status
+        FROM project_requirement pr
+        LEFT JOIN project_requirement_description prd
+        ON pr.proj_id = prd.proj_require_id
+        JOIN user u 
+        ON u.user_id = pr.publish_user_id
+        LEFT JOIN project_requirement_class prc 
+        ON prc.proj_require_id = pr.proj_id
+        JOIN requirement_audit ra
+        ON ra.proj_requirement_id = pr.proj_id
+        <where>
+            (pr.proj_flow_status = 400102
+            OR pr.proj_flow_status = 400103)
+            AND ra.audit_status = 400702
+            AND ra.requirement_type = 700001
+            AND pr.is_open = 0
+            <if test="null != dictionarydatas and 0 != dictionarydatas.size()">
+                AND prc.proj_require_class_value in 
+                <foreach collection="dictionarydatas" index="index" item="dictionarydata" open="(" separator="," close=")"> 
+                    #{dictionarydata} 
+                </foreach> 
+            </if>
+        </where>
+        UNION
+        
+        SELECT 
+        tt.talent_requirement_id proj_id,
+        tt.talent_requirement_name proj_name,
+        tt.requirement_description proj_require_description_content,
+        (
+        SELECT IFNULL(c.company_name,IFNULL(u.user_alias,'匿名'))
+        FROM user u 
+        LEFT JOIN company c 
+        ON u.company_id = c.company_id
+        WHERE u.user_id = tt.user_id
+        ) publishUser,
+        NULL,
+        (
+        SELECT COUNT(*) 
+        FROM talent_enroll te
+        WHERE te.talent_requirement_id = tt.talent_requirement_id
+        ) user_count,
+        (
+        SELECT COUNT(*)
+        FROM user_house uh
+        WHERE uh.house_type = 700002
+        AND uh.house_resource_id = tt.talent_requirement_id
+        ) user_house,
+        IF(u.is_authentication = 1,null,IF(u.user_type = '100501',1,2)) authentication,
+        u.user_email,
+        u.user_mobile,
+        tt.talent_buget proj_service_fee,
+        100201 proj_type1,
+        ra.audit_datetime create_datetime,
+        NULL
+        FROM talent_requirement tt
+        JOIN user u 
+        ON u.user_id = tt.user_id
+        LEFT JOIN publish_technology pt
+        ON pt.publish_id = tt.talent_requirement_id
+        JOIN requirement_audit ra
+        ON ra.proj_requirement_id = tt.talent_requirement_id
+        <where>
+            (tt.requirement_status = 400102
+            OR tt.requirement_status = 400103)
+            AND ra.audit_status = 400702
+            AND ra.requirement_type = 700002
+            AND tt.is_open = 0
+            <if test="null != dictionarydatas and 0 != dictionarydatas.size()">
+                AND pt.technology_type in 
+                <foreach collection="dictionarydatas" index="index" item="dictionarydata" open="(" separator="," close=")"> 
+                    #{dictionarydata} 
+                </foreach> 
+            </if>
+        </where>
+        
+        UNION
+
+        SELECT 
+        f.fancing_id,
+        f.project_name,
+        fancing_description,
+        (
+        SELECT IFNULL(c.company_name,IFNULL(u.user_alias,'匿名'))
+        FROM user u 
+        LEFT JOIN company c 
+        ON u.company_id = c.company_id
+        WHERE u.user_id = f.user_id
+        ) publishUser,
+        NULL,
+        NULL,
+        (
+        SELECT COUNT(*)
+        FROM user_house uh
+        WHERE uh.house_type = 700003
+        AND uh.house_resource_id = f.fancing_id
+        ) user_house,
+        IF(u.is_authentication = 1,null,IF(u.user_type = '100501',1,2)) authentication,
+        u.user_email,
+        u.user_mobile,
+        f.fancing_money,
+        100203 proj_type1,
+        f.create_datetime,
+        NULL
+        FROM fancing f
+        JOIN user u 
+        ON u.user_id = f.user_id
+        JOIN requirement_audit ra
+        ON ra.proj_requirement_id = f.fancing_id
+        LEFT JOIN fancing_classifier fc
+        ON fc.fancing_id = f.fancing_id
+        <where>
+	        ra.audit_status = 400702
+	        AND ra.requirement_type = 700003
+	        AND f.is_open = 0
+            <if test="null != dictionarydatas and 0 != dictionarydatas.size()">
+                AND fc.fancing_classifier_value in 
+                <foreach collection="dictionarydatas" index="index" item="dictionarydata" open="(" separator="," close=")"> 
+                    #{dictionarydata} 
+                </foreach> 
+            </if>
+        </where>
+        ) requirement
+        <where>
+            1 = 1
+            <if test="null != projType2 and 0!= projType2.size()">
+                AND proj_type1 in 
+                <foreach collection="projType2" index="index" item="projType" open="(" separator="," close=")"> 
+                    #{projType} 
+                </foreach> 
+            </if>
+            <if test="null != minFee and '' != minFee">
+                AND proj_service_fee &gt;= #{minFee}
+            </if>
+            <if test="null != maxFee and '' != maxFee">
+                AND proj_service_fee &lt;= #{maxFee}
+            </if>
+            <if test="null != name and '' != name">
+                AND proj_name LIKE '%${name}%' 
+            </if>
+        </where>
+        <if test="null != orderBys and '' != orderBys">
+            ORDER BY ${orderBys} 
+        </if>
+        <if test="null != ascs and '' != ascs">
+            ${ascs}
+        </if>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirement" id="selectRequirementMap">
+        <id property="projId" column="proj_id" />
+        <result property="projName" column="proj_name" />
+        <result property="projEnrollStatusValue" column="proj_enroll_status" />
+        <result property="projServiceFee" column="proj_service_fee" />
+        <result property="publishUser" column="publish_user" />
+        <result property="projCloseDate" column="proj_close_date" />
+        <result property="projRequireDescriptionContent" column="proj_require_description_content" />
+        <result property="userCount" column="user_count" />
+        <result property="userHouse" column="user_house" />
+        <result property="authenticationRequirement" column="authentication" />
+        <result property="userEmail" column="user_house" />
+        <result property="userMobile" column="user_house" />
+        <result property="projServiceFee" column="proj_service_fee" />
+        <result property="projType1" column="proj_type1" />
+        <result property="createDatetime" column="create_datetime" />
+    </resultMap>
+</mapper>

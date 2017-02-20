@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.CeativeResourceAuditDao">
+
+	<!-- 查询审核的结果 Map -->
+	<resultMap id="selectAllRequirementMap"
+		type="com.shdatabank.puruan.model.CreativeResourceAudit">
+		<id property="auditId" column="audit_it" />
+		<result property="resourceId" column="creative_resource_id" />
+		<result property="backUserId" column="back_user_id" />
+		<result property="auditDatetime" column="audit_datetime" />
+		<result property="auditContent" column="audit_content" />
+		<result property="auditStatus" column="auditStatus" />
+		<result property="active" column="active" />
+		<result property="resourceName" column="resource_name" />
+		<result property="resourceType" column="resourceType" />
+		<result property="publishDatetime" column="publish_datetime" />
+		<result property="publishName" column="publishName" />
+	</resultMap>
+
+	<!-- 查询所有已审核资源发布 -->
+	<select id="selectAllRequirementYes" resultMap="selectAllRequirementMap"
+		parameterType="com.shdatabank.puruan.model.CreativeResourceAudit">
+		SELECT r.creative_resource_id, r.resource_name,(SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user u
+		LEFT JOIN
+		company c
+		ON u.company_id = c.company_id
+		WHERE u.user_id =
+		r.user_id)
+		publishName,GROUP_CONCAT(DISTINCT d.data_value)
+		resourceType,t.audit_datetime,a.data_value auditStatus
+		from (SELECT
+		c.audit_id,c.resource_id,c.audit_status,c.audit_datetime,c.active
+		from
+		creative_resource_audit c ORDER BY c.audit_datetime DESC) t
+		LEFT JOIN
+		creative_resource r on r.creative_resource_id=t.resource_id
+		LEFT JOIN
+		creative_resource_classifier f on
+		f.creative_resource_id=r.creative_resource_id
+		LEFT JOIN dictionarydata
+		d on d.data_id=f.classifier_value
+		LEFT JOIN dictionarydata a on
+		a.data_id=t.audit_status
+		where t.active=0 and r.active=0
+		<if test="resourceName!='' and resourceName!=null">
+			and r.resource_name LIKE '%${resourceName}%'
+		</if>
+		GROUP BY t.resource_id
+	</select>
+
+	<!-- 查询所有未审核资源发布 -->
+	<select id="selectAllRequirementNo" resultMap="selectAllRequirementMap"
+		parameterType="com.shdatabank.puruan.model.CreativeResourceAudit">
+		SELECT r.creative_resource_id ,r.resource_name,(
+		SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user u
+		LEFT JOIN
+		company c
+		ON u.company_id = c.company_id
+		WHERE u.user_id =r.user_id
+		)
+		publishName ,GROUP_CONCAT(DISTINCT d.data_value)
+		resourceType,r.publish_datetime from
+		creative_resource r
+		LEFT JOIN
+		creative_resource_classifier f on
+		f.creative_resource_id=r.creative_resource_id
+		LEFT JOIN dictionarydata
+		d on d.data_id=f.classifier_value
+		where r.resource_status = 401202 and r.active=0
+		<if test="resourceName!='' and resourceName!=null">
+			and r.resource_name LIKE '%${resourceName}%'
+		</if>
+		GROUP BY r.creative_resource_id
+	</select>
+
+
+	<!-- 资源审核信息Map -->
+	<resultMap id="selectRequirementMap"
+		type="com.shdatabank.puruan.model.ProjectRequirement">
+		<id property="projId" column="proj_id" />
+		<result property="projName" column="proj_name" />
+		<result property="publishUser" column="company_name" />
+		<result property="requirementType" column="requirement_type" />
+		<result property="projServiceFee" column="proj_service_fee" />
+		<result property="projStartDate" column="proj_start_date" />
+		<result property="projCloseDate" column="proj_close_date" />
+		<result property="projEstimate" column="proj_estimate" />
+		<result property="createDatetime" column="create_datetime" />
+		<result property="projRequireDescriptionContent" column="proj_require_description_content" />
+		<result property="projAttachFile" column="proj_attach_file" />
+	</resultMap>
+
+	<!-- 根据ID查询创意资源 -->
+	<select id="findRequirementById" resultType="com.shdatabank.puruan.model.CreativeResource"
+		parameterType="java.lang.Long">
+		SELECT
+			r.creative_resource_id	creativeResourceId,
+			r.resource_name resourceName,(
+			SELECT
+			IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user u
+			LEFT JOIN
+			company c
+			ON u.company_id = c.company_id
+			WHERE u.user_id =r.user_id
+			)publishName ,
+			r.resource_price resourcePrice,
+			r.resource_number	resourceNumber,
+			r.publish_datetime publishDatetime,
+			r.show_address showAddress,
+			GROUP_CONCAT(DISTINCT d.data_value) resourceType,
+			r.resource_image resourceImage,
+			r.resource_image_name resourceImageName,
+			r.resource_attach resourceAttach,
+			r.resource_attach_name resourceAttachName,
+			r.resource_attach_see resourceAttachSee,
+			r.resource_description resourceDescription,
+			a.data_value auditStatus
+		FROM
+		creative_resource r
+		LEFT JOIN (SELECT e.audit_status ,e.resource_id ,e.audit_datetime from
+		creative_resource_audit e ORDER BY e.audit_datetime DESC) t on
+		t.resource_id=r.creative_resource_id
+		LEFT JOIN dictionarydata a on
+		a.data_id=t.audit_status
+		LEFT JOIN
+		creative_resource_classifier f on
+		f.creative_resource_id=r.creative_resource_id
+		LEFT JOIN dictionarydata
+		d on d.data_id=f.classifier_value
+		where r.creative_resource_id=#{id}
+	</select>
+
+	<!-- 添加创意资源审核 -->
+	<insert id="insertResourceAudit" parameterType="com.shdatabank.puruan.model.CreativeResourceAudit"
+		useGeneratedKeys="true" keyProperty="auditId">
+		INSERT INTO
+		creative_resource_audit(resource_id,back_user_id,audit_datetime,audit_content,audit_status,active)
+		VALUES(
+		#{resourceId},
+		#{backUserId},
+		now(),
+		#{auditContent},
+		#{auditStatusId},
+		0
+		)
+	</insert>
+	<!-- 更新创意资源状态 -->
+	<update id="updateResourceAudit" parameterType="com.shdatabank.puruan.model.CreativeResourceAudit">
+		UPDATE
+		creative_resource c set c.resource_status=#{resStatusId} where
+		c.creative_resource_id=#{resourceId}
+	</update>
+
+</mapper>

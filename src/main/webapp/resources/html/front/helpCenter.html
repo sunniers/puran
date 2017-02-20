@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>软件创意设计共性技术服务平台</title>
+    <link rel="stylesheet" href="resources/styles/base/sui.min.css">
+    <link rel="stylesheet" href="resources/styles/base/smartpaginator.css">
+    <link rel="stylesheet" href="resources/styles/common.front.css"> 
+<body>
+    <!-- 非登录头部导航    -->
+     <div class="topPrompt unlogin">
+        <div class="helloManager">
+            <span id="login">欢迎登录</span>
+            <span id="register">注册</span><i>|</i>
+            <span class="complaintsReport">投诉举报</span><i>|</i>
+            <span class="helpCenter">帮助中心</span><i>|</i>
+            <span><img src="resources/images/front/wechat.png" alt="">微信公众号</span>
+        </div>
+    </div>
+	<!-- 登录头部导航 -->
+	<div class="topPrompt logined" style="display: none;">
+        <div class="helloManager">
+            <span id="userName"></span>
+            <span id="logout">退出</span><i>|</i>
+            <span class="sui-dropdown">
+            	<span class="dropdown-inner">
+            	<a style="color:#333333" role="button" data-toggle="dropdown" href="javascript:void(0);" class="dropdown-toggle">个人中心 <i class="caret"></i></a>
+                      <ul role="menu" aria-labelledby="drop1" class="sui-dropdown-menu">
+                        <li id="myAccount" role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);">我的帐号</a></li>
+                        <li id="myCircle" role="presentation" class="menuitem "><a role="menuitem" tabindex="-1" href="javascript:void(0);">我的圈子</a></li>
+                        <li  role="presentation" class="menuitem"><a role="menuitem" tabindex="-1" href="javascript:void(0);">我的成交</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);">我的收藏</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);">我的购物车</a></li>
+                      </ul>
+                 </span>
+            </span>
+            <i>|</i>
+            <span class="messageIcon"><img src="resources/images/front/email.png" alt="">消息</span>
+			<i>|</i>
+            <span class="complaintsReport">投诉举报</span>
+            <i>|</i>
+            <span class="helpCenter">帮助中心</span>
+            <i>|</i>
+            <span><img src="resources/images/front/wechat.png" alt="">微信公众号</span>
+        </div>
+    </div>
+
+
+    <!--logo区域-->
+    <div class="logoField">
+        <div class="logoMediate">
+            <img src="resources/images/front/logo.jpg" alt="浦软">
+            <div class="search">
+                <div class="helpSearch">
+                    <input placeholder="问题搜索,请输入问题关键词" type="text"><button><img src="resources/images/front/search.png" alt=""></button>
+                </div>
+            </div>
+        </div>
+        <div class="menuNav">
+            <div class="navMiddle">
+                <div class="home">
+                    <img src="resources/images/front/index.png" alt="">
+                    <span>首页</span>
+                </div>
+                <div class="demandHall">
+                    <span>需求大厅</span>
+                </div>
+                <div class="creativeTalent">
+                    <span>创意人才</span>
+                </div>
+                <div class="creativeResources">
+                    <span>创意资源</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!--容器-->
+    <div class="container">
+
+        <!--主体内容-->
+        <div class="content">
+
+            <!--左侧菜单区域-->
+            <div class="leftMenuField" id="leftMenu">
+            
+            </div>
+
+            <!--右侧内容区域-->
+            <div class="rightContentField">
+                
+                <!-- <div  class="nav">
+                    <span>首页</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                </div> -->
+
+                <!--内容详情-->
+                <div class="contentInfo">
+                    <div class="demandRecommend">
+                        <div class="title">
+                            <span></span>
+                            <span>需求推荐</span>
+                            <span>更多 <img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                        </div>
+                        <div class="demandRecommendContent">
+                            <div class="left">
+                                <!-- <div>大数据平台开发</div>
+                                <div>¥3,000,000</div>
+                                <div>已报<span>0</span><span>6</span><span>8</span>人次</div>
+                                <div><span>报名中</span></div>
+                                <div><img src="resources/images/front/time.png" alt="">剩余23小时26分54秒</div>
+                                <div><span>上海科技技术服务有限公司</span></div> -->
+                            </div>
+                            <div class="right">
+                              
+                            </div>
+                        </div>
+                        <div class="title bottomTitle">
+                            <span></span>
+                            <span>资源推荐</span>
+                            <span>更多 <img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                        </div>
+                        <div class="bottomContent">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--右侧固定工具栏-->
+            <div class="toFixed">
+                <div>
+                    <img src="resources/images/front/customerService.png" alt="投诉">
+                    <div class="complaintContent">
+                        <div>电话：13115551935</div>
+                        <div>邮箱：service@pdsts.com</div>
+                        <div><span>在线客服</span>9:00-18:00</div>
+                    </div>
+                </div>
+                <div>
+                    <img src="resources/images/front/wechat1.png" alt="微信">
+                    <div class="codeRight">
+                        <div>
+                            <img src="resources/images/front/QRcode.JPG" alt="">
+                        </div>
+                        <div class="codeRightContent">
+                            <div>扫一扫</div>
+                            <div>关注微信公众号</div>
+                            <div>为您推送最新咨询</div>
+                        </div>
+
+                    </div>
+                </div>
+                <div>
+                    <img src="resources/images/front/complaint.png" alt="投诉">
+                </div>
+                <div>
+                    <img src="resources/images/front/angleBracketsThinUp.png" alt="返回顶部">
+                    
+                </div>
+            </div>
+
+        </div>
+
+    </div>    
+
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!--路径-->
+<div class="nav">
+	<span>首页</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+	<span>需求管理</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span> 
+	<span>需求状态</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span> 
+	<span>修改</span>
+</div>
+<div class="contentInfo">
+	<div class="demandStatusEdit">
+		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>需求名称:</div>
+			    <div class="span5 projName"><input type="text"></div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>需求分类:</div>
+			    <div class="span5 dictionarydatas">
+					
+				</div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			   <div class="span4"><span>*</span>需求预算:</div>
+			    <div class="span5 projServiceFee"><input type="text"></div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>报名截止日期:</div>
+			    <div class="span5 projCloseDate"><input type="text" data-toggle="datepicker" value=""></div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>需求交付日期:</div>
+			    <div class="span5 projDevlierDate"><input type="text" data-toggle="datepicker" value=""></div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>评估周期:</div>
+			    <div class="span5 projEstimate"><input type="text">天</div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>需求概述:</div>
+			    <div class="span5 projRequireDescriptionContent">
+			    	<textarea rows="10" cols="45"></textarea>
+			    </div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>供方类型:</div>
+			    <div class="span5 providerType">
+					<label class="checkbox-pretty inline ">
+    					<input data-id="1" type="checkbox"  ><span>企业用户</span>
+  					</label>
+  					<label class="checkbox-pretty inline ">
+    					<input data-id="2" type="checkbox"  ><span>个人用户</span>
+  					</label>
+				</div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>认证要求:</div>
+			    <div class="span5 authenticationRequirement">
+					<label class="checkbox-pretty inline ">
+    					<input data-id="1" type="checkbox" ><span>身份认证</span>
+  					</label>
+  					<label class="checkbox-pretty inline ">
+    					<input data-id="2" type="checkbox"  ><span>手机认证</span>
+  					</label>
+  					<label class="checkbox-pretty inline ">
+    					<input data-id="3" type="checkbox"  ><span>邮箱认证</span>
+  					</label>
+				</div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>发布方式:</div>
+			    <div class="span5 publishWay">
+					<label class="checkbox-pretty inline ">
+    					<input data-id="1" type="checkbox"  ><span>公开发布</span>
+  					</label>
+  					<label class="checkbox-pretty inline ">
+    					<input data-id="2" type="checkbox" ><span>我的圈子</span>
+  					</label>
+  					<label class="checkbox-pretty inline ">
+    					<input data-id="3" type="checkbox" ><span>平台自动推荐</span>
+  					</label>
+				</div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4">附件:</div>
+			    <div class="span5">
+			    	<div class="span12 fileBox">
+			    		<div class="span5 file">
+			    			<div class="fileImg">
+			    				<img src="resources/images/front/enclosure.png"/>
+			    			</div>
+			    			<div class="view">
+			    				<a href="javascript:void(0)">查看</a>
+			    			</div>
+			    		</div>
+			    		<div class="span5 file uploadAgain">
+			    			<div class="fileImg ">
+			    				<img src="resources/images/front/upload.png"/>
+			    			</div>
+			    			<div class="view">
+			    				<label>重新上传
+			    					<input type="file" name="file" style="display: none;"/>
+			    				</label>
+			    			</div>
+			    		</div>
+			    	</div>
+			    </div>
+	  		</div>
+	  		<div class="sui-row-fluid buttons">
+	  			<button class="save">保存</button>
+	  			<button class="refer">发布</button>
+	  		</div>
+	</div>
+</div>
+<script id="status_edit_tmplate" type="text/x-jquery-tmpl">
+				<label class="checkbox-pretty inline">
+					<input type="checkbox" value="${dataId}" ><span>${dataValue}</span>
+				</label>
+</script>
+<script type="text/javascript"	src="resources/js/front/demandStatusEdit.js"></script>

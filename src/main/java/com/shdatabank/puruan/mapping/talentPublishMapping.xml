@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.TalentRequirementDao">
+	 <!--查询项目需求类型-->
+     <resultMap id="TalentRequirementMap" type="com.shdatabank.puruan.model.TalentRequirement">
+	    <id property="talentRequirementId" column="talent_requirement_id" />
+	    <result property="createTime" column="create_time"/>
+	    <result property="talentRequirementName" column="talent_requirement_name" />
+	    <result property="requirementDescription" column="requirement_description" />
+	    <collection property="talentRequirementClasss" ofType="com.shdatabank.puruan.model.TalentRequirementClass">
+	        <id property="talentRequirementClassId" column="talent_requirement_class_id" />
+	        <result property="talentRequirementId" column="talent_requirement_id" />
+	        <result property="talentRequirementClassValue" column="talent_requirement_class_value" />
+	        <result property="talentRequirementClassName" column="talent_requirement_class_name" />
+	    </collection> 
+	</resultMap>
+	 <!--查询项目需求类型-->
+     <resultMap id="Dictionary_resultMap" type="com.shdatabank.puruan.model.Dictionary">
+	    <id property="dictId" column="dict_id" />
+	    <result property="parentId" column="parent_id" />
+	    <result property="dictName" column="dict_name" />
+	    <collection property="dictionarydatas" ofType="com.shdatabank.puruan.model.Dictionarydata">
+	        <id property="dataId" column="data_id" />
+	        <result property="dictId" column="dictid" />
+	        <result property="dataValue" column="data_value" />
+	    </collection> 
+	</resultMap>
+	 <!-- 插入需求的分类 -->
+    <insert id="insertRequirementType" parameterType="java.util.List" useGeneratedKeys="true">
+	    INSERT INTO talent_requirement_class(talent_requirement_id,talent_requirement_class_value)VALUES
+			<foreach collection="list" item="item" index="index" separator=",">
+				(#{item.talentRequirementId},#{item.talentRequirementClassValue})
+			</foreach>
+    </insert>
+	<!-- 插入人才需求 -->
+	<insert id="insertTaRequirement" parameterType="com.shdatabank.puruan.model.TalentRequirement" useGeneratedKeys="true" keyProperty="talentRequirementId">
+		INSERT INTO talent_requirement 
+			(
+				user_id,
+				talent_requirement_name,
+				work_mode,
+				professional_skills,
+				talent_buget,
+				requirement_description,
+				work_space,
+				effective_datetime,
+				requirement_classifier,
+				cooperate_type,
+				requirement_status,
+				talent_attachment,
+				work_duty,
+				talent_require,
+				publish_way,
+				talent_attachment_see_path,
+				talent_attachment_name,
+				create_time
+			)
+			VALUES
+				(
+					#{userId},
+					#{talentRequirementName},
+					#{workMode},
+					#{professionalSkills},
+					#{talentBuget},
+					#{requirementDescription},
+					#{workSpace},
+					#{effectiveDatetime},
+					#{requirementClassifier},
+					#{cooperateType},
+					#{requirementStatus},
+					#{talentAttachment},
+					#{workDuty},
+					#{talentRequire},
+					#{publishWay},
+					#{talentAttachmentSeePath},
+					#{talentAttachmentName},
+					NOW()
+				)
+	</insert>
+	<!-- 插入创意人才技能 -->
+    <insert id="insertTalentTechnology" parameterType="java.util.List" useGeneratedKeys="true">
+	    INSERT INTO talent_technology(creative_talent_id,technology_id)VALUES
+			<foreach collection="list" item="item" index="index" separator=",">
+				(#{item.creativeTalentId},#{item.technologyId})
+			</foreach>
+    </insert>
+      <!-- 根据创意人才id来修改创意人才 -->
+    <update id="updateTaTechnology" parameterType="com.shdatabank.puruan.model.TalentRequirement">
+    	UPDATE talent_requirement
+		<set>
+				<if test="userId != null">  
+					user_id = #{userId},
+				</if>
+				<if test="talentRequirementName != null">
+					talent_requirement_name = #{talentRequirementName},
+				</if>
+				<if test="workMode != null">
+					work_mode = #{workMode},
+				</if>
+				<if test="professionalSkills != null">
+					professional_skills = #{professionalSkills},
+				</if>
+				<if test="talentBuget != null">
+					talent_buget = #{talentBuget},
+				</if>				
+				<if test="requirementDescription != null">
+					requirement_description = #{requirementDescription},
+				</if>				
+				<if test="workSpace != null">
+					work_space = #{workSpace},
+				</if>				
+				<if test="effectiveDatetime != null">
+					effective_datetime = #{effectiveDatetime},
+				</if>				
+				<if test="requirementClassifier != null">
+					requirement_classifier = #{requirementClassifier},
+				</if>				
+				<if test="cooperateType != null">
+					cooperate_type = #{cooperateType},
+				</if>	
+				<if test="active != null">
+					active = #{active},
+				</if>				
+				<if test="requirementStatus != null">
+					requirement_status = #{requirementStatus},
+				</if>				
+				<if test="talentAttachment != null">
+					talent_attachment = #{talentAttachment},
+				</if>				
+				<if test="workDuty != null">
+					work_duty = #{workDuty},
+				</if>				
+				<if test="talentRequire != null">
+					talent_require = #{talentRequire}
+				</if>				
+				<if test="publishWay != null">
+					publish_way = #{publishWay}
+				</if>				
+				<if test="createTime != null">
+					create_time = #{createTime}
+				</if>				
+		</set>
+		WHERE talent_requirement_id = #{talentRequirementId}
+    </update>
+    <!-- 根据创意人才id删除创意技术类型 -->
+    <delete id="deleteTalentTechnology" parameterType="java.lang.Long">
+		delete from talent_technology where creative_talent_id = #{creativeTalentId}
+    </delete>
+    <!-- 根据创意人才id假删除一条创意人才 -->
+    <update id="deleteTaTechnology" parameterType="java.lang.Long">
+    	update talent_requirement set active = 1 where talent_requirement_id = #{talentRequirementId}
+    </update>
+     <!-- 查询创意人才需求 -->
+    <select id="selectTaRequirementId" resultMap="TalentRequirementMap">
+  	 SELECT tr.*,trc.talent_requirement_class_value,(select dd.data_value 
+		from dictionary d LEFT JOIN dictionarydata dd ON d.dict_id = dd.dict_id 
+		WHERE  dd.dict_id = 100100 and dd.data_id = trc.talent_requirement_class_value
+		ORDER BY d.dict_id) talent_requirement_class_name from talent_requirement tr,talent_requirement_class trc
+    	where tr.talent_requirement_id = #{talentRequirementId} and  trc.talent_requirement_id = tr.talent_requirement_id  and tr.active = 0 
+    </select>
+    
+     <!-- 查询创意人才中的显示的字段 -->
+    <select id="selectTaTechnology" resultMap="TalentRequirementMap">
+    	SELECT create_time,talent_requirement_name,requirement_description from talent_requirement
+    	where talent_requirement_id = #{talentRequirementId} and active = 0
+    </select>
+    <!-- 根据ID查询创意人才对象 -->
+    <select id="selectTaTechnologyId" resultMap="TalentRequirementMap">
+    	SELECT * from talent_requirement  
+    	where talent_requirement_id = #{talentRequirementId}
+    </select>
+	<!-- 查询出所有技术类型包含子类型 -->
+	<select id="selectAllTechnologyType" resultMap="Dictionary_resultMap">
+		select d.dict_id,d.parent_id,d.dict_name,dd.data_id,dd.dict_id dictid,dd.data_value 
+		from dictionary d LEFT JOIN dictionarydata dd ON d.dict_id = dd.dict_id
+		WHERE d.parent_id = 300000 and dd.dict_id=300200
+		<!-- and dd.data_id in (SELECT tt.technology_id from talent_technology tt,talent_requirement tr 
+				where tr.talent_requirement_id = tt.creative_talent_id) -->
+		ORDER BY d.dict_id
+	</select> 
+	<!-- 查询出所有工作形式 -->
+	<select id="selectAllWorkModeType" resultMap="Dictionary_resultMap">
+		select d.dict_id,d.parent_id,d.dict_name,dd.data_id,dd.dict_id dictid,dd.data_value 
+		from dictionary d LEFT JOIN dictionarydata dd ON d.dict_id = dd.dict_id
+		WHERE d.parent_id = 100000 and dd.dict_id=100400
+		<!-- and dd.data_id in (SELECT tr.work_mode from talent_requirement tr 
+				where tr.talent_requirement_id ) -->
+		ORDER BY d.dict_id
+	</select> 
+	 <!-- 根据需求id删除该人才需求分类id的所有类型 -->
+	<delete id="deleteRequirementType" parameterType="java.lang.Long">
+		delete from talent_requirement_class where talent_requirement_id = #{talentRequirementId}
+	</delete>
+
+</mapper>

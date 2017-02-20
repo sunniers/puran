@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IPerfectInformationDao">    
+    <!-- 查询用户信息 -->
+    <select id="selectUserInfo" resultMap="selectUserInfoMap" parameterType="java.lang.Long">
+        <![CDATA[
+            SELECT 
+            u.user_id,
+            u.company_id,
+            u.user_alias,
+            u.user_name,
+            u.user_type,
+            u.user_header_img,
+            u.user_pwd,
+            u.user_mobile,
+            u.user_email,
+            u.is_authentication,
+            u.is_activation,
+            tee.experience_id edu_experience_id,
+            tee.user_id edu_user_id,
+            tee.talent_degree,
+            tee.talent_profession,
+            tee.talent_school,
+            tee.finish_date,
+            tee.memo,
+            twe.experience_id work_experience_id,
+            twe.user_id work_user_id,
+            twe.start_date,
+            twe.end_date,
+            twe.work_company,
+            twe.work_description,
+            twe.work_job,
+            uct.creative_talent_id,
+            uct.talent_name,
+            uct.work_mode,
+            uct.work_time,
+            uct.now_address,
+            uct.hope_salary,
+            uct.talent_description,
+            uct.talent_work_experience,
+            uct.publish_datetime,
+            uei.user_real_name,
+            uei.credit_number,
+            tt.technology_id,
+            tt.creative_talent_id,
+            tt.talent_technology_id
+            FROM user u LEFT JOIN talent_edu_experience tee ON u.user_id = tee.user_id 
+            LEFT JOIN talent_work_experience twe ON u.user_id = twe.user_id 
+            LEFT JOIN user_creative_talent uct ON uct.user_id = u.user_id 
+            LEFT JOIN (SELECT * FROM(SELECT * FROM user_extension_info uei
+            ORDER BY uei.create_time DESC) u GROUP BY u.user_id ) uei
+            ON uei.user_id = u.user_id
+            LEFT JOIN talent_technology tt ON tt.creative_talent_id = uct.creative_talent_id
+            WHERE u.user_id = #{userId}
+            AND u.active = 0 
+            AND u.is_activation = 0
+        ]]>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.User" id="selectUserInfoMap">
+        <id property="userId" column="user_id" />
+        <result property="companyId" column="company_id" />
+        <result property="userAlias" column="user_alias" />
+        <result property="userName" column="user_name" />
+        <result property="userType" column="user_type" />
+        <result property="userHeaderImg" column="user_header_img" />
+        <result property="userPwd" column="user_pwd" />
+        <result property="userMobile" column="user_mobile" />
+        <result property="userEmail" column="user_email" />
+        <result property="isAuthentication" column="is_authentication" />
+        <result property="isActivation" column="is_activation" />
+        <result property="realName" column="user_real_name" />
+        <result property="code" column="credit_number" />
+        <association property="talentEduExperience" javaType="com.shdatabank.puruan.model.TalentEduExperience">
+            <id property="experienceId" column="edu_experience_id" />
+            <result property="userId" column="edu_user_id" />
+            <result property="talentDegree" column="talent_degree" />
+            <result property="talentProfession" column="talent_profession" />
+            <result property="talentSchool" column="talent_school" />
+            <result property="finishDate" column="finish_date" />
+            <result property="memo" column="memo" />
+        </association>
+        <association property="userCreativeTalent" javaType="com.shdatabank.puruan.model.UserCreativeTalent">
+            <id property="creativeTalentId" column="creative_talent_id" />
+            <result property="userId" column="user_id" />
+            <result property="talentName" column="talent_name" />
+            <result property="workMode" column="work_mode" />
+            <result property="workTime" column="work_time" />
+            <result property="nowAddress" column="now_address" />
+            <result property="hopeSalary" column="hope_salary" />
+            <result property="talentDescription" column="talent_description" />
+            <result property="talentWorkExperience" column="talent_work_experience" />
+            <result property="publishDatetime" column="publish_datetime" />
+            <collection property="talentTechnologies" ofType="com.shdatabank.puruan.model.TalentTechnology">
+                <id property="talentTechnologyId" column="talent_technology_id" />
+                <result property="creativeTalentId" column="creative_talent_id1" />
+                <result property="technologyId" column="technology_id" />
+            </collection>
+        </association>
+        <collection property="talentWorkExperiences" ofType="com.shdatabank.puruan.model.TalentWorkExperience">
+            <id property="experienceId" column="work_experience_id" />
+            <result property="userId" column="work_user_id" />
+            <result property="startDate" column="start_date" />
+            <result property="endDate" column="end_date" />
+            <result property="workCompany" column="work_company" />
+            <result property="workDescription" column="work_description" />
+            <result property="workJob" column="work_job" />
+        </collection>
+    </resultMap>
+    
+    <!-- 根据用户id查询企业id -->
+    <select id="selectCompanyInfo" resultMap="selectCompanyInfoMap" parameterType="java.lang.Long">
+        <![CDATA[
+            SELECT u.user_name,c.company_id,c.company_name,c.company_corporation,
+            c.organizational_institution_code,c.company_type,
+            c.company_address,c.company_phone,c.company_trade,
+            c.company_introduce 
+            FROM company c JOIN user u ON c.company_id = u.company_id 
+            WHERE u.user_id = #{userId}
+        ]]>
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.Company" id="selectCompanyInfoMap">
+        <id property="companyId" column="company_id" />
+        <result property="userName" column="user_name" />
+        <result property="companyName" column="company_name" />
+        <result property="companyCorporation" column="company_corporation" />
+        <result property="organizationalInstitutionCode" column="organizational_institution_code" />
+        <result property="companyType" column="company_type" />
+        <result property="companyAddress" column="company_address" />
+        <result property="companyPhone" column="company_phone" />
+        <result property="companyTrade" column="company_trade" />
+        <result property="companyIntroduce" column="company_introduce" />
+    </resultMap>
+
+    <!-- 更新个人基本信息 -->
+    <update id="updateUserInfo" parameterType="com.shdatabank.puruan.model.User">
+        UPDATE user
+        <set>
+            <trim suffixOverrides=",">
+                user_id = #{userId},
+                <if test="null != userAlias and '' != userAlias">
+                    user_alias = #{userAlias}
+                </if>
+            </trim>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+    
+    <!-- 插入教育经历 -->
+    <insert id="insertTalentEduExperience" parameterType="com.shdatabank.puruan.model.TalentEduExperience" useGeneratedKeys="true">
+        <![CDATA[
+            INSERT INTO talent_edu_experience(user_id,talent_degree,
+            talent_school,talent_profession,finish_date,memo) VALUES(
+            #{userId},#{talentDegree},#{talentSchool},#{talentProfession},
+            #{finishDate},#{memo})
+        ]]>
+    </insert>
+    
+    <!-- 删除教育经历 -->
+    <delete id="deleteTalentEduExperience" parameterType="com.shdatabank.puruan.model.User">
+        <![CDATA[
+            DELETE FROM talent_edu_experience WHERE user_id = #{userId}
+        ]]>
+    </delete>
+    
+    <!-- 插入工作经验 -->
+    <insert id="insertTalentWorkExperience" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO talent_work_experience(user_id,start_date,
+        end_date,work_company,work_job,work_description) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userId},#{item.startDate},#{item.endDate},#{item.workCompany},
+            #{item.workJob},#{item.workDescription})
+        </foreach>
+    </insert>
+    
+    <!-- 删除工作经验 -->
+    <delete id="deleteTalentWorkExperience" parameterType="com.shdatabank.puruan.model.User">
+        <![CDATA[
+            DELETE FROM talent_work_experience WHERE user_id = #{userId}
+        ]]>
+    </delete>
+    
+    <!-- 查询附加信息 -->
+    <select id="selectUserCreativeTalent" parameterType="com.shdatabank.puruan.model.User" 
+    resultType="java.lang.Integer">
+        <![CDATA[
+            SELECT COUNT(*) FROM user_creative_talent WHERE user_id = #{userId}
+        ]]>
+    </select>
+    
+    <!-- 插入附加信息 -->
+    <insert id="insertUserCreativeTalent" parameterType="com.shdatabank.puruan.model.UserCreativeTalent"
+    useGeneratedKeys="true" keyProperty="creativeTalentId">
+        INSERT INTO user_creative_talent(user_id,talent_name,work_mode,
+        work_time,now_address,hope_salary,talent_description,
+        talent_work_experience,publish_datetime)
+        VALUES (#{userId},#{talentName},#{workMode},
+        #{workTime},#{nowAddress},#{hopeSalary},
+        #{talentDescription},#{talentWorkExperience},NOW())
+    </insert>
+    
+    <!-- 更新附加信息 -->
+    <update id="updateUserCreativeTalent" parameterType="com.shdatabank.puruan.model.UserCreativeTalent">
+        UPDATE user_creative_talent
+        <set>
+            <trim suffixOverrides=",">
+                creative_talent_id = #{creativeTalentId},
+                <if test="null != talentName and '' != talentName">
+                    talent_name = #{talentName},
+                </if>
+                <if test="null != workMode and '' != workMode">
+                    work_mode = #{workMode},
+                </if>
+                <if test="null != workTime and '' != workTime">
+                    work_time = #{workTime},
+                </if>
+                <if test="null != nowAddress and '' != nowAddress">
+                    now_address = #{nowAddress},
+                </if>
+                <if test="null != hopeSalary and '' != hopeSalary">
+                    hope_salary = #{hopeSalary},
+                </if>
+                <if test="null != talentDescription and '' != talentDescription">
+                    talent_description = #{talentDescription},
+                </if>
+                <if test="null != talentWorkExperience and '' != talentWorkExperience">
+                    talent_work_experience = #{talentWorkExperience}
+                </if>
+            </trim>
+        </set>
+        WHERE user_id = #{userId} 
+        AND creative_talent_id = #{creativeTalentId}
+    </update>
+    
+    <!-- 更新企业信息 -->
+    <update id="updateCompanyInfo" parameterType="com.shdatabank.puruan.model.Company">
+        UPDATE company
+        <set>
+            <trim suffixOverrides=",">
+                company_id = #{companyId},
+                <if test="null != companyType and '' != companyType">
+                    company_type = #{companyType},
+                </if>
+                <if test="null != companyAddress and '' != companyAddress">
+                    company_address = #{companyAddress},
+                </if>
+                <if test="null != companyPhone and '' != companyPhone">
+                    company_phone = #{companyPhone},
+                </if>
+                <if test="null != companyTrade and '' != companyTrade">
+                    company_trade = #{companyTrade},
+                </if>
+                <if test="null != companyIntroduce and '' != companyIntroduce">
+                    company_introduce = #{companyIntroduce}
+                </if>
+            </trim>
+        </set>
+        WHERE company_id = #{companyId}
+    </update>
+    
+    <!-- 插入教育经历 -->
+    <insert id="insertTalentEduExperience2" parameterType="com.shdatabank.puruan.model.TalentEduExperience" useGeneratedKeys="true">
+        <![CDATA[
+            INSERT INTO talent_edu_experience(user_id,talent_degree,
+            talent_school,talent_profession,finish_date,memo,is_open) VALUES(
+            #{userId},#{talentDegree},#{talentSchool},#{talentProfession},
+            #{finishDate},#{memo},#{isOpen})
+        ]]>
+    </insert>
+    
+    <!-- 删除教育经历 -->
+    <delete id="deleteTalentEduExperience2" parameterType="com.shdatabank.puruan.model.User">
+        <![CDATA[
+            DELETE FROM talent_edu_experience WHERE user_id = #{userId}
+        ]]>
+    </delete>
+    
+    <!-- 插入工作经验 -->
+    <insert id="insertTalentWorkExperience2" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO talent_work_experience(user_id,start_date,
+        end_date,work_company,work_job,work_description,is_open) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userId},#{item.startDate},#{item.endDate},#{item.workCompany},
+            #{item.workJob},#{item.workDescription},#{item.isOpen})
+        </foreach>
+    </insert>
+    
+    <!-- 删除工作经验 -->
+    <delete id="deleteTalentWorkExperience2" parameterType="com.shdatabank.puruan.model.User">
+        <![CDATA[
+            DELETE FROM talent_work_experience WHERE user_id = #{userId}
+        ]]>
+    </delete>
+    
+    <!-- 插入附加信息 -->
+    <insert id="insertUserCreativeTalent2" parameterType="com.shdatabank.puruan.model.UserCreativeTalent"
+    useGeneratedKeys="true" keyProperty="creativeTalentId">
+        INSERT INTO user_creative_talent(user_id,talent_name,work_mode,
+        work_time,now_address,hope_salary,talent_description,
+        talent_work_experience,publish_datetime,is_open)
+        VALUES (#{userId},#{talentName},#{workMode},
+        #{workTime},#{nowAddress},#{hopeSalary},
+        #{talentDescription},#{talentWorkExperience},NOW(),#{isOpen})
+    </insert>
+    
+    <!-- 更新附加信息 -->
+    <update id="updateUserCreativeTalent2" parameterType="com.shdatabank.puruan.model.UserCreativeTalent">
+        UPDATE user_creative_talent
+        <set>
+            <trim suffixOverrides=",">
+                creative_talent_id = #{creativeTalentId},
+                <if test="null != talentName and '' != talentName">
+                    talent_name = #{talentName},
+                </if>
+                <if test="null != workMode and '' != workMode">
+                    work_mode = #{workMode},
+                </if>
+                <if test="null != workTime and '' != workTime">
+                    work_time = #{workTime},
+                </if>
+                <if test="null != nowAddress and '' != nowAddress">
+                    now_address = #{nowAddress},
+                </if>
+                <if test="null != hopeSalary and '' != hopeSalary">
+                    hope_salary = #{hopeSalary},
+                </if>
+                <if test="null != talentDescription and '' != talentDescription">
+                    talent_description = #{talentDescription},
+                </if>
+                <if test="null != talentWorkExperience and '' != talentWorkExperience">
+                    talent_work_experience = #{talentWorkExperience},
+                </if>
+                <if test="1 != isOpen">
+                    is_open = 0
+                </if>
+            </trim>
+        </set>
+        WHERE user_id = #{userId} 
+        AND creative_talent_id = #{creativeTalentId}
+    </update>
+    
+    <!-- 插入投资机构 -->
+    <insert id="insertInvestCompany" parameterType="com.shdatabank.puruan.model.InvestCompany" 
+        useGeneratedKeys="true" keyProperty="investCompanyId">
+        INSERT INTO invest_company(
+        company_id,
+        invest_company_name,
+        build_date,
+        invest_case,
+        invest_status,
+        create_time
+        ) VALUES (
+        #{companyId},
+        #{investCompanyName},
+        #{buildDate},
+        #{investCase},
+        400701,
+        NOW()
+        )
+    </insert>
+    <!-- 插入投资机构 -->
+    <insert id="insertInvestPreference" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO invest_preference(
+        invest_company_id,
+        invest_preference_value
+        ) VALUES 
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.investCompanyId},#{item.investPreferenceValueId})
+        </foreach>
+    </insert>
+    <!-- 插入投资领域 -->
+    <insert id="insertInvestDomain" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO invest_domain(
+        invest_company_id,
+        invest_domain_value
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.investCompanyId},#{item.investDomainValue})
+        </foreach>
+    </insert>
+    
+    <!-- 删除投资偏好 -->
+    <delete id="deleteInvestPreference" parameterType="com.shdatabank.puruan.model.InvestCompany">
+        DELETE FROM invest_preference WHERE invest_company_id = #{investCompanyId}
+    </delete>
+    <!-- 删除投资领域 -->
+    <delete id="deleteInvestDomain" parameterType="com.shdatabank.puruan.model.InvestCompany">
+        DELETE FROM invest_domain WHERE invest_company_id = #{investCompanyId}
+    </delete>
+    <!-- 更新投资机构 -->
+    <update id="updateInvestCompany" parameterType="com.shdatabank.puruan.model.InvestCompany">
+        UPDATE invest_company 
+        <set>
+            <trim suffixOverrides=",">
+                invest_status = 400701,
+                <if test="null != companyId and '' != companyId">
+                    company_id = #{companyId},
+                </if>
+                <if test="null != investCompanyName and '' != investCompanyName">
+                    invest_company_name = #{investCompanyName},
+                </if>
+                <if test="null != buildDate">
+                    build_date = #{buildDate},
+                </if>
+                <if test="null != investCase and '' != investCase">
+                    invest_case = #{investCase},
+                </if>
+                create_time = NOW()
+            </trim>
+        </set>
+        WHERE invest_company_id = #{investCompanyId} 
+    </update>
+    
+    <!-- 判断投资机构是否成功 -->
+    <select id="selectInvestCompany" resultType="java.lang.Integer" 
+        parameterType="com.shdatabank.puruan.model.InvestCompany">
+        SELECT COUNT(*) FROM invest_company
+        WHERE company_id = #{companyId}
+    </select>
+    
+    <!-- 查询投资机构信息 -->
+    <select id="selectInvestCompanys" resultMap="selectInvestCompanysMap"
+        parameterType="com.shdatabank.puruan.model.InvestCompany">
+        SELECT
+        ic.*,
+        id.*,
+        ip.*
+        FROM invest_company ic
+        LEFT JOIN invest_domain id
+        ON ic.invest_company_id = id.invest_company_id
+        LEFT JOIN invest_preference ip
+        ON ic.invest_company_id = ip.invest_company_id
+        WHERE ic.company_id = #{companyId} LIMIT 1
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.InvestCompany" id="selectInvestCompanysMap">
+        <id property="investCompanyId" column="invest_company_id" />
+        <result property="companyId" column="company_id" />
+        <result property="investCompanyName" column="invest_company_name" />
+        <result property="buildDate" column="build_date" />
+        <result property="investCase" column="invest_case" />
+        <result property="investStatus" column="invest_status" />
+        <result property="createTime" column="create_time" />
+        <result property="active" column="active" />
+        <collection property="investPreferences" ofType="com.shdatabank.puruan.model.InvestPreference">
+            <id property="investPreferenceId" column="invest_preference_id" />
+            <result property="investCompanyId" column="invest_company_id2" />
+            <result property="investPreferenceValueId" column="invest_preference_value" />
+            <result property="preferenceValue" column="preference_value" />
+        </collection>
+        <collection property="investDomains" ofType="com.shdatabank.puruan.model.InvestDomain">
+            <id property="investDomainId" column="invest_domain_id" />
+            <result property="investCompanyId" column="invest_company_id1" />
+            <result property="investDomainValue" column="invest_domain_value" />
+            <result property="domainValue" column="domain_value" />
+        </collection>
+    </resultMap>
+    
+    <!-- 查询人才技能 -->
+    <select id="selectTalentTechnology" resultMap="selectTalentTechnologyMap">
+        SELECT
+        dd.data_id,
+        dd.dict_id,
+        dd.data_value
+        FROM dictionarydata dd
+        WHERE dd.dict_id in (300100,300200)
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.Dictionarydata" id="selectTalentTechnologyMap">
+        <id property="dataId" column="data_id" />
+        <result property="dictId" column="dict_id" />
+        <result property="dataValue" column="data_value" />
+    </resultMap>
+    
+    <!-- 插入人才技能 -->
+    <insert id="insertTalentTechnology" parameterType="java.util.List"
+        useGeneratedKeys="true" keyProperty="talentTechnologyId">
+        INSERT INTO talent_technology(
+        creative_talent_id,
+        technology_id
+        ) VALUES 
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.creativeTalentId},#{item.technologyId})
+        </foreach>
+    </insert>
+    
+    <!-- 删除人才技能 -->
+    <delete id="deleteTalentTechnology" parameterType="com.shdatabank.puruan.model.TalentTechnology">
+        DELETE FROM talent_technology WHERE creative_talent_id = #{0}
+    </delete>
+    
+    <!-- 查询投资机构偏好 -->
+    <select id="selectInvestPreferences" resultMap="selectInvestPreferencesMap">
+        SELECT
+        d.dict_id,
+        d.parent_id,
+        d.dict_name,
+        dd.data_id,
+        dd.dict_id,
+        dd.data_value
+        FROM dictionary d
+        LEFT JOIN dictionarydata dd
+        ON d.dict_id = dd.dict_id
+        WHERE d.dict_id in (500100,500200)
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.Dictionary" id="selectInvestPreferencesMap">
+        <id property="dictId" column="dict_id" />
+        <result property="parentId" column="parent_id" />
+        <result property="dictName" column="dict_name" />
+        <collection property="dictionarydatas" ofType="com.shdatabank.puruan.model.Dictionarydata">
+            <id property="dataId" column="data_id" />
+            <result property="dictId" column="dict_id1" />
+            <result property="dataValue" column="data_value" />
+        </collection>
+    </resultMap>
+</mapper>

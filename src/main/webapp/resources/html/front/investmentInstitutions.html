@@ -1,0 +1,61 @@
+			<!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="./resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>投融资管理</span><span><img src="./resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>投资机构</span>
+            </div>
+
+            <!--内容详情-->
+            <div class="contentInfo">
+                <div class="investmentInstitutions">
+                    <div class="head">
+                        <div class="part1 fl">查询:</div>
+                        <div class="part2 fr">
+                            <label>机构名称：
+                                <input type="text" id="organizationName">
+                            </label>
+                            <label>投资偏好：
+                                <select id="preference"></select>
+                            </label>
+                            <button id="query">查询</button>
+                        </div>
+                    </div>
+                    <table class="sui-table table-nobordered" id="tableData">
+                        <thead>
+                        <tr>
+                            <th>投资机构</th>
+                            <th>成立时间</th>
+                            <th>投资案例</th>
+                            <th>投资偏好</th>
+                            <th>投资领域</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        
+                        </tbody>
+                    </table>
+                    <div class="page">
+                        <div id="paginator" style="margin: auto;"></div>
+                    </div>
+                </div>
+            </div>
+            <script id="investment_institutions_template" type="text/x-jquery-tmpl">
+ 						<tr>
+                            <td ID="companyId">${investCompanyName}</td>
+                            <td>${buildDate}</td>
+                            <td>${investCase}</td>
+                            <td>
+								{{each $data.preference}}
+									<span data-id="preferenceId">${$data.preference[$index]}</span>
+								{{/each}}
+							</td>
+                            <td>
+                                {{each $data.domain}}
+									<span data-id="investDomainId">${$data.domain[$index]}</span>
+								{{/each}}
+                            </td>
+							<td><button data-id=${investCompanyId}>查看</button></td>
+                        </tr>
+			</script>
+            <script type="text/javascript" src="resources/js/front/investmentInstitutions.js"></script>

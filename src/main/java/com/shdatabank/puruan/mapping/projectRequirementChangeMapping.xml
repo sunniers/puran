@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IProjectRequirementChangeDao">
+    <!-- 查询变更的基本信息 -->
+    <select id="selectProjectRequirementChange" resultMap="selectProjectRequirementChangeMap"
+        parameterType="com.shdatabank.puruan.model.ProjectRequirementChange">
+        SELECT
+        pr.proj_id proj_requirement_id,
+        pr.proj_name proj_requirement_name,
+        (SELECT u.user_id FROM user u WHERE u.user_id = 1) publish_user_id,
+        (SELECT IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) 
+        FROM user u LEFT JOIN company c 
+        ON u.company_id = c.company_id
+        WHERE u.user_id = #{publishUserId}) user_alias
+        FROM project_requirement pr
+        JOIN project p 
+        ON p.project_requirement_id = pr.proj_id
+        WHERE p.project_id = #{projRequirementId}
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirementChange" 
+        id="selectProjectRequirementChangeMap">
+        <id property="projRequirementId" column="proj_requirement_id" />
+        <result property="projRequirementName" column="proj_requirement_name" />
+        <result property="publishUserId" column="publish_user_id" />
+        <result property="userAlias" column="user_alias" />
+    </resultMap>
+    
+    <!-- 插入需求变更 -->
+    <insert id="insertProjectRequirementChange" 
+        parameterType="com.shdatabank.puruan.model.ProjectRequirementChange">
+        INSERT INTO project_requirement_change(
+        proj_requirement_id,
+        publish_user_id,
+        target_user_id,
+        change_content,
+        start_datetime,
+        end_datetime,
+        change_status,
+        create_time
+        ) VALUES (
+        #{projRequirementId},
+        #{publishUserId},
+        #{targetUserId},
+        #{changeContent},
+        #{startDatetime},
+        #{endDatetime},
+        400901,
+        NOW()
+        )
+    </insert>
+    
+    <!-- 判断登录用户是否为项目的负责人 -->
+    <select id="selectPublishUser" parameterType="com.shdatabank.puruan.model.ProjectRequirementChange" 
+        resultType="java.lang.Integer">
+        SELECT COUNT(*) 
+        FROM user u 
+        JOIN project_requirement pr
+        ON pr.manager_user_id = u.user_id
+        WHERE pr.proj_id = #{projRequirementId}
+        AND u.user_id = #{publishUserId}
+    </select>
+    
+    <!-- 查询登录用户为管理员的团员的用户信息 -->
+    <select id="selectClassMember" resultMap="selectUserMap"
+        parameterType="com.shdatabank.puruan.model.ProjectRequirementChange">
+        SELECT u.user_id, 
+        u.user_name
+        FROM user u 
+        JOIN project_user_releation pur
+        ON u.user_id = pur.user_id
+        WHERE pur.project_requirement_id = #{projRequirementId}
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.User" id="selectUserMap">
+        <id property="userId" column="user_id" />
+        <result property="userName" column="user_name" />
+    </resultMap>
+    
+    <!-- 查询登录用户不为管理员的团员的用户信息 -->
+    <select id="selectClassManger" resultMap="selectUserMap"
+        parameterType="com.shdatabank.puruan.model.ProjectRequirementChange">
+        SELECT u.user_id,
+        u.user_name
+        FROM user u
+        JOIN project_requirement pr
+        ON pr.publish_user_id = u.user_id
+        WHERE pr.proj_id = #{projRequirementId}
+    </select>
+    
+    <!-- 查询所有的变更信息 -->
+    <select id="selectAllChanges" resultMap="selectAllChangesMap"
+        parameterType="com.shdatabank.puruan.model.ProjectRequirementChange">
+        SELECT
+        prc.*,
+        (
+        SELECT pr.proj_name FROM project_requirement pr
+        WHERE pr.proj_id = prc.proj_requirement_id
+        ) proj_requirement_name,
+        (
+        SELECT u.user_name FROM user u 
+        WHERE u.user_id = prc.publish_user_id
+        ) user_alias,
+        (
+        SELECT u.user_name FROM user u 
+        WHERE u.user_id = prc.target_user_id
+        ) target_user_alias,
+        'my' type
+        FROM project_requirement_change prc
+        WHERE prc.proj_requirement_id = #{projRequirementId}
+        AND prc.publish_user_id = #{publishUserId}
+        
+        UNION
+        
+        SELECT
+        prc.*,
+        (
+        SELECT pr.proj_name FROM project_requirement pr
+        WHERE pr.proj_id = prc.proj_requirement_id
+        ) proj_requirement_name,
+        (
+        SELECT u.user_name FROM user u 
+        WHERE u.user_id = prc.publish_user_id
+        ) user_alias,
+        (
+        SELECT u.user_name FROM user u 
+        WHERE u.user_id = prc.target_user_id
+        ) target_user_alias,
+        'other' type
+        FROM project_requirement_change prc
+        WHERE prc.proj_requirement_id = #{projRequirementId}
+        AND prc.target_user_id = #{publishUserId}
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirementChange" id="selectAllChangesMap">
+        <id property="projRequirementChangeId" column="proj_requirement_change_id" />
+        <result property="projRequirementId" column="proj_requirement_id" />
+        <result property="projRequirementName" column="proj_requirement_name" />
+        <result property="publishUserId" column="publish_user_id" />
+        <result property="userAlias" column="user_alias" />
+        <result property="targetUserId" column="target_user_id" />
+        <result property="targetUserAlias" column="target_user_alias" />
+        <result property="projBudget" column="proj_budget" />
+        <result property="changeContent" column="change_content" />
+        <result property="startDatetime" column="start_datetime" />
+        <result property="endDatetime" column="end_datetime" />
+        <result property="changeStatus" column="change_status" />
+        <result property="createTime" column="create_time" />
+        <result property="active" column="active" />
+        <result property="type" column="type" />
+    </resultMap>
+    
+    <!-- 查询详细信息 -->
+    <select id="selectChange" resultMap="selectChangeMap"
+        parameterType="com.shdatabank.puruan.model.ProjectRequirementChange">
+        SELECT * 
+        FROM project_requirement_change prc
+        WHERE prc.proj_requirement_change_id = #{projRequirementChangeId}
+    </select>
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirementChange" id="selectChangeMap">
+        <id property="projRequirementChangeId" column="proj_requirement_change_id" />
+        <result property="projRequirementId" column="proj_requirement_id" />
+        <result property="publishUserId" column="publish_user_id" />
+        <result property="targetUserId" column="target_user_id" />
+        <result property="projBudget" column="proj_budget" />
+        <result property="changeContent" column="change_content" />
+        <result property="startDatetime" column="start_datetime" />
+        <result property="endDatetime" column="end_datetime" />
+        <result property="changeStatus" column="change_status" />
+        <result property="createTime" column="create_time" />
+        <result property="active" column="active" />
+    </resultMap>
+    
+    <!-- 修改变更内容 -->
+    <update id="updateProjectRequirementChange" 
+        parameterType="com.shdatabank.puruan.model.ProjectRequirementChange">
+        UPDATE  project_requirement_change 
+        SET change_status = 400902
+        WHERE proj_requirement_change_id = #{projRequirementChangeId}
+    </update>
+</mapper>

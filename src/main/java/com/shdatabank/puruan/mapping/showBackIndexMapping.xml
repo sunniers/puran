@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.ShowBackIndexDao">
+    <!-- 查询后台首页的菜单 -->
+    <select id="selectSysResources" resultMap="selectSysResourcesMap">
+        SELECT p.*,s.resource_name name,s.resource_id id,s.parent_resource_id p_id,s.resource_chese chese,
+        s.sorted_field fields,
+        s.resource_icon icon,s.resource_type type,s.active active1,s.resource_link resource_link1 
+        FROM sys_resource p join sys_resource s on p.resource_id = s.parent_resource_id 
+        WHERE s.resource_type = #{resourceType} AND p.resource_type = #{resourceType} 
+        union select p1.*,null,null,null,null,null,null,null,null,null from sys_resource p1 where p1.parent_resource_id is null 
+        AND p1.resource_type = #{resourceType}  ORDER BY sorted_field,fields
+    </select>
+    <!-- 查询后台首页的菜单的结果 -->
+    <resultMap type="com.shdatabank.puruan.model.SysResource" id="selectSysResourcesMap">
+        <id property="resourceId" column="resource_id" />
+        <result property="parentResourceId" column="parent_resource_id" />  
+        <result property="resourceName" column="resource_name" />
+        <result property="resourceChese" column="resource_chese" />
+        <result property="resourceIcon" column="resource_icon" />
+        <result property="resourceType" column="resource_type" />
+        <result property="resourceLink" column="resource_link" />
+        <result property="active" column="active" />
+        <collection property="sysResources" ofType="com.shdatabank.puruan.model.SysResource">  
+            <id property="resourceId" column="id" />
+            <result property="parentResourceId" column="p_id" />  
+            <result property="resourceName" column="name" />
+            <result property="resourceChese" column="chese" />
+            <result property="resourceIcon" column="icon" />
+            <result property="resourceType" column="type" />
+            <result property="active" column="active1" />
+            <result property="resourceLink" column="resource_link1" />
+        </collection>
+    </resultMap>
+    
+    <!-- 查询后台首页的需求信息 -->
+    <select id="selectProjectRequirements" resultMap="selectProjectRequirementsMap">
+        <![CDATA[
+            SELECT 
+            pr.proj_id,
+            pr.proj_name,
+            pr.proj_service_fee,
+            pr.proj_close_date,
+            (
+            SELECT IFNULL(c.company_name,u.user_alias) FROM user u 
+            LEFT JOIN company c 
+            ON c.company_id = u.company_id 
+            WHERE u.user_id = pr.publish_user_id 
+            ) publish_user,
+            (
+            SELECT COUNT(*) FROM project_enroll pe 
+            WHERE pe.project_requirement_id = pr.proj_id 
+            ) user_count,
+            prc.*,
+            (
+            SELECT dd.data_value FROM dictionarydata dd 
+            WHERE dd.data_id = prc.proj_require_class_value 
+            ) proj_require_class_values 
+            FROM project_requirement pr 
+            LEFT JOIN project_requirement_class prc 
+            ON pr.proj_id = prc.proj_require_id 
+            WHERE NOW() < pr.proj_close_date 
+            AND pr.active = 0 
+            AND pr.is_open = 0
+            ORDER BY user_count desc
+        ]]>
+    </select>
+    <!-- 查询后台首页的需求信息的结果 -->
+    <resultMap type="com.shdatabank.puruan.model.ProjectRequirement" id="selectProjectRequirementsMap">
+        <id property="projId" column="proj_id" />
+        <result property="projName" column="proj_name" />
+        <result property="projServiceFee" column="proj_service_fee" />
+        <result property="publishUser" column="publish_user" />
+        <result property="projCloseDate" column="proj_close_date" />
+        <result property="userCount" column="user_count" />
+        <collection property="projectRequirementClasss" ofType="com.shdatabank.puruan.model.ProjectRequirementClass">
+            <id property="projRequirementClassId" column="proj_requirement_class_id" />
+            <result property="projRequireId" column="proj_require_id" />
+            <result property="projRequireClassValue" column="proj_require_class_value" />
+            <result property="projRequireClassValues" column="proj_require_class_values" />
+        </collection>
+    </resultMap>
+    
+    <!-- 查询后台首页的创意资源 -->
+    <select id="selectCreativeResources" resultMap="selectCreativeResourcesMap">
+        <![CDATA[
+            SELECT creative_resource_id,resource_name,resource_image,
+            resource_number,resource_description,show_address,resource_attach,
+            resource_attach_name,resource_currency,resource_price,resource_status,active FROM 
+            creative_resource WHERE active = 0 ORDER BY publish_datetime DESC
+            LIMIT 4
+        ]]>
+    </select>
+    <!-- 查询后台首页的创意资源的结果 -->
+    <resultMap type="com.shdatabank.puruan.model.CreativeResource" id="selectCreativeResourcesMap">
+        <id property="creativeResourceId" column="creative_resource_id" />
+        <result property="resourceName" column="resource_name" />
+        <result property="resourceImage" column="resource_image" />
+        <result property="resourceNumber" column="resource_number" />
+        <result property="resourceDescription" column="resource_description" />
+        <result property="showAddress" column="show_address" />
+        <result property="resourceAttach" column="resource_attach" />
+        <result property="resourceAttachName" column="resource_attach_name" />
+        <result property="resourceCurrency" column="resource_currency" />
+        <result property="resourcePrice" column="resource_price" />
+        <result property="resourceStatus" column="resource_status" />
+        <result property="active" column="active" />
+    </resultMap>
+</mapper>

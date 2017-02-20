@@ -1,0 +1,139 @@
+
+<!--路径-->
+<div class="nav">
+	<span>首页</span><span><img	src="resources/images/front/rightAngleBrackets.png" alt=""></span> 
+	<span>个人中心</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+	<span>我的购物车</span>
+</div>
+
+<!--内容详情-->
+<div class="contentInfo">
+	<div class="borderInves">
+		<!-- 边框 -->
+		<!--shopingCart-->
+		<div class="catbox">
+			<table id="cartTable">
+				<thead>
+					<tr>
+						<th width="15"><label> <input class="check-all check" type="checkbox"><span class="seLect">全选</span></label></th>
+						<th width="270">资源名称</th>
+						<th width="100">单价（元）</th>
+						<th width="100">库存（件）</th>
+						<th width="100">数量</th>
+						<th width="100">小计（元）</th>
+						<th width="130">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="checkbox"><input class="check-one check"	type="checkbox" /></td>
+						<td class="goods"><img src="resources/images/background/logo.jpg"	alt="" />
+							<p>
+								<a href="#">包邮 正品玛姬儿压缩面膜无纺布纸膜100粒</a>
+							</p>
+							<div class="buSiness">商家：<a href="javascript:void(0)">Windows中国官方旗舰店</a></div>
+						</td>
+						<td class="price">5999.88</td>
+						<td class="inventory">100</td>
+						<td class="count">
+							<span class="reduce">-</span> 
+								<input data-inventory="100"	data-price="5999.88" class="count-input" type="number" value="1" /> 
+							<span class="add">+</span>
+						</td>
+						<td class="subtotal" data-num="5999.88">5999.88</td>
+						<td class="operation"><span class="delete">删除</span><p>移到我的收藏</p></td>
+					</tr>
+					<tr>
+						<td class="checkbox"><input class="check-one check"	type="checkbox" /></td>
+						<td class="goods"><img src="resources/images/background/logo.jpg"	alt="" />
+							<p>
+								<a href="#">包邮 正品玛姬儿压缩面膜无纺布纸膜100粒</a>
+							</p>
+							<div class="buSiness">商家：<a href="javascript:void(0)">Windows中国官方旗舰店</a></div>
+						</td>
+						<td class="price">5999.88</td>
+						<td class="inventory">100</td>
+						<td class="count">
+							<span class="reduce">-</span> 
+								<input data-inventory="100"	data-price="5999.88" class="count-input" type="number" value="1" /> 
+							<span class="add">+</span>
+						</td>
+						<td class="subtotal" data-num="5999.88">5999.88</td>
+						<td class="operation"><span class="delete">删除</span><p>移到我的收藏</p></td>
+					</tr>
+					<tr>
+						<td class="checkbox"><input class="check-one check"	type="checkbox" /></td>
+						<td class="goods"><img src="resources/images/background/logo.jpg"	alt="" />
+							<p>
+								<a href="#">包邮 正品玛姬儿压缩面膜无纺布纸膜100粒</a>
+							</p>
+							<div class="buSiness">商家：<a href="javascript:void(0)">Windows中国官方旗舰店</a></div>
+						</td>
+						<td class="price">5999.88</td>
+						<td class="inventory">100</td>
+						<td class="count">
+							<span class="reduce">-</span> 
+								<input data-inventory="100"	data-price="5999.88" class="count-input" type="number" value="1" /> 
+							<span class="add">+</span>
+						</td>
+						<td class="subtotal" data-num="5999.88">5999.88</td>
+						<td class="operation"><span class="delete">删除</span><p>移到我的收藏</p></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="page">
+				<div id="paginator" style="margin: auto;"></div>
+			</div>
+			<div class="foot" id="foot">
+				<label class="fl select-all"><input type="checkbox"
+					class="check-all check" />&nbsp;&nbsp;全选</label> <a class="fl delete"
+					id="deleteAll" href="javascript:;">删除选中商品</a>
+				<div class="fr closing payFor" >去结算</div>
+				<input type="hidden" id="cartTotalPrice" />
+				<div class="fr total">
+					共计：<span data-total="0" id="priceTotal">0.00</span>元
+				</div>
+				<div class="fr selected" id="selected">
+					已选商品<span data-totalNum="0" id="selectedTotal">0</span>件
+					<!--<span class="arrow up">︽</span><span class="arrow down">︾</span>-->
+				</div>
+				<div class="selected-view">
+					<div id="selectedViewList" class="clearfix">
+						<div>
+							<span>取消选择</span>
+						</div>
+					</div>
+					<!-- <span class="arrow">◆<span>◆</span></span> -->
+				</div>
+			</div>
+		</div>
+		<!--shopingCart-->
+	</div>
+</div>
+<script type="text/x-jquery-tmpl" id="shopping_cart_tmplate">
+					<tr data-resourceType="${resourceType}" data-shoppingCardId="${shoppingCardId}" data-creativeResourceId="${creativeResourceId}">
+						<td class="checkbox"><input class="check-one check"	type="checkbox" /></td>
+						<td class="goods"><img src="${resourceImage}"	alt="" />
+							<p>
+								<a href="javascript:void(0)">${resourceName}</a>
+							</p>
+							<div class="buSiness">商家：<a href="javascript:void(0)">${publishName}</a></div>
+						</td>
+						<td class="price">${price}</td>
+						<td class="inventory">${resourceNumber}</td>
+						<td class="count">
+							<span class="reduce">-</span> 
+								<input data-inventory="${resourceNumber}" 
+								data-price="${resourcePrice}" class="count-input" type="number" value="${shoppingNum}" /> 
+							<span class="add">+</span>
+						</td>
+						<td class="subtotal" data-num="${totalPrice}">${totalFormatPrice}</td>
+						<td class="operation">
+						<span class="delete">删除</span>
+						{{if $data.isHouse=='0'}}
+						<p class="collect">移到我的收藏</p>
+						{{/if}}
+						</td>
+					</tr>
+</script>
+<script type="text/javascript" src="resources/js/front/shoppingCart.js"></script>

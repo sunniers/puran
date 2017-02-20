@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.CreateResourceWarehouseDao">
+	<!-- 资源仓库mapper -->
+	<resultMap type="com.shdatabank.puruan.model.CreateResourceWarehouse" id="CreateResourceWarehouse_Map">
+		<id property="stockId" column="stock_id"/>
+		<result property="createResourceId" column="create_resource_id"/>
+		<result property="stockCount" column="stock_count"/>
+		<result property="resourceType" column="resource_type"/>
+		<result property="inStockTime" column="in_stock_time"/>
+		<result property="updateTime" column="update_time"/>
+		<result property="active" column="active"/>
+		<association property="creativeResource" javaType="com.shdatabank.puruan.model.CreativeResource">  
+	        <id property="creativeResourceId" column="creative_resource_id"/>
+			<result property="userId" column="user_id"/>
+			<result property="resourceName" column="resource_name"/>
+			<result property="resourceImage" column="resource_image"/>
+			<result property="resourceNumber" column="resource_number"/>
+			<result property="resourceDescription" column="resource_description"/>
+			<result property="showAddress" column="show_address"/>
+			<result property="resourceAttach" column="resource_attach"/>
+			<result property="resourceAttachName" column="resource_attach_name"/>
+			<result property="resourceCurrency" column="resource_currency"/>
+			<result property="resourcePrice" column="resource_price"/>
+			<result property="resourceStatus" column="resource_status"/>  
+	    </association>
+	</resultMap>
+	<sql id="CreateResourceWarehouse_Columns">
+		crw.stock_id stockId,
+		crw.create_resource_id createResourceId,
+		crw.stock_count stockCount,
+		crw.resource_type resourceType,
+		crw.in_stock_time inStockTime,
+		crw.update_time updateTime,
+		crw.active active,
+		cr.user_id userId,
+		cr.resource_name resourceName,
+		cr.resource_image resourceImage,
+		cr.resource_number resourceNumber,
+		cr.resource_description resourceDescription,
+		cr.show_address showAddress,
+		cr.resource_attach resourceAttach,
+		cr.resource_attach_name resourceAttachName,
+		cr.resource_currency resourceCurrency,
+		cr.resource_price resourcePrice,
+		cr.resource_status resourceStatus
+	</sql>
+
+	<!-- 资源仓库查询集合 -->
+	<select id="selectAllCreateResourceWarehouse" resultType="com.shdatabank.puruan.model.WarehouseAndResource">
+		select <include refid="CreateResourceWarehouse_Columns"/> from create_resource_warehouse crw
+		left join creative_resource cr on crw.create_resource_id = cr.creative_resource_id
+		where cr.user_id = #{userId}
+	</select>
+	
+	<!-- 资源仓库数据插入 -->
+	<insert id="insertCreateResourceWarehouse" parameterType="com.shdatabank.puruan.model.CreateResourceWarehouse">
+		insert into create_resource_warehouse (create_resource_id,stock_count,resource_type,in_stock_time,active)
+		values(#{createResourceId},#{stockCount},#{resourceType},now(),0)
+	</insert>
+	<!-- 资源仓库详细信息查看 -->
+	<select id="selectCreateResourceWarehouse" resultType="com.shdatabank.puruan.model.WarehouseAndResource">
+		select <include refid="CreateResourceWarehouse_Columns"/> from create_resource_warehouse crw
+		left join creative_resource cr on crw.create_resource_id = cr.creative_resource_id
+		where crw.stock_id = #{stockId}
+	</select>
+	<!-- 根据id减去仓库中相应库存 -->
+	<update id="updateCreateResourceWarehouseReduce" parameterType="com.shdatabank.puruan.model.ProjectAndPurchase">
+		update create_resource_warehouse set stock_count = (stock_count - #{number}) where  stock_id = #{stockId}
+	</update>
+	<!-- 修改资源库存 -->
+	<update id="updateCreateResourceWarehouseCount" parameterType="com.shdatabank.puruan.model.WarehouseAndResource">
+		update create_resource_warehouse set stock_count = #{stockCount} where stock_id = #{stockId}
+	</update>
+	<!-- ==========================从资源仓库里把审核通过的资源添加到采购列表 ============================== -->
+	
+	<!-- 根据用户id查询用户负责的项目列表 -->
+	<select id="selectAllProject" resultType="com.shdatabank.puruan.model.ProjectAndTask">
+		select project_id projectId,project_name projectName from project where project_manager_user_id = #{userId}
+	</select>
+	<!-- 根据用户id和项目id查询用户承接的任务列表 -->
+	<select id="selectAllTask" resultType="com.shdatabank.puruan.model.ProjectAndTask">
+		select ppt.proj_task_id projTaskId,ppt.proj_task_name projTaskName
+		from project p 
+		left join project_plan pp on p.project_id = pp.proj_id
+		left join project_plan_task ppt on ppt.proj_plan_id=pp.proj_plan_id
+		where p.project_id = #{projectId} and ppt.undertake_user_id = #{userId}
+	</select>
+</mapper>

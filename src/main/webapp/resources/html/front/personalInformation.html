@@ -1,0 +1,240 @@
+<!--路径-->
+<div class="nav">
+	<span>首页</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>个人中心</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>我的账号</span><span><img
+		src="resources/images/front/rightAngleBrackets.png" alt=""></span> <span>个人信息</span>
+</div>
+
+<!--内容详情-->
+<div class="contentInfo white">
+	<div class="myInformation">
+		<div class="essentialInformation">
+			<div class="head">基本信息</div>
+			<div class="informationContent">
+				<div class="userName box">
+					<div class="box1">
+						<label>用户名：</label>
+					</div>
+					<div class="box2">
+						<span class="name"></span>
+						<span >个人用户</span>
+					</div>
+				</div>
+				<div class="nickname box">
+					<div class="box1">
+						<label>昵称：</label>
+					</div>
+					<div class="box2">
+						<input type="text">
+					</div>
+				</div>
+				<div class="realName box">
+					<div class="box1">
+						<label>真实姓名：</label>
+					</div>
+					<div class="box2">
+						
+					</div>
+				</div>
+				<div class="idNumber box">
+					<div class="box1">
+						<label>身份证号：</label>
+					</div>
+					<div class="box2">
+						
+					</div>
+				</div>
+				<div class="mailbox box">
+					<div class="box1">
+						<label>邮箱：</label>
+					</div>
+					<div class="box2">
+						
+					</div>
+				</div>
+				<div class="phoneNumber box">
+					<div class="box1">
+						<label>手机号：</label>
+					</div>
+					<div class="box2">
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="educationExperience">
+			<div class="head">教育经历</div>
+			<div class="informationContent">
+				<div class="education fr box">
+					<label>学历：</label> 
+					<select data-id="">
+						<option>小学</option>
+						<option>初中</option>
+						<option>高中</option>
+						<option>中专</option>
+						<option>大专</option>
+						<option>本科</option>
+						<option>硕士</option>
+						<option>博士</option>
+					</select>
+				</div>
+				<div class="school fr box">
+					<label>学校：</label> <input type="text">
+				</div>
+				<div class="major fr box">
+					<label>专业：</label> <input type="text">
+				</div>
+				<div class="graduation fr box">
+					<form class="sui-form form-horizontal" style="margin-right: 481px;">
+					  <div data-toggle="datepicker" class="control-group input-daterange">
+					    <label class="control-label">时间选择：</label>
+					    <div class="controls">
+					      <input type="text" class="input-medium input-date">
+					    </div>
+					  </div>
+					</form>
+				</div>
+				<div class="remarks fr box">
+					<label>备注：</label>
+					<textarea></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="workExperience">
+			<div class="head">工作经验</div>
+			<div class="informationContent">
+				<div class="workExItem">
+					<div class="position fr">
+					<label>职位：</label> <input type="text">
+					</div>
+					<div class="company fr">
+						<label>公司：</label> <input type="text">
+					</div>
+					<div class="time fr">
+						<form class="sui-form form-horizontal">
+							  <div data-toggle="datepicker" class="control-group input-daterange">
+							    <label class="control-label">时间选择：</label>
+							    <div class="controls">
+							      <input type="text" class="input-medium input-date startDate"><span>-</span>
+							      <input type="text" class="input-medium input-date endDate">
+							    </div>
+							  </div>
+						</form>
+					</div>
+					<div class="mainCase fr">
+						<label>主要情况：</label>
+						<textarea></textarea>
+					</div>
+					<div class="del">删除</div>
+				</div>
+				
+			</div>
+			<div class="add fr">
+					<span class="addEx"><img src="resources/images/front/add.png" />&nbsp;<span>增加</span>&nbsp;</span>
+					<span class="delEx undel"><img src="resources/images/front/minus.png" />&nbsp;<span>删除</span></span>
+			</div>
+		</div>
+		<div class="addInformation">
+			<div class="head">
+				<div class="fl">附加信息</div>
+			</div>
+			<div data-id="" class="informationContent">
+				<div class="talentName fl box">
+					<label>人才名称：</label> <input type="text">
+				</div>
+				<div class="workWay fl box">
+					<label>工作方式：</label> <input type="text">
+				</div>
+				<div class="workTime fl box">
+					<label>工作时间：</label> <input type="text">
+				</div>
+				<div class="technologys fl box">
+					<label>技术标签：</label>
+					<div class="checkContent" style="display:inline-block;">
+					</div>
+				</div>
+				<div class="liveAddress fl box">
+					<label>所在地址：</label> <input type="text">
+				</div>
+				<div class="expectedaSalary fl box">
+					<label>期望薪资：</label> <input type="number"placeholder="(单位元)">
+				</div>
+				<div class="technology fl box">
+					<label>技术特长：</label>
+					<textarea></textarea>
+				</div>
+				<div class="projectExperience fl box">
+					<label>项目经验：</label>
+					<textarea></textarea>
+				</div>
+				<div class="Jurisdiction">
+					<span>权限公开限制：</span>
+                	<label class="checkbox-pretty inline ">
+                    	<input id="eduOpen" type="checkbox" ><span>教育信息公开</span>
+                  	</label>
+                  	<label class="checkbox-pretty inline">
+                    	<input id="workExOpen" type="checkbox" ><span>工作经历公开</span>
+                  	</label>
+                  	<label class="checkbox-pretty inline checked">
+                    	<input id="otherOpen" type="checkbox" checked="checked"><span>附加信息公开</span>
+                  	</label>	
+                </div>
+				<div class="save fr">
+					<button class="preserve">保 存</button>
+					<button class="pub">发 布</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="errModal" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" data-dismiss="modal" aria-hidden="true" class="sui-close">×</button>
+        <h4 id="myModalLabel" class="modal-title">提示</h4>
+      </div>
+      <div class="modal-body">
+		附加信息公开时,请将附加信息全部填写。
+		</div>
+      <div class="modal-footer">
+        <button type="button" data-ok="modal" class="sui-btn btn-primary btn-large">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script id="per_workexper_template" type="text/x-jquery-tmpl">
+				<div data-id="${experienceId}" class="workExItem">
+					<div class="position fr">
+					<label>职位：</label> <input type="text" value="${workJob}">
+					</div>
+					<div class="company fr">
+						<label>公司：</label> <input type="text" value="${workCompany}">
+					</div>
+					<div class="time fr">
+						<form class="sui-form form-horizontal">
+							  <div data-toggle="datepicker" class="control-group input-daterange">
+							    <label class="control-label">时间选择：</label>
+							    <div class="controls">
+							      <input type="text" class="input-medium input-date startDate" value="${startDate}"><span>-</span>
+							      <input type="text" class="input-medium input-date endDate" value="${endDate}">
+							    </div>
+							  </div>
+						</form>
+					</div>
+					<div class="mainCase fr">
+						<label>主要情况：</label>
+						<textarea>${workDescription}</textarea>
+					</div>
+					<div class="del">
+							删除
+					</div>
+				</div>
+</script>
+	<script id="person_check_template" type="text/x-jquery-tmpl">
+	<label><input data-id="${dataId}"  type="checkbox"/>${dataValue}</label>
+	</script>
+<script type="text/javascript" src="resources/js/front/personalInformation.js"></script>

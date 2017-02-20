@@ -1,0 +1,106 @@
+<!--路径-->
+<div class="nav">
+	<span>首页</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+	<span>需求管理</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span> 
+	<span>需求状态</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span> 
+	<span>查看</span>
+</div>
+
+<div class="contentInfo">
+	<div class="demandStatusView">
+			
+	</div>
+</div>
+<script type="text/x-jquery-tmpl" id="status_view_tmplate">
+			<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>需求名称:</div>
+			    <div class="span5">${projName}</div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>需求分类:</div>
+			    <div class="span5">
+					{{each $data.projectRequirementClasss}}
+						<label class="checkbox-pretty inline checked disabled">
+    						<input type="checkbox" checked=""  disabled=""><span>${$data.projectRequirementClasss[$index].projRequireClassName}</span>
+  						</label>
+					{{/each}}
+				</div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			   <div class="span4"><span>*</span>需求预算:</div>
+			    <div class="span5">${projServiceFee}</div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>报名截止日期:</div>
+			    <div class="span5">${projCloseDate}</div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>需求交付日期:</div>
+			    <div class="span5">${projDevlierDate}</div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>评估周期:</div>
+			    <div class="span5">${projEstimate}天</div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>需求概述:</div>
+			    <div class="span5"><textarea rows="10" cols="65">${projRequireDescriptionContent}</textarea></div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>供方类型:</div>
+			    <div class="span5 providerType">
+					<label class="checkbox-pretty inline checked disabled">
+    					<input data-id="1" type="checkbox"  disabled=""><span>企业用户</span>
+  					</label>
+  					<label class="checkbox-pretty inline checked disabled">
+    					<input data-id="2" type="checkbox"  disabled=""><span>个人用户</span>
+  					</label>
+				</div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>认证要求:</div>
+			    <div class="span5 authenticationRequirement">
+					<label class="checkbox-pretty inline checked disabled">
+    					<input data-id="1" type="checkbox"  disabled=""><span>身份认证</span>
+  					</label>
+  					<label class="checkbox-pretty inline checked disabled">
+    					<input data-id="2" type="checkbox"  disabled=""><span>手机认证</span>
+  					</label>
+  					<label class="checkbox-pretty inline checked disabled">
+    					<input data-id="3" type="checkbox"  disabled=""><span>邮箱认证</span>
+  					</label>
+				</div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4"><span>*</span>发布方式:</div>
+			    <div class="span5 publishWay">
+					<label class="checkbox-pretty inline checked disabled">
+    					<input data-id="1" type="checkbox"  disabled=""><span>公开发布</span>
+  					</label>
+  					<label class="checkbox-pretty inline  disabled">
+    					<input data-id="2" type="checkbox"  disabled=""><span>我的圈子</span>
+  					</label>
+  					<label class="checkbox-pretty inline checked disabled">
+    					<input data-id="3" type="checkbox"  disabled=""><span>平台自动推荐</span>
+  					</label>
+				</div>
+	  		</div>
+	  		<div class="sui-row-fluid">
+			    <div class="span4">附件:</div>
+			    <div class="span5">
+					{{if $data.projAttachFile!=null}}
+			    	<div class="span12 fileBox">
+			    		<div class="file">
+			    			<div class="fileImg">
+			    				<img src="resources/images/front/enclosure.png"/>
+			    			</div>
+			    			<div class="view">
+			    				<a href="${projAttachFile}">${projName}</a>
+			    			</div>
+			    		</div>
+			    	</div>
+					{{/if}}
+			    </div>
+	  		</div>
+</script>
+<script src="resources/js/front/demandStatusView.js"></script>

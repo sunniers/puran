@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.IFindPwdDao">
+	<!-- 判断用户是否存在 -->
+	<select id="selectUserCount" parameterType="com.shdatabank.puruan.model.User"
+		resultMap="selectUserCountMap">
+		SELECT user_id,user_name,user_email ,user_mobile FROM user WHERE
+		user_name
+		=#{userName,jdbcType=VARCHAR}
+		<if test="userEmail !=null and userEmail !=''">
+			AND user_email = #{userEmail,jdbcType=VARCHAR}
+		</if>
+		<if test="userMobile !=null and userMobile !=''">
+			AND user_mobile=#{userMobile}
+		</if>
+	</select>
+	<resultMap type="com.shdatabank.puruan.model.User" id="selectUserCountMap">
+		<id property="userId" column="user_id" />
+		<result property="userName" column="user_name" />
+		<result property="userEmail" column="user_email" />
+		<result property="userMobile" column="user_mobile" />
+	</resultMap>
+
+	<!-- 更新用户密码 -->
+	<update id="updateUserPwd" parameterType="com.shdatabank.puruan.model.User">
+        <![CDATA[
+            UPDATE user SET user_pwd = #{newUserPwd,jdbcType=VARCHAR} WHERE user_name=#{userName}
+            
+        ]]>
+	</update>
+	
+	<!-- 根据用户名修改认证手机号 -->
+	<update id="updateVerificationUserphone" parameterType="com.shdatabank.puruan.model.User">
+		UPDATE user u set 
+		u.user_mobile=#{userMobile} where user_name = #{userName}
+	</update>
+</mapper>

@@ -1,0 +1,63 @@
+            <!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="../../images/background/rightCusp.png" alt=""></span>
+                <span>用户管理</span>
+            </div>
+
+            <!--内容详情-->
+            <div class="contentInfo umHeight">
+                <div class="userManage">
+                    <div class="fastQuery">
+                        <div class="fastQuery1">
+                            <div class="fastQueryName">快速查询：</div>
+                        </div>
+                        <div class="fastQuery2">
+                        	<form>
+                            <div class="userName">
+                                <label>用户姓名：</label>
+                                <input id="userName" type="text">
+                            </div>
+                            <!-- <div class="department" >
+                                <label>部门：</label>
+                                <select id="department"></select>
+                            </div> -->
+                            </form>
+                            <button class="query" id="query">查询</button>
+                        </div>
+                    </div>
+                    <div class="addNewUser" >
+                        <div class="addNewUserLeft" >
+                            <img src="../../images/background/add.png" />
+                            <div class="addNewUserWord">新增用户</div>
+                        </div>
+                        <div class="addNewUserRight">全选</div>
+                    </div>
+                    <div class="userManageForm">
+                        <table class="sui-table table-zebra" id="tableData"> 
+                            <thead>
+                            <tr>
+                                <th>用户姓名</th>
+                                <th>角色</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>  
+                            	
+                            </tbody>
+                        </table>
+                    </div> 
+                </div>
+                <div id="paginator" style="margin: auto;"></div>
+            </div>
+			<script id="user_manage_template" type="text/x-jquery-tmpl"> 
+							<tr>
+                                <td><input type="checkbox">${userAlias}</td>
+                                <td>${backAllUserRoles}</td>
+                                <td data-value="${userId}">
+								<button class="update">修改</button>
+								<button class="del">删除</button>
+								</td>
+                            </tr>
+			</script>
+			 <script type="text/javascript" src="../../js/background/userManage.js"></script>
+

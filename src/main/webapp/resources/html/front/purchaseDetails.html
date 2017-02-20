@@ -1,0 +1,123 @@
+            <!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>出售的资源</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>查看详情</span>
+            </div>
+
+            <!--内容详情-->
+            <div class="contentInfo white">
+            	<div class="resourceDetails">
+            		<div class="selTop">
+            			<div class="pic">
+            				<img alt="" src="resources/html/background/test.jpg">
+            			</div>
+            			<div class="selInfo">
+            				<h2>Windows 10免费升价</h2>
+            				<div class="selMoney">
+            					<div class="selLeft">
+            						报价：￥<span>000</span>元
+            					</div>
+            					<div class="selRight">
+            						<p>
+            							<span class="selPl">000</span><br />
+            							<span>累计评价</span>
+            						</p>
+            						<p>
+            							<span class="selCj">000</span><br />
+            							<span>总成交量</span>
+            						</p>
+            					</div>
+            				</div>
+                            <div>
+                               	 库存：<span class="Stock">000</span> 件
+                            </div>
+            			</div>
+            			<!-- 能否购买 -->
+            			<div class="purchase" style="display: none;">
+            				<div class="Number">
+	            				<span class="reduce"></span> 
+	            					<input class="count-input" type="text" value="1">
+	            				<span class="add">+</span>
+            				</div>
+            				<div class="operation">
+	            				<a href="" class="collection">加入购物车</a>
+	            				<a href="" class="buy">立即购买</a>
+            				</div>
+            			</div>
+            			
+            		</div>
+            		
+            		
+            		<div class="selBottom">
+                        <div class="investment_title">
+                            <div data-attr="resourceDescription" class="on">资源详情</div>
+                            <div data-attr="selPl" class="" id="evaluation">资源评价</div>
+                        </div>
+                       	<div class="investment_con">
+                            <!--资源详情  -->
+                            <div class="investment_con_list resourceDescription" style="display:block;">
+                            	<div class="showAddress">
+
+	                            </div>
+	                            <div class="selRes">
+	                            	123
+	                            </div>
+                            </div>
+                            <!--资源评价-->
+                            <div class="investment_con_list selPl" style="display: none;">
+                            	<div class="selReply">
+                            		<!-- 初评 -->
+                            		
+                            		<!-- 商家解释 -->
+                            	</div>	
+                            			
+                            			
+                            		
+	                        </div>
+	            		</div>
+	            	</div>
+	            </div>
+	         </div>
+	         
+	         
+			<script id="purchase_replay_tmplate" type="text/x-jquery-tmpl">
+						<div class="selStars">
+                            			<div class="selTitle">
+	                            			<div class="selSt"></div>
+	                            			<span class="selName">${userAlias}</span>
+                            			</div>
+                            			
+                            			<div class="selContent">
+                            				<div class="madContent">
+                            					<div class="selLeft">
+	                            					<p>${evaluateTime} | <span>初评：</span></p>
+	                            				</div>
+	                            				<div class="selRight">
+	                            					<p>${evaluateValue}</p>
+	                            				</div>
+                            				</div>
+											{{if $data.evaluateAppend!=null}}
+                            					<div class="madContent">
+                            						<div class="selLeft">
+	                            						<p>${appendTime} | <span>追加：</span></p>
+	                            					</div>
+	                            					<div class="selRight">
+	                            						<p>${evaluateAppend}</p>
+	                            					</div>
+                            					</div>
+                            				{{/if}}
+											{{if $data.explain!=null}}
+                            					<div class="selBusiness">
+                            							<div class="selLeft">
+	                            							<p><span>商家：</span></p>
+	                            						</div>
+	                            						<div class="selRight">
+	                            							<p>${explain}</p>
+	                            						</div>
+                            					</div>
+											{{/if}}
+                            			</div>
+                            		</div>
+			</script>
+            <script type="text/javascript" src="resources/js/front/purchaseDetails.js"></script>

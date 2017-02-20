@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.ProficientDao">
+
+	<!--专家库实体映射 -->
+	<resultMap id="selectAllProficientMap" type="com.shdatabank.puruan.model.Proficient">
+		<id property="userId" column="user_id" />
+		<result property="userName" column="user_name" />
+		<result property="userAlias" column="user_alias" />
+		<result property="userMobile" column="user_mobile" />
+		<result property="userEmail" column="user_email" />
+		<result property="professionalField" column="professionalField" />
+	</resultMap>
+
+	<!-- 用户表 -->
+	<sql id="sql_form1">
+		from user
+	</sql>
+	<!-- 专家专业领域表 -->
+	<sql id="sql_form2">
+		from proficient_professional_field
+	</sql>
+
+	<!-- 新增专家 专业领域 -->
+	<insert id="proficientProfessionalField" useGeneratedKeys="true"
+		keyProperty="professionalFielId">
+		INSERT INTO proficient_professional_field
+		(user_id,professional_field_value)
+		VALUES
+		<foreach collection="professionalValue" item="item" index="index"
+			separator=",">
+			(#{userId},
+			#{item}
+			)
+		</foreach>
+	</insert>
+
+	<!-- 删除专家 -->
+	<update id="deleteProficient">
+		UPDATE user u set u.active=1 where u.user_id=
+		#{userId}
+	</update>
+
+	<!-- 根据ID更新专家 -->
+	<update id="updateProficienUser" parameterType="com.shdatabank.puruan.model.Proficient">
+		UPDATE user
+		<set>
+			<trim suffix=" " suffixOverrides=",">
+				<if test="userName!='' and userName!=null">
+					user_name = #{userName},
+				</if>
+				<if test="userAlias!='' and userAlias!=null">
+					user_alias = #{userAlias},
+				</if>
+				<if test="userMobile!='' and userMobile!=null">
+					user_mobile = #{userMobile},
+				</if>
+				<if test="userEmail !='' and userEmail !=null">
+					user_email = #{userEmail},
+				</if>
+			</trim>
+		</set>
+		WHERE user_id = #{userId}
+	</update>
+
+	<!-- 删除专家专业领域 -->
+	<delete id="deleteProficientFile">
+		DELETE
+		<include refid="sql_form2" />
+		WHERE user_id = #{userId};
+	</delete>
+
+	<!-- 查询专家列表 -->
+	<select id="selectAllProficient" parameterType="com.shdatabank.puruan.model.Proficient"
+		resultMap="selectAllProficientMap">
+		SELECT u.user_id,u.user_name, u.user_alias ,GROUP_CONCAT(DISTINCT
+		d.data_value) professionalField,
+		u.user_mobile,u.user_email
+		from user u
+		,proficient_professional_field p
+		LEFT JOIN dictionarydata d
+		on
+		d.data_id=p.professional_field_value
+		WHERE u.user_id=p.user_id and
+		u.active=0
+		<if test="userAlias!='' and userAlias!=null">
+			and u.user_alias LIKE '%${userAlias}%'
+		</if>
+		GROUP BY u.user_id
+	</select>
+
+	<!-- 根据id查询专家 -->
+	<select id="selectProficientById" resultMap="selectAllProficientMap">
+		SELECT
+		u.user_id,u.user_name, u.user_alias ,GROUP_CONCAT(DISTINCT
+		d.data_value) professionalField,
+		u.user_mobile,u.user_email
+		from user u
+		,proficient_professional_field p
+		LEFT JOIN dictionarydata d
+		on
+		d.data_id=p.professional_field_value
+		WHERE u.user_id=#{userId}
+	</select>
+
+	<!-- 专家专业领域列表 -->
+	<select id="findProfessionalFile" resultType="com.shdatabank.puruan.model.ListModel">
+		SELECT d.data_id
+		id,d.data_value value from dictionarydata
+		d where dict_id=100100
+	</select>
+
+</mapper>

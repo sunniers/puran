@@ -1,0 +1,59 @@
+            <!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>需求管理</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>最新反馈</span>
+            </div>
+
+            <!--内容详情-->
+            <div class="contentInfo">
+            	<div class="newMessage">
+                <div class="messageCenter">
+                    <div class="header">
+                        <div class="headers on" data-attr="registrationNews">
+                            <span>报名消息</span>
+                        </div>
+                        <div class="headers" data-attr="collectionNews">
+                            <span>关注消息</span>
+                        </div>
+                    </div>
+                    <div class="registrationNews newMessage_ct" style="display:none">
+                   
+                    </div>
+                    <div class="collectionNews newMessage_ct" style="display:none">
+                    
+                    </div>
+                </div>
+                <div class="page">
+                        <div id="paginator" style="margin: auto;"></div>
+                </div>
+                </div>
+            </div>
+         
+            <script id="demand_registrationNews_tmplate" type="text/x-jquery-tmpl">
+					<div class="box" data-id="${sysMessageId}">
+                        <div class="box1">
+                            <div class="title">${messageTitle}</div>
+                            <div class="prompts fr">${generateDatetime}</div>
+                        </div>
+                        <div class="box2">
+                            <span>报名了</span>
+                            <span>您发布的项目</span>
+                            <span class="projectName">${messageContent}</span>
+                        </div>
+                    </div>
+			</script>
+			<script id="demand_collectionNews_tmplate" type="text/x-jquery-tmpl">
+					<div class="box" data-id="${sysMessageId}">
+                        <div class="box1">
+                            <div class="title">${messageTitle}</div>
+                            <div class="prompts fr">${generateDatetime}</div>
+                        </div>
+                        <div class="box2">
+                            <span>收藏了</span>
+                            <span>您发布的项目</span>
+                            <span class="projectName">${messageContent}</span>
+                        </div>
+                    </div>
+			</script>
+            <script type="text/javascript" src="resources/js/front/newMessage.js"></script>

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.SysResourceDao">
+
+    <!-- 查询资源目录的信息 -->
+    <resultMap type="com.shdatabank.puruan.model.SysResource" id="SysResourceMap">
+        <id property="resourceId" column="resource_id" />
+        <result property="parentResourceId" column="parent_resource_id" />  
+        <result property="resourceName" column="resource_name" />
+        <result property="resourceChese" column="resource_chese" />
+        <result property="resourceIcon" column="resource_icon" />
+        <result property="resourceType" column="resource_type" />
+        <result property="sortedField" column="sorted_field" />
+        <result property="resourceLink" column="resource_link" />
+        <result property="active" column="active" />
+        <collection property="sysResources" ofType="com.shdatabank.puruan.model.SysResource">  
+            <id property="resourceId" column="id" />
+            <result property="parentResourceId" column="p_id" />  
+            <result property="resourceName" column="name" />
+            <result property="resourceChese" column="chese" />
+            <result property="resourceIcon" column="icon" />
+            <result property="resourceType" column="type" />
+            <result property="sortedField" column="field" />
+            <result property="resourceLink" column="link" />
+            <result property="active" column="active1" />
+        </collection> 
+    </resultMap>
+    <resultMap type="com.shdatabank.puruan.model.SysResource" id="sysFirst">
+        <id property="resourceId" column="resource_id" />
+        <result property="parentResourceId" column="parent_resource_id" />  
+        <result property="resourceName" column="resource_name" />
+        <result property="resourceChese" column="resource_chese" />
+        <result property="resourceIcon" column="resource_icon" />
+        <result property="resourceType" column="resource_type" />
+        <result property="sortedField" column="sorted_field" />
+        <result property="resourceLink" column="resource_link" />
+        <result property="active" column="active" />
+    </resultMap>
+    <resultMap type="com.shdatabank.puruan.model.SysResourcePage" id="SysResourcePageMap">
+        <id property="resourceId" column="resource_id" />
+        <result property="resourceName" column="resource_name" />
+        <result property="parentName" column="parent_name" />
+        <result property="resourceType" column="resource_type" />
+    </resultMap>
+    <!-- 查询菜单 -->
+    <select id="selectFirstMenu" resultMap="SysResourceMap">
+        SELECT p.*,s.resource_name name,s.resource_id id,s.parent_resource_id p_id,s.resource_chese chese,
+        s.resource_icon icon,s.resource_type type,s.active active1,s.sorted_field field,s.resource_link link 
+        from sys_resource p join sys_resource s on p.resource_id = s.parent_resource_id 
+        <where>
+            s.active= 0
+            <if test="parentResourceId != null and parentResourceId != ''">
+                AND s.parent_resource_id = s.resource_id
+            </if>
+            <if test="parentMenu != null and parentMenu != ''">
+                AND s.resource_name  like '%${parentMenu}%'
+            </if>
+            
+            <if test="childMenu != null and childMenu != ''">
+                AND s.resource_name like '%${childMenu}%'
+            </if>
+            <if test="resourceType !=null and resourceType !=''">
+                AND s.resource_type = #{resourceType} 
+            </if>    
+        </where>
+        union select p1.*,null,null,null,null,null,null,null,null,null from sys_resource p1 where p1.parent_resource_id is null
+    </select>
+    <!-- 查询资源目录的信息  -->
+    <select id="selectSysResource" resultMap="SysResourceMap">
+        <![CDATA[
+            SELECT resource_id,parent_resource_id,resource_name,resource_chese,resource_icon,resource_type,active 
+            FROM sys_resource WHERE resource_id = #{0} 
+            AND active = 0
+        ]]>
+    </select>
+    
+    <!-- 查询分页  -->
+    <select id="selectPage" resultMap="SysResourcePageMap" parameterType="com.shdatabank.puruan.model.SysResourcePage">
+            select p.resource_id,p.resource_name,(select s.resource_name from sys_resource s where s.resource_id = p.parent_resource_id) parent_name,p.resource_type from sys_resource p
+            <where>
+                 p.active = 0
+            <if test="parentName != null and parentName != ''">
+                AND (select s.resource_name from sys_resource s where s.resource_id = p.parent_resource_id)  like '%${parentName}%'
+            </if>
+            <if test="resourceName != null and resourceName != ''">
+                AND resource_name like '%${resourceName}%'
+            </if>
+            <if test="resourceType !=null and resourceType !=''">
+                AND resource_type = #{resourceType} 
+            </if>    
+            </where>
+    </select>
+    <!-- 查询后台资源目录  -->
+    <select id="selectBackSysResource" resultMap="SysResourceMap" >
+        SELECT p.*,s.resource_name name,s.resource_id id,s.parent_resource_id p_id,s.resource_chese chese,
+        s.resource_icon icon,s.resource_type type,s.active active1,s.sorted_field field,s.resource_link link  
+        from sys_resource p join sys_resource s on p.resource_id = s.parent_resource_id 
+        AND s.resource_type = "back" and s.active = 0
+    <!--     <where>
+            s.active= #{active}
+            <if test="parentResourceId != null and parentResourceId != ''">
+                AND s.parent_resource_id = s.resource_id
+            </if>
+            <if test="parentMenu != null and parentMenu != ''">
+                AND s.resource_name  like '%${parentMenu}%'
+            </if>
+            <if test="childMenu != null and childMenu != ''">
+                AND s.resource_name like '%${childMenu}%'
+            </if>
+        </where> -->
+        union select p1.*,null,null,null,null,null,null,null,null,null from sys_resource p1 where p1.parent_resource_id is null
+    </select>
+    
+    <!-- 查询一级目录  -->
+    <select id="selectFirstResource" resultMap="sysFirst" >
+        SELECT resource_name,resource_id ,parent_resource_id ,resource_chese,
+        resource_icon ,resource_type ,active ,sorted_field ,resource_link  
+        from sys_resource
+        <where>
+            parent_resource_id is null and active = 0
+            <if test="null != resourceType and '' != resourceType">
+                and resource_type =#{resourceType}
+            </if>
+        </where>
+    </select>
+    
+    <!-- 查询一级还是二级目录  -->
+    <select id="selectFirstAndSecondResource" resultMap="SysResourceMap" >
+        SELECT resource_name,resource_id ,parent_resource_id ,resource_chese,
+        resource_icon ,resource_type ,active ,sorted_field ,resource_link  
+        from sys_resource where resource_id = #{resourceId} and active = 0
+    </select>
+    
+    <!-- 插入资源目录的一级目录信息 -->
+    <insert id="insertSysResource" parameterType="com.shdatabank.puruan.model.SysResource" useGeneratedKeys="true" keyProperty="resourceId">
+        <![CDATA[
+            INSERT INTO sys_resource(parent_resource_id,resource_name,resource_chese,resource_icon,resource_type,sorted_field,resource_link) 
+            VALUES(
+                   #{parentResourceId},
+                   #{resourceName},
+                   #{resourceChese},
+                   #{resourceIcon},
+                   #{resourceType},           
+                   #{sortedField},           
+                   #{resourceLink}       
+                  )
+        ]]>
+    </insert>
+    <!-- 插入资源目录的二级目录信息 -->
+    <insert id="insertChildSysResource" parameterType="com.shdatabank.puruan.model.SysResource" >
+        <![CDATA[
+            INSERT INTO sys_resource(parent_resource_id,resource_name,resource_chese,resource_icon,resource_type,sorted_field,resource_link) 
+            VALUES(
+                   #{parentResourceId},
+                   #{resourceName},
+                   #{resourceChese},
+                   #{resourceIcon},
+                   #{resourceType},           
+                   #{sortedField},           
+                   #{resourceLink}           
+                  )
+        ]]>
+    </insert>
+    <!-- 修改一级目录 -->
+    <update id="updateSysResource" parameterType="com.shdatabank.puruan.model.SysResource">
+        UPDATE sys_resource 
+        <set>
+            <trim suffixOverrides=",">
+                 <if test="null != parentResourceId and '' != parentResourceId">
+                    parent_resource_id=#{parentResourceId},
+                </if>
+                 <if test="null != resourceName and '' != resourceName">
+                    resource_name=#{resourceName},
+                </if>
+                 <if test="null != resourceChese and '' != resourceChese">
+                    resource_chese=#{resourceChese},
+                </if>
+                 <if test="null != resourceIcon and '' != resourceIcon">
+                    resource_icon=#{resourceIcon},
+                </if>
+                 <if test="null != sortedField and '' != sortedField">
+                    sorted_field=#{sortedField},
+                </if>
+                 <if test="null != resourceLink and '' != resourceLink">
+                    resource_link=#{resourceLink},
+                </if>
+                 <if test="null != resourceType and '' != resourceType">
+                    resource_type=#{resourceType}
+                </if>
+            </trim>
+        </set>
+        WHERE resource_id = #{resourceId}
+    </update>
+    <!-- 修改二级目录 -->
+    <update id="updateChildResource" parameterType="com.shdatabank.puruan.model.SysResource">
+        UPDATE sys_resource 
+            <set>
+            <trim suffixOverrides=",">
+                 <if test="null != parentResourceId and '' != parentResourceId">
+                    parent_resource_id=#{parentResourceId},
+                </if>
+                 <if test="null != resourceName and '' != resourceName">
+                    resource_name=#{resourceName},
+                </if>
+                 <if test="null != resourceChese and '' != resourceChese">
+                    resource_chese=#{resourceChese},
+                </if>
+                 <if test="null != resourceIcon and '' != resourceIcon">
+                    resource_icon=#{resourceIcon},
+                </if>
+                 <if test="null != sortedField and '' != sortedField">
+                    sorted_field=#{sortedField},
+                </if>
+                 <if test="null != resourceLink and '' != resourceLink">
+                    resource_link=#{resourceLink},
+                </if>
+                 <if test="null != resourceType and '' != resourceType">
+                    resource_type=#{resourceType}
+                </if>
+            </trim>
+        </set>
+        WHERE resource_id = #{resourceId}
+    </update>
+    
+    <delete id="deleteSysResource"  >
+        <![CDATA[
+             UPDATE sys_resource SET active = #{1} WHERE 
+            resource_id = #{0}
+        ]]>
+    </delete>
+    <!-- 上传图片路径更新 -->
+    <update id="updateUpload" parameterType="com.shdatabank.puruan.model.SysResource">
+        UPDATE sys_resource SET resource_icon=#{resourceIcon}
+        WHERE resource_id = #{resourceId}
+    </update>
+    
+</mapper>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shdatabank.puruan.dao.SupplyAndDemandDao">
+
+	<resultMap id="selectResoursebyNameMap" type="com.shdatabank.puruan.model.SupplyAndDemand">
+		<result property="id" column="id" />
+		<result property="sign" column="sign" />
+		<result property="signId" column="signId" />
+		<result property="name" column="name" />
+		<result property="supply" column="supply" />
+		<result property="demand" column="demand" />
+		<result property="time" column="time" />
+		<result property="number" column="number" />
+		<result property="status" column="status" />
+	</resultMap>
+
+	<!-- 根据条件查询所有供需信息 -->
+	<select id="selectAllResoursebyName" resultMap="selectResoursebyNameMap">
+		SELECT * from (
+		SELECT t.undertake_id transactionId ,700001 signId, '需求' sign,
+		r.proj_id
+		id,r.proj_name name,
+		(
+		SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user u
+		LEFT JOIN
+		company c
+		ON u.company_id = c.company_id
+		WHERE u.user_id
+		=r.publish_user_id
+		) supply ,
+		(
+		SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user u
+		LEFT JOIN
+		company c
+		ON u.company_id = c.company_id
+		WHERE u.user_id
+		=t.user_id
+		)
+		demand ,
+		1 number,
+		t.undertake_datetime time
+		from
+		project_requirement_undertake t, project_requirement r where
+		t.project_requirement_id=r.proj_id and t.active=0 and r.active=0
+		UNION ALL
+		SELECT
+		t.transaction_id	transactionId,700002 signId,
+		'人才' sign, r.talent_requirement_id	id,
+		r.talent_requirement_name name,
+		(
+		SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user u
+		LEFT
+		JOIN
+		company c
+		ON u.company_id = c.company_id
+		WHERE u.user_id
+		=t.user_id
+		)
+		supply ,
+		(
+		SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM
+		user u
+		LEFT JOIN
+		company c
+		ON u.company_id = c.company_id
+		WHERE u.user_id
+		=r.user_id
+		)
+		demand ,
+		1 number,
+		t.transaction_datetime time
+		from
+		talent_transaction t,user u,talent_requirement r
+		where t.user_id=u.user_id and
+		r.talent_requirement_id=t.talent_requirement_id
+		and t.active=0 and r.active=0 and u.active=0
+		UNION ALL
+		SELECT
+		t.resource_transaction_id transactionId,700005 signId,
+		'资源' sign,
+		r.creative_resource_id id,r.resource_name name,
+		(
+		SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM user u
+		LEFT JOIN
+		company c
+		ON u.company_id = c.company_id
+		WHERE u.user_id
+		=r.user_id
+		)
+		supply ,
+		(
+		SELECT
+		IFNULL(c.company_name,IFNULL(u.user_alias,'匿名')) FROM
+		user u
+		LEFT JOIN
+		company c
+		ON u.company_id = c.company_id
+		WHERE u.user_id
+		=t.buy_user_id
+		)
+		demand ,
+		t.transaction_number number,
+		t.transaction_datetime time
+		from
+		ceative_resource_transaction t
+		,creative_resource r where
+		r.creative_resource_id=t.creative_resource_id and r.active=0 and
+		t.active=0) m
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="name != null and name !=''">
+				AND m.name LIKE '%${name}%'
+			</if>
+			<!-- 大于等于 -->
+			<if test="startTime != null and startTime !=''">
+				AND m.time &gt;= #{startTime}
+			</if>
+			<!-- 小于等于 -->
+			<if test="endTime != null and endTime !=''">
+				AND m.time &lt;= #{endTime}
+			</if>
+		</trim>
+		ORDER BY time DESC
+	</select>
+
+	<!-- 根据条件查询项目供需信息 -->
+	<select id="selectRequirementbyName" resultMap="selectResoursebyNameMap">
+		SELECT r.proj_id id,'proj' sign, r.proj_name
+		name,d.proj_require_description_content description,1 number
+		,p.undertake_datetime time FROM project_requirement_undertake
+		p,project_requirement r
+		LEFT JOIN project_requirement_description d ON
+		d.proj_require_id=r.proj_id
+		where p.undertake_id=r.proj_id
+		<if test="name!='' and name!=null">
+			and r.proj_name LIKE '%${name}%'
+		</if>
+		ORDER BY time DESC
+	</select>
+
+	<!-- 根据条件查询资源供需信息 -->
+	<select id="selectResoursebyName" resultMap="selectResoursebyNameMap">
+
+		SELECT r.creative_resource_id id,'res' sign, r.resource_name
+		name,r.resource_description description,c.transaction_datetime
+		time,c.transaction_number number
+		from ceative_resource_transaction c
+		RIGHT JOIN creative_resource r on c.creative_resource_id =
+		r.creative_resource_id
+		<if test="name!='' and name!=null">
+			where r.resource_name LIKE '%${name}%'
+		</if>
+		ORDER BY time DESC
+	</select>
+
+	<!-- 根据条件查询人才供需信息 -->
+	<select id="selectTalentbyName" resultMap="selectResoursebyNameMap">
+		SELECT r.talent_requirement_id
+		id,'talent'
+		sign,r.talent_requirement_name
+		name,r.requirement_description
+		description,t.transaction_datetime
+		time,1 number
+		from talent_transaction
+		t
+		RIGHT JOIN talent_requirement r
+		on t.talent_requirement_id =
+		r.talent_requirement_id
+		<if test="name!='' and name!=null">
+			where r.talent_requirement_name LIKE '%${name}%'
+		</if>
+		ORDER BY time DESC
+	</select>
+
+	<!-- 根据ID查询人才资源资源 resultMap -->
+	<resultMap id="selectTalentByIdMap" type="com.shdatabank.puruan.model.TalentRequirement">
+		<result property="talentRequirementId" column="talent_requirement_id" />
+		<result property="userId" column="user_id" />
+		<result property="talentRequirementName" column="talent_requirement_name" />
+		<result property="talentDuget" column="talent_buget" />
+		<result property="requirementDescription" column="requirement_description" />
+		<result property="effectiveDatetime" column="effective_datetime" />
+		<result property="requirementClassifier" column="requirement_classifier" />
+		<result property="cooperateType" column="cooperate_type" />
+		<result property="active" column="active" />
+		<result property="requirementStatus" column="requirement_status" />
+	</resultMap>
+	<!-- 人才资源字段 -->
+	<sql id="sql_column">
+		talent_requirement_id,user_id,talent_requirement_name,talent_buget,requirement_description,effective_datetime,requirement_classifier,cooperate_type,active,requirement_status
+	</sql>
+
+	<!-- 根据ID查询人才资源 -->
+	<select id="selectTalentById" resultMap="selectTalentByIdMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="sql_column" />
+		from talent_requirement WHERE talent_requirement_id=#{id}
+	</select>
+</mapper>

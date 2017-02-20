@@ -1,0 +1,189 @@
+  			<!--路径-->
+            <div class="nav">
+                <span>首页</span><span><img src="resources/images/front/rightAngleBrackets.png" alt=""></span>
+                <span>需求详情</span>
+            </div>
+            <!--内容详情-->
+            <div class="contentInfo">
+                <div class="demandDetail">
+                    <div class="contents1">
+                        <div class="steps">
+                            <div class="sui-steps-round steps-round-auto">
+                                <div class="current">
+                                    <div class="wrap step1">
+                                        <div class="round">1</div>
+                                        <div class="bar"></div>
+                                    </div>
+                                    <label>&nbsp;&nbsp;发布</label>
+                                </div>
+                                <div class="current">
+                                    <div class="wrap step2">
+                                        <div class="round">2</div>
+                                        <div class="bar"></div>
+                                    </div>
+                                    <label>开始报名</label>
+                                </div>
+                                <div class="current">
+                                    <div class="wrap step3">
+                                        <div class="round">3</div>
+                                        <div class="bar"></div>
+                                    </div>
+                                    <label>报名截止</label>
+                                </div>
+                                <div class="current">
+                                    <div class="wrap step4">
+                                        <div class="round">4</div>
+                                        <div class="bar"></div>
+                                    </div>
+                                    <label>&nbsp;&nbsp;筛选</label>
+                                </div>
+                                <div class="current last">
+                                    <div class="wrap step5">
+                                        <div class="round">5</div>
+                                    </div>
+                                    <label>&nbsp;&nbsp;实施</label>
+                                </div>
+                            </div>
+                            <div class="times">
+                            	<div class="time">2016-11-16</div>
+                            	<div class="time">2016-11-16</div>
+                            	<div class="time">2016-11-16</div>
+                            	<div class="time">2016-11-16</div>
+                            	<div class="time">2016-11-16</div>
+                            </div>
+                        </div>
+                        <div class="introduce">
+                        	<div class="introduces"></div>
+                            <button class="collection" id="collection">收 藏</button>
+							<button class="signUp" id="signUp" data-toggle="modal" data-keyboard="false">报 名</button>
+                        </div>
+                        <div class="title">
+                            <div class="circle"></div>需求描述
+                        </div>
+                        <div class="describe">
+                        	
+                        </div>
+                        <div class="title">
+                            <div class="circle"></div>附件
+                        </div>
+                        <div class="enclosure">
+                            
+                        </div>
+                    </div>
+                    <div class="contents2">
+                        <div class="title">
+                            <div class="circle"></div>评论(<span id="commentNum"></span>)
+                        </div>
+                        <div class="commentArea">
+                            
+                        </div>
+                        <textarea placeholder="评论区" id="commentArea"></textarea>
+                        <button id="cmtBtn">发表评论</button>
+                    </div>
+                </div>
+            </div>
+            <script id="demandDetail_times_tmplate" type="text/x-jquery-tmpl">
+								<div class="time">${auditDatetime}</div>
+                				<div class="time">${auditDatetime}</div>
+                				<div class="time">${projColseDate}</div>
+                            	<div class="time">${finishDate}</div>
+								<div class="time">${undertakeDatetime}</div>
+			</script>
+            <script id="demandDetail_introduce_tmplate" type="text/x-jquery-tmpl">
+							<div class="ct1">
+                            <h2>${projName}</h2><div class="needing">需 求</div>
+                            </div>
+                            <div class="ct2">
+                                <span>${companyName}</span>
+								{{if $data.isAuthentication==0}}
+                                <img src="resources/images/front/identityAuthentication.png" alt="身份认证"/>
+								{{else}}
+								<img src="resources/images/front/identityAuthenticationGray.png" alt="身份认证"/>
+								{{/if}}
+								{{if $data.userMobile!=null}}
+                                <img src="resources/images/front/phoneMakeSureBlue.png" alt="手机认证"/>
+								{{else}}
+								<img src="resources/images/front/phoneMakeSureGray.png" alt="手机认证"/>
+								{{/if}}
+                                <img src="resources/images/front/emailAuthentication.png" alt="邮箱认证"/>
+                            </div>
+                            <div class="ct3">
+                               	 报名人数：<span>${enrollCount}</span>人 | 发布于 <span>${auditDatetime}</span>
+                            </div>
+                            <div class="ct4">
+                                <h2> ￥${projServiceFee}</h2>
+								{{if $data.isFeeTrusteeship==0}}
+                                <span>酬金已托管</span>
+								{{else}}
+								<span>酬金未托管</span>
+								{{/if}}
+                       		</div>
+							
+			</script>
+			<script id="demandDetail_describe_tmplate" type="text/x-jquery-tmpl">
+				${projRequireDescriptionContent}
+			</script>
+			<script id="demandDetail_enclosure_tmplate" type="text/x-jquery-tmpl">
+				{{if  $data.projAttachFile!=null}}
+				<div class="enclosures">
+                    <img src="resources/images/front/enclosure.png" alt="链接"/>
+                    <div class="download fl"><a href="${projAttachFile}">下载</a></div> |
+                    <div data-url="${projAttachFile}" class="preview fr">预览</div>
+                </div>
+				{{/if}}
+			</script>
+			<script id="demandDetail_commentArea_tmplate" type="text/x-jquery-tmpl">
+								
+				<div class="box">
+                    <div class="box1">
+                        <span class="commentName">${userAlias}</span>
+                        <span class="commentTime">${evaluateTime}</span>
+                    </div>
+                    <div class="box2">${evaluateValue}</div>
+                </div>
+				
+			</script>
+			
+			<div id="demandDetail_signUpContent" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" data-dismiss="modal" aria-hidden="true" class="sui-close">×</button>
+							<h4 id="myModalLabel" class="modal-title">报名信息</h4>
+						</div>
+						<div class="modal-body signUpContent">
+							<div class="title">*联系人：</div>
+							<input type="text" class="contacts">
+							<div class="sui-msg msg-error contactsPrompt">
+                                <div class="msg-con">联系人不能为空</div>
+                                <s class="msg-icon"></s>
+                            </div>
+							<div class="title">*联系电话：</div>
+							<input type="text" class="contactNumber">
+							<div class="sui-msg msg-error contactNumberPrompt">
+                                <div class="msg-con">联系电话不能为空</div>
+                                <s class="msg-icon"></s>
+                            </div>
+							<div class="title">*邮箱：</div>
+							<input type="text" class="emailbox">
+							<div class="sui-msg msg-error emailboxPrompt">
+                                <div class="msg-con">邮箱不能为空</div>
+                                <s class="msg-icon"></s>
+                            </div>
+							<div class="title">备注：</div>
+							<textarea class="remarks"></textarea>
+							<div class="upload">
+								<label>
+                            		<input class="upLoadImg" type="file" name="file" style="display:none;">
+                            		<div class="replace">附件上传</div>
+                            	</label>
+                            </div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" data-ok="modal" class="sui-btn btn-primary btn-large" id="modalSubmit">确认</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+             <script type="text/javascript" src="resources/js/front/demandDetail.js"></script>
